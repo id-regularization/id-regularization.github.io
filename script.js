@@ -129,7 +129,7 @@
     },
     itself: {
       cuhk: "assets/qualitative/[re]itself-cuhk.png",
-      icfg: "assets/qualitative/[re]-itself-icfg.png",
+      icfg: "assets/qualitative/[re]itself-icfg.png",
       rstp: "assets/qualitative/[re]itself-rstp.png"
     },
     irra: {
@@ -164,18 +164,156 @@
     }
   };
 
-  // Normalized coordinates inside each 3-row composite qualitative figure.
-  // These are intentionally expressed as fractions so the explorer works at any image resolution.
-  const qualitativeCropLayout = {
-    rows: [
-      { y: 0.055, height: 0.265 },
-      { y: 0.375, height: 0.265 },
-      { y: 0.695, height: 0.265 }
-    ],
-    regions: {
-      query: { x: 0.006, width: 0.19 },
-      iapr: { x: 0.225, width: 0.365 },
-      base: { x: 0.62, width: 0.365 }
+  // Per-figure crop calibration for the 15 qualitative composites.
+  // Coordinates are measured on the source figures and kept in reference pixels;
+  // applyQualitativeCrop converts them to normalized CSS offsets at runtime.
+  const qualitativeCropLayouts = {
+    clip: {
+      cuhk: {
+        width: 4023, height: 1798,
+        overviewRows: [{ y: 75, height: 536 }, { y: 661, height: 538 }, { y: 1215, height: 538 }],
+        cropRows: {
+          query: [{ y: 159, height: 441 }, { y: 745, height: 443 }, { y: 1299, height: 443 }],
+          ranking: [{ y: 85, height: 519 }, { y: 671, height: 521 }, { y: 1225, height: 521 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 793, width: 1574 }, base: { x: 2471, width: 1552 } }
+      },
+      icfg: {
+        width: 4023, height: 1809,
+        overviewRows: [{ y: 77, height: 538 }, { y: 665, height: 539 }, { y: 1221, height: 537 }],
+        cropRows: {
+          query: [{ y: 161, height: 443 }, { y: 749, height: 444 }, { y: 1305, height: 442 }],
+          ranking: [{ y: 87, height: 521 }, { y: 675, height: 522 }, { y: 1231, height: 520 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 780, width: 1574 }, base: { x: 2461, width: 1562 } }
+      },
+      rstp: {
+        width: 4023, height: 1810,
+        overviewRows: [{ y: 76, height: 538 }, { y: 663, height: 541 }, { y: 1217, height: 541 }],
+        cropRows: {
+          query: [{ y: 160, height: 443 }, { y: 747, height: 446 }, { y: 1301, height: 446 }],
+          ranking: [{ y: 86, height: 521 }, { y: 673, height: 524 }, { y: 1227, height: 524 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 783, width: 1573 }, base: { x: 2461, width: 1562 } }
+      }
+    },
+    itself: {
+      cuhk: {
+        width: 4023, height: 1806,
+        overviewRows: [{ y: 73, height: 539 }, { y: 660, height: 539 }, { y: 1217, height: 540 }],
+        cropRows: {
+          query: [{ y: 157, height: 444 }, { y: 744, height: 444 }, { y: 1301, height: 445 }],
+          ranking: [{ y: 83, height: 522 }, { y: 670, height: 522 }, { y: 1227, height: 523 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 784, width: 1575 }, base: { x: 2466, width: 1557 } }
+      },
+      icfg: {
+        width: 4023, height: 1814,
+        overviewRows: [{ y: 67, height: 539 }, { y: 655, height: 542 }, { y: 1213, height: 541 }],
+        cropRows: {
+          query: [{ y: 151, height: 444 }, { y: 739, height: 447 }, { y: 1297, height: 446 }],
+          ranking: [{ y: 77, height: 522 }, { y: 665, height: 525 }, { y: 1223, height: 524 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 783, width: 1577 }, base: { x: 2467, width: 1556 } }
+      },
+      rstp: {
+        width: 4023, height: 1799,
+        overviewRows: [{ y: 60, height: 537 }, { y: 648, height: 539 }, { y: 1202, height: 538 }],
+        cropRows: {
+          query: [{ y: 144, height: 442 }, { y: 732, height: 444 }, { y: 1286, height: 443 }],
+          ranking: [{ y: 70, height: 520 }, { y: 658, height: 522 }, { y: 1212, height: 521 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 785, width: 1575 }, base: { x: 2464, width: 1559 } }
+      }
+    },
+    irra: {
+      cuhk: {
+        // IRRA · CUHK-PEDES has been rescaled to match the standard
+        // qualitative-figure geometry used by the other retriever/dataset pairs.
+        width: 4023, height: 1805,
+        overviewRows: [{ y: 75, height: 539 }, { y: 662, height: 539 }, { y: 1218, height: 539 }],
+        cropRows: {
+          query: [{ y: 159, height: 444 }, { y: 746, height: 444 }, { y: 1302, height: 444 }],
+          ranking: [{ y: 85, height: 522 }, { y: 672, height: 522 }, { y: 1228, height: 522 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 784, width: 1575 }, base: { x: 2466, width: 1557 } }
+      },
+      icfg: {
+        width: 4023, height: 1844,
+        overviewRows: [{ y: 82, height: 541 }, { y: 672, height: 544 }, { y: 1229, height: 540 }],
+        cropRows: {
+          query: [{ y: 166, height: 446 }, { y: 756, height: 449 }, { y: 1313, height: 445 }],
+          ranking: [{ y: 92, height: 524 }, { y: 682, height: 527 }, { y: 1239, height: 523 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 783, width: 1578 }, base: { x: 2467, width: 1556 } }
+      },
+      rstp: {
+        width: 4023, height: 1820,
+        overviewRows: [{ y: 81, height: 541 }, { y: 667, height: 540 }, { y: 1223, height: 537 }],
+        cropRows: {
+          query: [{ y: 165, height: 446 }, { y: 751, height: 445 }, { y: 1307, height: 442 }],
+          ranking: [{ y: 91, height: 524 }, { y: 677, height: 523 }, { y: 1233, height: 520 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 783, width: 1574 }, base: { x: 2462, width: 1561 } }
+      }
+    },
+    rde: {
+      cuhk: {
+        width: 4023, height: 1809,
+        overviewRows: [{ y: 75, height: 540 }, { y: 664, height: 539 }, { y: 1219, height: 540 }],
+        cropRows: {
+          query: [{ y: 159, height: 445 }, { y: 748, height: 444 }, { y: 1303, height: 445 }],
+          ranking: [{ y: 85, height: 523 }, { y: 674, height: 522 }, { y: 1229, height: 523 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 780, width: 1576 }, base: { x: 2461, width: 1562 } }
+      },
+      icfg: {
+        width: 4023, height: 1815,
+        overviewRows: [{ y: 83, height: 540 }, { y: 673, height: 542 }, { y: 1227, height: 544 }],
+        cropRows: {
+          query: [{ y: 167, height: 445 }, { y: 757, height: 447 }, { y: 1311, height: 449 }],
+          ranking: [{ y: 93, height: 523 }, { y: 683, height: 525 }, { y: 1237, height: 527 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 784, width: 1577 }, base: { x: 2467, width: 1556 } }
+      },
+      rstp: {
+        width: 4023, height: 1815,
+        overviewRows: [{ y: 77, height: 538 }, { y: 665, height: 542 }, { y: 1222, height: 540 }],
+        cropRows: {
+          query: [{ y: 161, height: 443 }, { y: 749, height: 447 }, { y: 1306, height: 445 }],
+          ranking: [{ y: 87, height: 521 }, { y: 675, height: 525 }, { y: 1232, height: 523 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 785, width: 1581 }, base: { x: 2467, width: 1556 } }
+      }
+    },
+    "dm-adapter": {
+      cuhk: {
+        width: 4023, height: 1803,
+        overviewRows: [{ y: 76, height: 538 }, { y: 663, height: 538 }, { y: 1217, height: 539 }],
+        cropRows: {
+          query: [{ y: 160, height: 443 }, { y: 747, height: 443 }, { y: 1301, height: 444 }],
+          ranking: [{ y: 86, height: 521 }, { y: 673, height: 521 }, { y: 1227, height: 522 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 789, width: 1572 }, base: { x: 2468, width: 1555 } }
+      },
+      icfg: {
+        width: 4023, height: 1831,
+        overviewRows: [{ y: 82, height: 538 }, { y: 669, height: 542 }, { y: 1226, height: 539 }],
+        cropRows: {
+          query: [{ y: 166, height: 443 }, { y: 753, height: 447 }, { y: 1310, height: 444 }],
+          ranking: [{ y: 92, height: 521 }, { y: 679, height: 525 }, { y: 1236, height: 522 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 784, width: 1575 }, base: { x: 2465, width: 1558 } }
+      },
+      rstp: {
+        width: 4022, height: 1802,
+        overviewRows: [{ y: 56, height: 539 }, { y: 644, height: 540 }, { y: 1203, height: 539 }],
+        cropRows: {
+          query: [{ y: 140, height: 444 }, { y: 728, height: 445 }, { y: 1287, height: 444 }],
+          ranking: [{ y: 66, height: 522 }, { y: 654, height: 523 }, { y: 1213, height: 522 }]
+        },
+        regions: { query: { x: 0, width: 690 }, iapr: { x: 781, width: 1576 }, base: { x: 2465, width: 1557 } }
+      }
     }
   };
 
@@ -210,16 +348,36 @@
     });
   }
 
-  function applyQualitativeCrop(cropElement, image, regionName, caseIndex) {
-    const region = qualitativeCropLayout.regions[regionName];
-    const row = qualitativeCropLayout.rows[caseIndex];
-    if (!region || !row || !image.naturalWidth || !image.naturalHeight) return;
+  function getQualitativeCropLayout(retriever = activeRetriever, dataset = activeDataset) {
+    return qualitativeCropLayouts[retriever]?.[dataset]
+      || qualitativeCropLayouts.clip.cuhk;
+  }
 
-    cropElement.style.setProperty("--qual-crop-image-width", `${(100 / region.width).toFixed(4)}%`);
-    cropElement.style.setProperty("--qual-crop-x", `${(-region.x * 100).toFixed(4)}%`);
-    cropElement.style.setProperty("--qual-crop-y", `${(-row.y * 100).toFixed(4)}%`);
-    const cropRatio = (region.width * image.naturalWidth) / (row.height * image.naturalHeight);
+  function getQualitativeCropRow(layout, regionName, caseIndex) {
+    const rowGroup = regionName === "query" ? "query" : "ranking";
+    return layout.cropRows?.[rowGroup]?.[caseIndex] || null;
+  }
+
+  function applyQualitativeCrop(cropElement, image, regionName, caseIndex) {
+    const layout = getQualitativeCropLayout();
+    const region = layout.regions?.[regionName];
+    const row = getQualitativeCropRow(layout, regionName, caseIndex);
+    if (!region || !row || !layout.width || !layout.height || !image.naturalWidth || !image.naturalHeight) return;
+
+    const regionWidth = region.width / layout.width;
+    const regionX = region.x / layout.width;
+    const rowY = row.y / layout.height;
+    const rowHeight = row.height / layout.height;
+
+    cropElement.style.setProperty("--qual-crop-image-width", `${(100 / regionWidth).toFixed(4)}%`);
+    cropElement.style.setProperty("--qual-crop-x", `${(-regionX * 100).toFixed(4)}%`);
+    cropElement.style.setProperty("--qual-crop-y", `${(-rowY * 100).toFixed(4)}%`);
+
+    const cropRatio = (regionWidth * image.naturalWidth) / (rowHeight * image.naturalHeight);
     cropElement.style.aspectRatio = String(cropRatio);
+
+    // Useful when fine-tuning a single figure in DevTools.
+    cropElement.dataset.qualCropLayout = `${activeRetriever}:${activeDataset}:${caseIndex + 1}:${regionName}`;
   }
 
   function updateQualitativeCropImages(src) {
@@ -258,9 +416,12 @@
     qualIaprLabel.textContent = `${retrieverLabel}–IAPR`;
     updateQualitativeCropImages(qualitativeFigure);
 
-    const row = qualitativeCropLayout.rows[activeCase];
-    qualRowFocus.style.setProperty("--qual-row-top", `${(row.y * 100).toFixed(3)}%`);
-    qualRowFocus.style.setProperty("--qual-row-height", `${(row.height * 100).toFixed(3)}%`);
+    const layout = getQualitativeCropLayout();
+    const row = layout.overviewRows?.[activeCase];
+    if (row) {
+      qualRowFocus.style.setProperty("--qual-row-top", `${(row.y / layout.height * 100).toFixed(3)}%`);
+      qualRowFocus.style.setProperty("--qual-row-height", `${(row.height / layout.height * 100).toFixed(3)}%`);
+    }
     const focusLabel = qualRowFocus.querySelector("b");
     if (focusLabel) focusLabel.textContent = `CASE ${String(activeCase + 1).padStart(2, "0")}`;
 
