@@ -18,32 +18,73 @@
       <span class="brand-mark" aria-hidden="true">ID</span>
       <span class="brand-text">Identity-Aware Prototype Regularization</span>
     </a>
-    <div class="nav-links">
-      <a href="#overview">Overview</a>
-      <a href="#hard-negatives">Hard negatives</a>
-      <a href="#method">IAPR</a>
-      <a class="nav-cta" href="#qualitative">Qualitative</a>
-      <a href="#evidence">Evidence</a>
+    <div class="nav-links" id="primaryNav">
+      <a href="#top" data-nav-label="overview">Overview</a>
+      <a href="#hard-negatives" data-nav-label="hard-negatives">Hard negatives</a>
+      <a href="#method" data-nav-label="iapr">IAPR</a>
+      <a href="#qualitative" data-nav-label="qualitative">Qualitative</a>
+      <a href="#evidence" data-nav-label="evidence">Evidence</a>
     </div>
   </div>
 </nav>
 
 <main id="main" class="page-shell">
-  <section id="top" class="section hero">
+  <section id="top" class="section hero paper-hero" aria-labelledby="heroTitle">
     <div class="hero-grid">
-      <div class="hero-copy reveal">
-        <div class="eyebrow"><span class="eyebrow-dot"></span> Text-Based Person Search · Training-time regularization</div>
-        <h1>Identity-Aware <span class="accent">Prototype Regularization</span></h1>
+      <div class="hero-copy paper-hero-copy reveal">
+        <h1 id="heroTitle">
+          <span class="hero-title-main">Identity-Aware Prototype Regularization</span>
+          <span class="hero-title-sub">for Text-Based Person Search</span>
+        </h1>
+
+        <nav class="paper-links" aria-label="Project resources">
+          <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="arXiv">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M4.25 1.75h5.25L13 5.25v9H4.25z"></path>
+              <path d="M9.5 1.75v3.5H13"></path>
+              <path d="M6 11.15 7.35 7.7l1.35 3.45M6.45 10.05h1.8"></path>
+            </svg>
+            <span>arXiv</span>
+          </a>
+          <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Code">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="m6.1 4.55-3.35 3.45 3.35 3.45"></path>
+              <path d="m9.9 4.55 3.35 3.45-3.35 3.45"></path>
+              <path d="m8.95 3.55-1.9 8.9"></path>
+            </svg>
+            <span>Code</span>
+          </a>
+          <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="BibTeX">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M4.25 1.75h7.5v12.5h-7.5z"></path>
+              <path d="M6.15 8.8h1.65v2H6.15z"></path>
+              <path d="M9.05 8.8h1.65v2H9.05z"></path>
+              <path d="M6.35 6.05h3.55"></path>
+            </svg>
+            <span>BibTeX</span>
+          </a>
+          <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Blog">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M3.25 2.75h9.5v10.5h-9.5z"></path>
+              <path d="M5.05 5.1h5.9"></path>
+              <path d="M5.05 7.1h5.9"></path>
+              <path d="M5.05 9.1h3.6"></path>
+            </svg>
+            <span>Blog</span>
+          </a>
+          <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Slides">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M3.4 4.1h9.2v6.1H3.4z"></path>
+              <path d="M5.1 10.2v1.6"></path>
+              <path d="M10.9 10.2v1.6"></path>
+              <path d="M4.7 12.2h6.6"></path>
+              <path d="M5.05 6.1h5.15"></path>
+            </svg>
+            <span>Slides</span>
+          </a>
+        </nav>
+
         <p class="hero-subtitle"><strong>Remember identity during training.</strong> Retrieve exactly as before.</p>
-        <div class="hero-actions">
-          <a class="button primary" href="#overview">Start with the overview ↓</a>
-          <a class="button" href="#qualitative">Browse retrieval examples</a>
-        </div>
-        <div class="hero-stats" aria-label="Project highlights">
-          <div class="hero-stat"><b>5</b> retrievers</div>
-          <div class="hero-stat"><b>3</b> benchmarks</div>
-          <div class="hero-stat"><b>0</b> inference modules added</div>
-        </div>
       </div>
     </div>
   </section>

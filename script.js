@@ -406,6 +406,79 @@
     }
   }
 
+  function bindActiveNavigation() {
+    const nav = document.querySelector(".site-nav");
+    const navLinksContainer = document.getElementById("primaryNav");
+    const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+    const targets = navLinks
+      .map((link) => ({ link, section: document.querySelector(link.getAttribute("href")) }))
+      .filter((item) => item.section);
+
+    if (!targets.length) return;
+
+    let activeItem = null;
+    let frame = 0;
+
+    function keepActiveLinkVisible(link) {
+      if (!navLinksContainer || navLinksContainer.scrollWidth <= navLinksContainer.clientWidth) return;
+      const targetLeft = link.offsetLeft - (navLinksContainer.clientWidth - link.offsetWidth) / 2;
+      navLinksContainer.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: reduceMotion ? "auto" : "smooth"
+      });
+    }
+
+    function setActive(item, ensureVisible = false) {
+      if (!item || item === activeItem) {
+        if (ensureVisible && item) keepActiveLinkVisible(item.link);
+        return;
+      }
+
+      activeItem = item;
+      targets.forEach(({ link }) => {
+        const isActive = link === item.link;
+        link.classList.toggle("active", isActive);
+        if (isActive) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+
+      if (ensureVisible) keepActiveLinkVisible(item.link);
+    }
+
+    function updateActiveNavigation() {
+      frame = 0;
+      const navHeight = nav?.getBoundingClientRect().height || 0;
+      const anchor = window.scrollY + navHeight + 30;
+      let nextActive = targets[0];
+
+      targets.forEach((item) => {
+        if (item.section.offsetTop <= anchor) nextActive = item;
+      });
+
+      const atDocumentEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 3;
+      if (atDocumentEnd) nextActive = targets[targets.length - 1];
+
+      setActive(nextActive, true);
+    }
+
+    function scheduleUpdate() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateActiveNavigation);
+    }
+
+    targets.forEach((item) => {
+      item.link.addEventListener("click", () => setActive(item, true));
+    });
+
+    updateActiveNavigation();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    window.addEventListener("hashchange", scheduleUpdate);
+    if (document.fonts?.ready) document.fonts.ready.then(scheduleUpdate).catch(() => {});
+  }
+
+  bindActiveNavigation();
+
   const revealNodes = [...document.querySelectorAll(".reveal")];
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealNodes.forEach((node) => node.classList.add("is-visible"));
