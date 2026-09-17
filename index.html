@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Identity-Aware Prototype Regularization (IAPR) for Text-Based Person Search — a lightweight training-time regularizer with no inference-time overhead." />
-  <meta name="theme-color" content="#fbfaf7" />
+  <meta name="theme-color" content="#991b1b" />
   <title>IAPR — Identity-Aware Prototype Regularization</title>
   <link rel="icon" href="assets/branding/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
@@ -19,6 +19,7 @@
       <span class="brand-text">Identity-Aware Prototype Regularization</span>
     </a>
     <div class="nav-links">
+      <a href="#overview">Overview</a>
       <a href="#hard-negatives">Hard negatives</a>
       <a href="#method">IAPR</a>
       <a class="nav-cta" href="#qualitative">Qualitative</a>
@@ -35,7 +36,7 @@
         <h1>Identity-Aware <span class="accent">Prototype Regularization</span></h1>
         <p class="hero-subtitle"><strong>Remember identity during training.</strong> Retrieve exactly as before.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#hard-negatives">Explore the demo ↓</a>
+          <a class="button primary" href="#overview">Start with the overview ↓</a>
           <a class="button" href="#qualitative">Browse retrieval examples</a>
         </div>
         <div class="hero-stats" aria-label="Project highlights">
@@ -44,25 +45,33 @@
           <div class="hero-stat"><b>0</b> inference modules added</div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="hero-visual reveal" aria-label="A target and a visually similar hard negative">
-        <div class="hero-query-card">
-          <span>Text query</span>
-          dark green hooded jacket · black pants · white sneakers · black backpack · beige tote
-        </div>
-        <div class="hero-compare">
-          <figure class="hero-person target">
-            <img src="assets/examples/target.png" alt="True target pedestrian matching the query" />
-            <figcaption><b>True target</b><span>all details match</span></figcaption>
-          </figure>
-          <div class="hero-vs" aria-hidden="true">vs.</div>
-          <figure class="hero-person negative">
-            <img src="assets/examples/hn_2.png" alt="Hard negative with a similar overall appearance but a jacket mismatch" />
-            <figcaption><b>Hard negative</b><span>same look, wrong jacket details</span></figcaption>
-          </figure>
-        </div>
-        <div class="hero-takeaway">Attribute-compatible ≠ identity-correct</div>
+  <section id="overview" class="section overview-section" aria-labelledby="overviewTitle">
+    <header class="overview-heading reveal">
+      <p class="section-kicker">Overview</p>
+      <h2 class="section-title" id="overviewTitle">When look-alikes are convincing, identity has to do the separating.</h2>
+    </header>
+
+    <div class="overview-tldr reveal" aria-label="TL;DR">
+      <span class="overview-tldr-label">TL;DR</span>
+      <p><strong>A convincing match can still be the wrong identity.</strong><br />
+      <strong>Training with persistent identity prototypes sharpens separation from hard look-alikes—then adds nothing at inference.</strong></p>
+    </div>
+
+    <figure class="overview-hero-figure reveal">
+      <div class="overview-figure-kicker">Motivation</div>
+      <img src="assets/overview/spidey.png" alt="Three visually similar red-and-blue suited figures pointing at one another" />
+      <figcaption>Several candidates can look equally convincing—yet identity allows only one correct match.</figcaption>
+    </figure>
+
+    <div class="overview-video reveal" aria-labelledby="videoOverviewTitle">
+      <div class="overview-video-head">
+        <p class="section-kicker">Video Overview</p>
+        <h3 id="videoOverviewTitle">A short walkthrough of the idea.</h3>
       </div>
+      <div class="overview-video-slot" aria-label="Video overview placeholder"></div>
     </div>
   </section>
 

@@ -2,11 +2,11 @@
   --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
-  --bg: #fbfaf7;
+  --bg: #fffafa;
   --bg-elevated: #ffffff;
   --surface: #ffffff;
-  --surface-soft: #f4f2ec;
-  --surface-accent: #f0edff;
+  --surface-soft: #f8f3f2;
+  --surface-accent: #fff0f0;
   --surface-blue: #edf5ff;
   --surface-warm: #fff5e8;
   --surface-green: #eef9f3;
@@ -18,9 +18,9 @@
   --line: #e3e0d8;
   --line-strong: #cbc7bd;
 
-  --accent: #6e57d9;
-  --accent-strong: #553cc4;
-  --accent-soft: #ece8ff;
+  --accent: #c62828;
+  --accent-strong: #991b1b;
+  --accent-soft: #feecec;
   --visual: #4f86e8;
   --visual-soft: #eaf2ff;
   --textual: #e89445;
