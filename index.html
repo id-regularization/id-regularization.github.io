@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Identity-Aware Prototype Regularization (IAPR) for Text-Based Person Search — a lightweight training-time regularizer with no inference-time overhead." />
+  <meta name="theme-color" content="#fbfaf7" />
+  <title>IAPR — Identity-Aware Prototype Regularization</title>
+  <link rel="icon" href="assets/branding/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="site-nav" aria-label="Primary navigation">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="IAPR home">
+      <span class="brand-mark" aria-hidden="true">ID</span>
+      <span class="brand-text">Identity-Aware Prototype Regularization</span>
+    </a>
+    <div class="nav-links">
+      <a href="#hard-negatives">Hard negatives</a>
+      <a href="#method">IAPR</a>
+      <a class="nav-cta" href="#qualitative">Qualitative</a>
+      <a href="#evidence">Evidence</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main" class="page-shell">
+  <section id="top" class="section hero">
+    <div class="hero-grid">
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> Text-Based Person Search · Training-time regularization</div>
+        <h1>Identity-Aware <span class="accent">Prototype Regularization</span></h1>
+        <p class="hero-subtitle"><strong>Remember identity during training.</strong> Retrieve exactly as before.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#hard-negatives">Explore the demo ↓</a>
+          <a class="button" href="#qualitative">Browse retrieval examples</a>
+        </div>
+        <div class="hero-stats" aria-label="Project highlights">
+          <div class="hero-stat"><b>5</b> retrievers</div>
+          <div class="hero-stat"><b>3</b> benchmarks</div>
+          <div class="hero-stat"><b>0</b> inference modules added</div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal" aria-label="A target and a visually similar hard negative">
+        <div class="hero-query-card">
+          <span>Text query</span>
+          dark green hooded jacket · black pants · white sneakers · black backpack · beige tote
+        </div>
+        <div class="hero-compare">
+          <figure class="hero-person target">
+            <img src="assets/examples/target.png" alt="True target pedestrian matching the query" />
+            <figcaption><b>True target</b><span>all details match</span></figcaption>
+          </figure>
+          <div class="hero-vs" aria-hidden="true">vs.</div>
+          <figure class="hero-person negative">
+            <img src="assets/examples/hn_2.png" alt="Hard negative with a similar overall appearance but a jacket mismatch" />
+            <figcaption><b>Hard negative</b><span>same look, wrong jacket details</span></figcaption>
+          </figure>
+        </div>
+        <div class="hero-takeaway">Attribute-compatible ≠ identity-correct</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hard-negatives" class="section">
+    <header class="section-header reveal">
+      <p class="section-kicker">Why identity matters</p>
+      <h2 class="section-title">Hard negatives can look almost right.</h2>
+      <p class="section-lead">The target and distractors below share the same overall appearance. The difference can come down to a backpack, a zipper, shoe construction, hairstyle, or which hand carries a tote.</p>
+    </header>
+
+    <div class="hn-demo reveal">
+      <aside class="hn-query-panel">
+        <span class="panel-label">Query</span>
+        <p>A young woman with shoulder-length dark hair wears a dark green hooded jacket, black straight-leg pants, and white sneakers. She carries a small black backpack and holds a beige tote bag in her left hand.</p>
+        <div class="shared-cues" aria-label="Shared visual cues">
+          <span>green jacket</span><span>black pants</span><span>white shoes</span><span>black backpack</span><span>beige tote</span>
+        </div>
+      </aside>
+
+      <div class="hn-stage">
+        <div class="hn-grid" role="list" aria-label="True target and hard negatives">
+          <button class="hn-card is-selected is-target" type="button" data-hn="target" aria-pressed="true">
+            <span class="hn-badge">Target</span>
+            <img src="assets/examples/target.png" alt="True target" />
+            <span class="hn-card-copy"><strong>True target</strong><small>matches all query cues</small></span>
+          </button>
+          <button class="hn-card" type="button" data-hn="hn1" aria-pressed="false">
+            <span class="hn-badge">HN 1</span>
+            <img src="assets/examples/hn_1.png" alt="Hard negative 1 with a backpack mismatch" />
+            <span class="hn-card-copy"><strong>Backpack</strong><small>subtle mismatch</small></span>
+          </button>
+          <button class="hn-card" type="button" data-hn="hn2" aria-pressed="false">
+            <span class="hn-badge">HN 2</span>
+            <img src="assets/examples/hn_2.png" alt="Hard negative 2 with a jacket mismatch" />
+            <span class="hn-card-copy"><strong>Jacket</strong><small>subtle mismatch</small></span>
+          </button>
+          <button class="hn-card" type="button" data-hn="hn3" aria-pressed="false">
+            <span class="hn-badge">HN 3</span>
+            <img src="assets/examples/hn_3.png" alt="Hard negative 3 with a shoe mismatch" />
+            <span class="hn-card-copy"><strong>Shoes</strong><small>subtle mismatch</small></span>
+          </button>
+          <button class="hn-card" type="button" data-hn="hn4" aria-pressed="false">
+            <span class="hn-badge">HN 4</span>
+            <img src="assets/examples/hn_4.png" alt="Hard negative 4 with hairstyle and tote-side mismatches" />
+            <span class="hn-card-copy"><strong>Hair + tote side</strong><small>subtle mismatch</small></span>
+          </button>
+        </div>
+
+        <div class="hn-detail" aria-live="polite">
+          <div>
+            <span class="panel-label" id="hnDetailKicker">True target</span>
+            <h3 id="hnDetailTitle">All query-grounding details match.</h3>
+          </div>
+          <p id="hnDetailBody">Shoulder-length straight dark hair, zipped hooded jacket with subtle side pockets, plain white low-top sneakers, a small black backpack with thin straps, and a beige tote held in the left hand.</p>
+          <div class="hn-diff" id="hnDiff"><span class="diff-good">✓ Identity-consistent reference</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-takeaway reveal"><b>Takeaway.</b> A hard negative may satisfy the dominant description while differing only in the identity-grounding details that decide the match.</div>
+  </section>
+
+  <section id="method" class="section">
+    <header class="section-header reveal">
+      <p class="section-kicker">What IAPR does</p>
+      <h2 class="section-title">Turn identity into a persistent training reference.</h2>
+      <p class="section-lead">The core idea is organized as four training-time steps, from persistent identity references to hard-negative separation.</p>
+    </header>
+
+    <div class="method-shell reveal">
+      <div class="method-toolbar" role="tablist" aria-label="IAPR stages">
+        <button class="method-step" role="tab" aria-selected="true" data-stage="remember"><span class="step-number">01</span><span class="step-label">Remember</span></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="assign"><span class="step-number">02</span><span class="step-label">Assign</span></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="translate"><span class="step-number">03</span><span class="step-label">Translate</span></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="separate"><span class="step-number">04</span><span class="step-label">Separate</span></button>
+      </div>
+
+      <div class="method-body">
+        <div class="method-canvas" id="methodCanvas" data-stage="remember" aria-live="polite">
+          <div class="method-flow">
+            <div class="method-node observation-node">
+              <span class="node-label">Training pair</span>
+              <div class="modality-pair"><span class="visual-pill">image</span><span class="text-pill">text</span></div>
+              <strong>ID 17</strong>
+            </div>
+            <div class="flow-connector" aria-hidden="true">→</div>
+            <div class="method-node memory-node">
+              <span class="node-label">Identity-owned memory</span>
+              <div class="memory-row active"><span>ID 17</span><i></i><i></i><i></i></div>
+              <div class="memory-row muted"><span>ID 08</span><i></i><i></i><i></i></div>
+              <div class="memory-row muted"><span>ID 31</span><i></i><i></i><i></i></div>
+            </div>
+            <div class="flow-connector" aria-hidden="true">→</div>
+            <div class="method-node target-node">
+              <span class="node-label">Same-space target</span>
+              <div class="target-orbit"><span class="positive-dot"></span><span class="negative-dot"></span><span class="margin-arrow">↔</span></div>
+              <strong>local identity competition</strong>
+            </div>
+          </div>
+        </div>
+
+        <aside class="method-copy">
+          <span class="interaction-hint">Click a stage to follow the training signal.</span>
+          <h3 id="stageTitle">Persistent identity prototypes</h3>
+          <p id="stageBody">IAPR keeps multiple visual and textual prototype slots for every training identity, so identity-level references survive beyond the current mini-batch.</p>
+          <div class="method-takeaway" id="stageTakeaway">Remember the identity across mini-batches.</div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="training-strip reveal" aria-label="IAPR is removed at inference">
+      <div class="training-side"><b>Training</b><span>Base retriever + IAPR auxiliary branch</span></div>
+      <div class="scissors" aria-hidden="true">✂</div>
+      <div class="training-side"><b>Inference</b><span>Original base retriever and original scoring function</span></div>
+    </div>
+  </section>
+
+  <section id="qualitative" class="section qualitative-section">
+    <header class="section-header reveal">
+      <p class="section-kicker">Interactive qualitative explorer</p>
+      <h2 class="section-title">Inspect retrieval changes one query at a time.</h2>
+      <p class="section-lead">Choose a retriever, benchmark, and case. The explorer keeps the same query visible while comparing the original retriever with the same retriever trained using IAPR.</p>
+    </header>
+
+    <div class="qual-explorer reveal" data-qual-explorer>
+      <div class="qual-interaction-hint" role="note">
+        <span>↗ EXPLORE</span>
+        <p>Switch the retriever or dataset, then select Case 01–03 to inspect the corresponding query and Top-5 rankings.</p>
+      </div>
+
+      <div class="qual-control-bar">
+        <div class="qual-control-group">
+          <span class="qual-control-label">Retriever</span>
+          <div class="qual-tabs" role="tablist" aria-label="Qualitative retriever">
+            <button type="button" role="tab" aria-selected="true" data-qual-retriever="clip">CLIP</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-retriever="itself">ITSELF</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-retriever="irra">IRRA</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-retriever="rde">RDE</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-retriever="dm-adapter">DM-Adapter</button>
+          </div>
+        </div>
+        <div class="qual-control-group qual-control-group--dataset">
+          <span class="qual-control-label">Benchmark</span>
+          <div class="qual-tabs qual-tabs--dataset" role="tablist" aria-label="Qualitative benchmark">
+            <button type="button" role="tab" aria-selected="true" data-qual-dataset="cuhk">CUHK-PEDES</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-dataset="icfg">ICFG-PEDES</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-dataset="rstp">RSTPReid</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="qual-stage" data-qual-stage>
+        <header class="qual-stage-head">
+          <div>
+            <p class="qual-stage-kicker" data-qual-stage-kicker>CLIP · CUHK-PEDES</p>
+            <h3>Same query. Same gallery. Better identity discrimination.</h3>
+          </div>
+          <button class="qual-original-button" type="button" data-qual-open-original>View full figure ↗</button>
+        </header>
+
+        <div class="qual-overview-shell">
+          <button class="qual-overview-button" type="button" data-qual-open-original aria-label="Open the complete qualitative figure">
+            <img src="assets/qualitative/[re]clip-cuhk.png" alt="CLIP qualitative retrieval comparison on CUHK-PEDES" data-qual-overview-image />
+            <span class="qual-row-focus" data-qual-row-focus aria-hidden="true"><b>CASE 01</b></span>
+          </button>
+          <p class="qual-overview-hint"><span aria-hidden="true">↗</span> The highlighted row is expanded below. Click the overview to inspect the full figure.</p>
+        </div>
+
+        <div class="qual-case-toolbar">
+          <div class="qual-case-picker" role="tablist" aria-label="Qualitative case">
+            <span>Case</span>
+            <button type="button" role="tab" aria-selected="true" data-qual-case="0">01</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-case="1">02</button>
+            <button type="button" role="tab" aria-selected="false" data-qual-case="2">03</button>
+          </div>
+        </div>
+
+        <div class="qual-focus-grid">
+          <article class="qual-query-panel">
+            <div class="qual-panel-label"><span>Query</span><small>selected case</small></div>
+            <div class="qual-crop qual-crop--query" data-qual-crop="query">
+              <img alt="Selected text query crop" data-qual-crop-image draggable="false" />
+            </div>
+          </article>
+
+          <div class="qual-ranking-story">
+            <article class="qual-ranking-panel qual-ranking-panel--base">
+              <div class="qual-ranking-head">
+                <div>
+                  <span class="qual-ranking-eyebrow">Original retriever</span>
+                  <strong data-qual-base-label>CLIP</strong>
+                </div>
+                <span class="qual-ranking-state">Top-5 retrieval</span>
+              </div>
+              <div class="qual-crop qual-crop--ranking" data-qual-crop="base">
+                <img alt="Selected base-retriever Top-5 ranking crop" data-qual-crop-image draggable="false" />
+              </div>
+            </article>
+
+            <div class="qual-training-bridge" aria-label="IAPR changes training while the inference pipeline remains unchanged">
+              <span class="qual-training-bridge__line" aria-hidden="true"></span>
+              <div><strong>TRAINED WITH IAPR</strong><small>same inference pipeline</small></div>
+              <span class="qual-training-bridge__line" aria-hidden="true"></span>
+            </div>
+
+            <article class="qual-ranking-panel qual-ranking-panel--iapr">
+              <div class="qual-ranking-head">
+                <div>
+                  <span class="qual-ranking-eyebrow">+ IAPR</span>
+                  <strong data-qual-iapr-label>CLIP–IAPR</strong>
+                </div>
+                <span class="qual-ranking-state qual-ranking-state--accent">Top-5 retrieval</span>
+              </div>
+              <div class="qual-crop qual-crop--ranking" data-qual-crop="iapr">
+                <img alt="Selected IAPR-trained Top-5 ranking crop" data-qual-crop-image draggable="false" />
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <footer class="qual-stage-footer">
+          <div class="qual-legend" aria-label="Qualitative figure legend">
+            <span><i class="legend-dot correct"></i> correct identity</span>
+            <span><i class="legend-dot wrong"></i> identity-wrong</span>
+          </div>
+          <p>Selected examples illustrate possible ranking changes; they are not a frequency estimate.</p>
+        </footer>
+        <p class="sr-only" aria-live="polite" data-qual-status></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence" class="section">
+    <header class="section-header reveal">
+      <p class="section-kicker">Evidence snapshot</p>
+      <h2 class="section-title">The gains are consistent — and the hard negatives move.</h2>
+      <p class="section-lead">Two diagnostics summarize how identity ambiguity and hard-negative competition change in the learned retrieval space.</p>
+    </header>
+
+    <div class="metric-strip reveal" aria-label="Main quantitative results">
+      <div class="metric-card"><strong>15 / 15</strong><span>retriever × dataset settings improve in both R@1 and mAP</span></div>
+      <div class="metric-card"><strong>+1.09</strong><span>average R@1 points</span></div>
+      <div class="metric-card"><strong>+0.78</strong><span>average mAP points</span></div>
+      <div class="metric-card"><strong>0</strong><span>added inference modules</span></div>
+    </div>
+
+    <div class="evidence-grid">
+      <article class="evidence-card reveal">
+        <div class="evidence-copy">
+          <span class="panel-label">Identity-level ambiguity</span>
+          <h3>Fewer queries remain near the identity decision boundary.</h3>
+          <p>At the near-margin thresholds used in the main analysis, ambiguity reduction is positive across every retriever–dataset setting.</p>
+          <div class="evidence-stat"><b>30 / 30</b><span>near-margin model × dataset × threshold settings reduce ambiguity</span></div>
+        </div>
+        <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/ambiguity.png" data-lightbox-alt="Identity-level ambiguity reduction plot across retrievers and datasets">
+          <img src="assets/paper_figures/ambiguity.png" alt="Identity-level ambiguity reduction plot across retrievers and datasets" />
+          <span>Click to enlarge ↗</span>
+        </button>
+      </article>
+
+      <article class="evidence-card reverse reveal">
+        <div class="evidence-copy">
+          <span class="panel-label">Score-shift decomposition</span>
+          <h3>Hard-negative suppression is a major correction mechanism.</h3>
+          <p>For base-misranked queries, IAPR usually enlarges the positive–negative margin through hard-negative suppression and direct positive–negative separation, rather than uniform positive amplification.</p>
+          <div class="evidence-stat"><b>≈61–65%</b><span>of base-misranked queries fall into margin-enlarging patterns, averaged by dataset</span></div>
+        </div>
+        <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/shift_decomposition.png" data-lightbox-alt="Score-shift decomposition for base-misranked queries">
+          <img src="assets/paper_figures/shift_decomposition.png" alt="Score-shift decomposition for base-misranked queries" />
+          <span>Click to enlarge ↗</span>
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-compact" id="closing">
+    <div class="closing-card reveal">
+      <div>
+        <h2>Remember identity during training. Retrieve exactly as before.</h2>
+        <p>IAPR adds persistent identity-aware references during optimization, then removes the auxiliary branch at inference so retrieval continues with the original base-retriever scoring function.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>IAPR · Identity-Aware Prototype Regularization for Text-Based Person Search</span>
+  <span>Interactive project demo</span>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-backdrop" type="button" data-close-lightbox aria-label="Close full-resolution viewer"></button>
+  <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label="Full-resolution figure viewer">
+    <button class="lightbox-close" type="button" data-close-lightbox aria-label="Close">×</button>
+    <img id="lightboxImage" src="" alt="" />
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
