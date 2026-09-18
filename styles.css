@@ -116,7 +116,8 @@ button { color: inherit; }
   box-shadow: 0 1px 2px rgba(22,24,29,.04), 0 5px 16px rgba(22,24,29,.035);
 }
 
-.page-shell { overflow: hidden; }
+.page-shell { overflow: visible; }
+body { overflow-x: clip; }
 .section {
   width: min(calc(100% - 2rem), var(--page));
   margin: 0 auto;
@@ -1750,11 +1751,13 @@ button { color: inherit; }
   align-items: start;
 }
 
+/* Each beat owns enough vertical scroll space for the sticky visual to remain
+   pinned through the full three-step story. */
 .motivation-narrative { display: grid; gap: 0; }
 .motivation-beat {
   appearance: none;
   position: relative;
-  min-height: 54vh;
+  min-height: 70vh;
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 1rem;
@@ -1821,10 +1824,17 @@ button { color: inherit; }
 .motivation-beat:not(.is-active) .motivation-beat-copy strong,
 .motivation-beat:not(.is-active) .motivation-beat-copy > span { opacity: .62; }
 
-.motivation-stage-wrap { position: relative; min-width: 0; }
-.motivation-stage {
+.motivation-stage-wrap {
   position: sticky;
-  top: 92px;
+  top: 84px;
+  align-self: start;
+  min-width: 0;
+  height: max-content;
+  z-index: 2;
+}
+.motivation-stage {
+  position: relative;
+  top: auto;
   min-height: min(760px, calc(100vh - 116px));
   overflow: hidden;
   border: 1px solid #ddd8ce;
@@ -1853,7 +1863,8 @@ button { color: inherit; }
   visibility: hidden;
   pointer-events: none;
   transform: translateY(10px) scale(.995);
-  transition: opacity .28s ease, transform .28s ease, visibility 0s linear .28s;
+  transition: opacity .24s ease, transform .32s cubic-bezier(.22,.8,.28,1), visibility 0s linear .32s;
+  will-change: opacity, transform;
 }
 .motivation-scene.is-active {
   position: relative;
@@ -2115,6 +2126,7 @@ button { color: inherit; }
 
 @media (max-width: 980px) {
   .motivation-story-shell { grid-template-columns: 1fr; gap: 1rem; }
+  .motivation-stage-wrap { position: relative; top: auto; height: auto; z-index: auto; }
   .motivation-narrative { grid-template-columns: repeat(3, minmax(190px, 1fr)); gap: .55rem; overflow-x: auto; padding-bottom: .25rem; scroll-snap-type: x proximity; }
   .motivation-beat { min-height: 0; grid-template-columns: 34px minmax(145px, 1fr); gap: .65rem; align-content: start; padding: .8rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.68); scroll-snap-align: start; }
   .motivation-beat:last-child { border-bottom: 1px solid var(--line); }

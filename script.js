@@ -125,14 +125,67 @@
     motivationDetailFigures.forEach((figure) => figure.dataset.focusCue = data.focus);
   }
 
+  const motivationDesktop = window.matchMedia("(min-width: 981px)");
+  const motivationReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let motivationScrollFrame = 0;
+
+  function getMotivationScrollAnchor() {
+    const navHeight = document.querySelector(".site-nav")?.getBoundingClientRect().height || 0;
+    const usable = Math.max(0, window.innerHeight - navHeight);
+    return navHeight + usable * 0.46;
+  }
+
+  function syncMotivationBeatFromScroll() {
+    motivationScrollFrame = 0;
+    if (!motivationStory || !motivationBeats.length || !motivationDesktop.matches) return;
+
+    const anchor = getMotivationScrollAnchor();
+    let bestBeat = motivationBeats[0];
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    motivationBeats.forEach((beat) => {
+      const rect = beat.getBoundingClientRect();
+      // Prefer the beat intersected by the reading anchor. Otherwise choose
+      // the nearest beat center. This avoids IntersectionObserver threshold gaps.
+      const distance = rect.top <= anchor && rect.bottom >= anchor
+        ? 0
+        : Math.abs((rect.top + rect.bottom) / 2 - anchor);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestBeat = beat;
+      }
+    });
+
+    setMotivationBeat(bestBeat.dataset.motivationBeat);
+  }
+
+  function scheduleMotivationScrollSync() {
+    if (motivationScrollFrame) return;
+    motivationScrollFrame = window.requestAnimationFrame(syncMotivationBeatFromScroll);
+  }
+
   motivationBeats.forEach((beat, index) => {
-    beat.addEventListener("click", () => setMotivationBeat(beat.dataset.motivationBeat));
+    beat.addEventListener("click", () => {
+      setMotivationBeat(beat.dataset.motivationBeat);
+      if (motivationDesktop.matches) {
+        beat.scrollIntoView({
+          behavior: motivationReduceMotion ? "auto" : "smooth",
+          block: "center"
+        });
+      }
+    });
     beat.addEventListener("keydown", (event) => {
       if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const forward = ["ArrowDown", "ArrowRight"].includes(event.key);
       const next = motivationBeats[(index + (forward ? 1 : -1) + motivationBeats.length) % motivationBeats.length];
       setMotivationBeat(next.dataset.motivationBeat, { focus: true });
+      if (motivationDesktop.matches) {
+        next.scrollIntoView({
+          behavior: motivationReduceMotion ? "auto" : "smooth",
+          block: "center"
+        });
+      }
     });
   });
 
@@ -167,17 +220,11 @@
   if (motivationStory && motivationBeats.length) {
     setMotivationBeat(1);
     setMotivationReveal(false);
-
-    if ("IntersectionObserver" in window) {
-      const beatObserver = new IntersectionObserver((entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (!visible) return;
-        setMotivationBeat(visible.target.dataset.motivationBeat);
-      }, { rootMargin: "-28% 0px -42% 0px", threshold: [0.15, 0.35, 0.6] });
-      motivationBeats.forEach((beat) => beatObserver.observe(beat));
-    }
+    syncMotivationBeatFromScroll();
+    window.addEventListener("scroll", scheduleMotivationScrollSync, { passive: true });
+    window.addEventListener("resize", scheduleMotivationScrollSync);
+    motivationDesktop.addEventListener?.("change", scheduleMotivationScrollSync);
+    if (document.fonts?.ready) document.fonts.ready.then(scheduleMotivationScrollSync).catch(() => {});
   }
 
   const methodReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
