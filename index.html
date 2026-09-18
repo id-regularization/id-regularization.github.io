@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Identity-Aware Prototype Regularization (IAPR) for Text-Based Person Search — a lightweight training-time regularizer with no inference-time overhead." />
+  <meta name="description" content="Identity-Aware Prototype Regularization (IAPR) for Text-Based Person Search — persistent identity references during training, no inference-time overhead." />
   <meta name="theme-color" content="#991b1b" />
   <title>IAPR — Identity-Aware Prototype Regularization</title>
   <link rel="icon" href="assets/branding/favicon.svg" type="image/svg+xml" />
@@ -19,11 +19,12 @@
       <span class="brand-text">Identity-Aware Prototype Regularization</span>
     </a>
     <div class="nav-links" id="primaryNav">
-      <a href="#top" data-nav-label="overview">Overview</a>
-      <a href="#hard-negatives" data-nav-label="hard-negatives">Hard negatives</a>
-      <a href="#method" data-nav-label="iapr">IAPR</a>
-      <a href="#qualitative" data-nav-label="qualitative">Qualitative</a>
-      <a href="#evidence" data-nav-label="evidence">Evidence</a>
+      <a href="#top">Overview</a>
+      <a href="#motivation">Motivation</a>
+      <a href="#method">IAPR</a>
+      <a href="#results">Results</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#qualitative">Examples</a>
     </div>
   </div>
 </nav>
@@ -39,47 +40,23 @@
 
         <nav class="paper-links" aria-label="Project resources">
           <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="arXiv">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="M4.25 1.75h5.25L13 5.25v9H4.25z"></path>
-              <path d="M9.5 1.75v3.5H13"></path>
-              <path d="M6 11.15 7.35 7.7l1.35 3.45M6.45 10.05h1.8"></path>
-            </svg>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16"><path d="M4.25 1.75h5.25L13 5.25v9H4.25z"></path><path d="M9.5 1.75v3.5H13"></path><path d="M6 11.15 7.35 7.7l1.35 3.45M6.45 10.05h1.8"></path></svg>
             <span>arXiv</span>
           </a>
           <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Code">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="m6.1 4.55-3.35 3.45 3.35 3.45"></path>
-              <path d="m9.9 4.55 3.35 3.45-3.35 3.45"></path>
-              <path d="m8.95 3.55-1.9 8.9"></path>
-            </svg>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16"><path d="m6.1 4.55-3.35 3.45 3.35 3.45"></path><path d="m9.9 4.55 3.35 3.45-3.35 3.45"></path><path d="m8.95 3.55-1.9 8.9"></path></svg>
             <span>Code</span>
           </a>
           <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="BibTeX">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="M4.25 1.75h7.5v12.5h-7.5z"></path>
-              <path d="M6.15 8.8h1.65v2H6.15z"></path>
-              <path d="M9.05 8.8h1.65v2H9.05z"></path>
-              <path d="M6.35 6.05h3.55"></path>
-            </svg>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16"><path d="M4.25 1.75h7.5v12.5h-7.5z"></path><path d="M6.15 8.8h1.65v2H6.15z"></path><path d="M9.05 8.8h1.65v2H9.05z"></path><path d="M6.35 6.05h3.55"></path></svg>
             <span>BibTeX</span>
           </a>
           <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Blog">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="M3.25 2.75h9.5v10.5h-9.5z"></path>
-              <path d="M5.05 5.1h5.9"></path>
-              <path d="M5.05 7.1h5.9"></path>
-              <path d="M5.05 9.1h3.6"></path>
-            </svg>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16"><path d="M3.25 2.75h9.5v10.5h-9.5z"></path><path d="M5.05 5.1h5.9"></path><path d="M5.05 7.1h5.9"></path><path d="M5.05 9.1h3.6"></path></svg>
             <span>Blog</span>
           </a>
           <a href="https://id-regularization.github.io/" target="_blank" rel="noreferrer noopener" aria-label="Slides">
-            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="M3.4 4.1h9.2v6.1H3.4z"></path>
-              <path d="M5.1 10.2v1.6"></path>
-              <path d="M10.9 10.2v1.6"></path>
-              <path d="M4.7 12.2h6.6"></path>
-              <path d="M5.05 6.1h5.15"></path>
-            </svg>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16"><path d="M3.4 4.1h9.2v6.1H3.4z"></path><path d="M5.1 10.2v1.6"></path><path d="M10.9 10.2v1.6"></path><path d="M4.7 12.2h6.6"></path><path d="M5.05 6.1h5.15"></path></svg>
             <span>Slides</span>
           </a>
         </nav>
@@ -116,133 +93,389 @@
     </div>
   </section>
 
-  <section id="hard-negatives" class="section">
+  <section id="motivation" class="section story-section motivation-v2">
     <header class="section-header reveal">
-      <p class="section-kicker">Why identity matters</p>
-      <h2 class="section-title">Hard negatives can look almost right.</h2>
-      <p class="section-lead">The target and distractors below share the same overall appearance. The difference can come down to a backpack, a zipper, shoe construction, hairstyle, or which hand carries a tote.</p>
+      <p class="section-kicker">Motivation</p>
+      <h2 class="section-title">A visually convincing match can still be the wrong person.</h2>
+      <p class="section-lead">Many candidates can share the dominant description. Text-based person search still has to preserve the identity-level evidence that separates the true person from plausible look-alikes.</p>
     </header>
 
-    <div class="hn-demo reveal">
-      <aside class="hn-query-panel">
-        <span class="panel-label">Query</span>
+    <div class="motivation-act motivation-act-challenge reveal">
+      <div class="motivation-act-head">
+        <div>
+          <span class="act-index">01 · Retrieval challenge</span>
+          <h3>Which one is the person?</h3>
+        </div>
+        <p>The description matches all five candidates at a glance. The decision lives in smaller details.</p>
+      </div>
+
+      <aside class="motivation-query" aria-label="Text query">
+        <span class="motivation-query-label">Text query</span>
         <p>A young woman with shoulder-length dark hair wears a dark green hooded jacket, black straight-leg pants, and white sneakers. She carries a small black backpack and holds a beige tote bag in her left hand.</p>
-        <div class="shared-cues" aria-label="Shared visual cues">
-          <span>green jacket</span><span>black pants</span><span>white shoes</span><span>black backpack</span><span>beige tote</span>
+        <div class="motivation-query-cues" aria-label="Dominant shared cues">
+          <span>dark hair</span><span>green jacket</span><span>black pants</span><span>white shoes</span><span>black backpack</span><span>beige tote</span>
         </div>
       </aside>
 
-      <div class="hn-stage">
-        <div class="hn-grid" role="list" aria-label="True target and hard negatives">
-          <button class="hn-card is-selected is-target" type="button" data-hn="target" aria-pressed="true">
-            <span class="hn-badge">Target</span>
-            <img src="assets/examples/target.png" alt="True target" />
-            <span class="hn-card-copy"><strong>True target</strong><small>matches all query cues</small></span>
-          </button>
-          <button class="hn-card" type="button" data-hn="hn1" aria-pressed="false">
-            <span class="hn-badge">HN 1</span>
-            <img src="assets/examples/hn_1.png" alt="Hard negative 1 with a backpack mismatch" />
-            <span class="hn-card-copy"><strong>Backpack</strong><small>subtle mismatch</small></span>
-          </button>
-          <button class="hn-card" type="button" data-hn="hn2" aria-pressed="false">
-            <span class="hn-badge">HN 2</span>
-            <img src="assets/examples/hn_2.png" alt="Hard negative 2 with a jacket mismatch" />
-            <span class="hn-card-copy"><strong>Jacket</strong><small>subtle mismatch</small></span>
-          </button>
-          <button class="hn-card" type="button" data-hn="hn3" aria-pressed="false">
-            <span class="hn-badge">HN 3</span>
-            <img src="assets/examples/hn_3.png" alt="Hard negative 3 with a shoe mismatch" />
-            <span class="hn-card-copy"><strong>Shoes</strong><small>subtle mismatch</small></span>
-          </button>
-          <button class="hn-card" type="button" data-hn="hn4" aria-pressed="false">
-            <span class="hn-badge">HN 4</span>
-            <img src="assets/examples/hn_4.png" alt="Hard negative 4 with hairstyle and tote-side mismatches" />
-            <span class="hn-card-copy"><strong>Hair + tote side</strong><small>subtle mismatch</small></span>
-          </button>
-        </div>
+      <div class="identity-candidate-grid" aria-label="True target and four hard negatives">
+        <article class="identity-candidate-card identity-target-card">
+          <span class="identity-candidate-badge">True target</span>
+          <img src="assets/examples/target.png" alt="True target person matching the query" />
+          <div class="identity-candidate-copy"><strong>Target identity</strong><small>all described cues align</small></div>
+        </article>
 
-        <div class="hn-detail" aria-live="polite">
-          <div>
-            <span class="panel-label" id="hnDetailKicker">True target</span>
-            <h3 id="hnDetailTitle">All query-grounding details match.</h3>
-          </div>
-          <p id="hnDetailBody">Shoulder-length straight dark hair, zipped hooded jacket with subtle side pockets, plain white low-top sneakers, a small black backpack with thin straps, and a beige tote held in the left hand.</p>
-          <div class="hn-diff" id="hnDiff"><span class="diff-good">✓ Identity-consistent reference</span></div>
+        <button class="identity-candidate-card identity-hn-card" type="button" data-motivation-hn="hn1" aria-pressed="false">
+          <span class="identity-candidate-badge">Look-alike 1</span>
+          <img src="assets/examples/hn_1.png" alt="Hard negative with a backpack-detail mismatch" />
+          <div class="identity-candidate-copy"><strong>Backpack</strong><small>subtle construction change</small></div>
+        </button>
+        <button class="identity-candidate-card identity-hn-card" type="button" data-motivation-hn="hn2" aria-pressed="false">
+          <span class="identity-candidate-badge">Look-alike 2</span>
+          <img src="assets/examples/hn_2.png" alt="Hard negative with a jacket-detail mismatch" />
+          <div class="identity-candidate-copy"><strong>Jacket</strong><small>subtle construction change</small></div>
+        </button>
+        <button class="identity-candidate-card identity-hn-card" type="button" data-motivation-hn="hn3" aria-pressed="false">
+          <span class="identity-candidate-badge">Look-alike 3</span>
+          <img src="assets/examples/hn_3.png" alt="Hard negative with a shoe-detail mismatch" />
+          <div class="identity-candidate-copy"><strong>Shoes</strong><small>same color, different form</small></div>
+        </button>
+        <button class="identity-candidate-card identity-hn-card" type="button" data-motivation-hn="hn4" aria-pressed="false">
+          <span class="identity-candidate-badge">Look-alike 4</span>
+          <img src="assets/examples/hn_4.png" alt="Hard negative with hairstyle and tote-side mismatches" />
+          <div class="identity-candidate-copy"><strong>Hair + tote side</strong><small>two small relational cues</small></div>
+        </button>
+      </div>
+
+      <div class="identity-comparison" id="motivationComparison" aria-live="polite">
+        <div class="identity-comparison-prompt">
+          <span class="comparison-kicker" id="motivationComparisonKicker">Compare a look-alike</span>
+          <h4 id="motivationComparisonTitle">Hover or click a candidate to expose the identity-level difference.</h4>
+        </div>
+        <div class="identity-comparison-detail" id="motivationComparisonDetail">
+          <div class="comparison-side comparison-target"><span>Target</span><strong>identity-consistent details</strong></div>
+          <div class="comparison-not-equal" aria-hidden="true">≠</div>
+          <div class="comparison-side comparison-negative"><span>Look-alike</span><strong>same dominant appearance</strong></div>
+        </div>
+      </div>
+
+      <div class="identity-neighborhood" aria-label="Illustrative local retrieval neighborhood">
+        <div class="identity-neighborhood-copy">
+          <span>Local retrieval neighborhood</span>
+          <strong>They can all look close. Identity still has to separate them.</strong>
+          <small>Illustrative geometry: the point is local competition, not exact distances.</small>
+        </div>
+        <div class="identity-neighborhood-plot" aria-hidden="true">
+          <i class="neighbor-dot target" style="--x:56%;--y:48%"><b>T</b></i>
+          <i class="neighbor-dot hn1" data-neighbor-hn="hn1" style="--x:28%;--y:35%"><b>1</b></i>
+          <i class="neighbor-dot hn2" data-neighbor-hn="hn2" style="--x:72%;--y:23%"><b>2</b></i>
+          <i class="neighbor-dot hn3" data-neighbor-hn="hn3" style="--x:76%;--y:70%"><b>3</b></i>
+          <i class="neighbor-dot hn4" data-neighbor-hn="hn4" style="--x:34%;--y:72%"><b>4</b></i>
+          <span class="neighborhood-ring"></span>
         </div>
       </div>
     </div>
 
-    <div class="section-takeaway reveal"><b>Takeaway.</b> A hard negative may satisfy the dominant description while differing only in the identity-grounding details that decide the match.</div>
+    <div class="motivation-act motivation-act-supervision reveal">
+      <div class="motivation-act-head motivation-act-head-compact">
+        <div>
+          <span class="act-index">02 · What TBPS already has</span>
+          <h3>But TBPS already uses identity supervision.</h3>
+        </div>
+        <p>The gap is not a missing identity label.</p>
+      </div>
+
+      <div class="identity-supervision-grid" aria-label="Common roles of identity supervision">
+        <article class="identity-supervision-card">
+          <div class="supervision-icon classify"><i></i><i></i><i></i></div>
+          <span>Classify</span>
+          <strong>Who is this?</strong>
+          <small>Identity labels can define classification targets.</small>
+        </article>
+        <article class="identity-supervision-card">
+          <div class="supervision-icon group"><i></i><i></i><i></i></div>
+          <span>Group</span>
+          <strong>Which observations belong together?</strong>
+          <small>Same-identity samples can act as positives.</small>
+        </article>
+        <article class="identity-supervision-card">
+          <div class="supervision-icon separate"><i></i><b>↔</b><i></i></div>
+          <span>Separate</span>
+          <strong>Which identities should be apart?</strong>
+          <small>Different identities can define discriminative relations.</small>
+        </article>
+      </div>
+
+      <div class="motivation-question"><span>So what is still missing?</span><strong>An explicit observation-derived identity reference that persists across mini-batches.</strong></div>
+    </div>
+
+    <div class="motivation-act motivation-act-gap reveal">
+      <div class="motivation-act-head">
+        <div>
+          <span class="act-index">03 · The missing piece</span>
+          <h3>Training moves on. The identity reference does not stay behind.</h3>
+        </div>
+        <p>Identity can supervise each update without maintaining a persistent representative built from the observed embeddings.</p>
+      </div>
+
+      <div class="batch-persistence-story" aria-label="Identity supervision across mini-batches without a persistent observation-derived representative">
+        <article class="batch-observation-card">
+          <span class="batch-observation-tag">Batch t₁</span>
+          <div class="batch-observation-pair"><i class="batch-visual-glyph"></i><i class="batch-text-glyph"></i></div>
+          <strong>ID 17 appears</strong>
+          <small>image + caption evidence</small>
+          <div class="batch-objective-chip">identity objective</div>
+        </article>
+        <div class="batch-flow-arrow" aria-hidden="true">→</div>
+        <article class="batch-observation-card">
+          <span class="batch-observation-tag">Batch t₂</span>
+          <div class="batch-observation-pair"><i class="batch-visual-glyph alt"></i><i class="batch-text-glyph alt"></i></div>
+          <strong>ID 17 appears again</strong>
+          <small>different observation</small>
+          <div class="batch-objective-chip">identity objective</div>
+        </article>
+        <div class="batch-flow-arrow" aria-hidden="true">→</div>
+        <article class="batch-observation-card">
+          <span class="batch-observation-tag">Batch t₃</span>
+          <div class="batch-observation-pair"><i class="batch-visual-glyph third"></i><i class="batch-text-glyph third"></i></div>
+          <strong>ID 17 appears again</strong>
+          <small>another observation</small>
+          <div class="batch-objective-chip">identity objective</div>
+        </article>
+      </div>
+      <div class="missing-reference-line"><span></span><strong>No explicit observation-derived identity representative is carried forward.</strong><span></span></div>
+    </div>
+
+    <div class="motivation-act motivation-act-iapr reveal">
+      <div class="motivation-act-head">
+        <div>
+          <span class="act-index">04 · IAPR's idea</span>
+          <h3>Give each training identity a memory.</h3>
+        </div>
+        <p>Observations can change from batch to batch while their identity-owned references remain available to future updates.</p>
+      </div>
+
+      <div class="iapr-memory-reveal">
+        <div class="memory-update-source">
+          <div><span>t₁</span><i class="source-visual"></i><i class="source-text"></i></div>
+          <div><span>t₂</span><i class="source-visual alt"></i><i class="source-text alt"></i></div>
+          <div><span>t₃</span><i class="source-visual third"></i><i class="source-text third"></i></div>
+        </div>
+        <div class="memory-update-arrow" aria-hidden="true"><span>update</span><b>→</b></div>
+        <div class="identity-owned-memory-card">
+          <div class="owned-memory-head"><span class="owned-lock" aria-hidden="true">▣</span><div><strong>ID 17 memory</strong><small>owned by this identity · persists across batches</small></div></div>
+          <div class="owned-memory-lane visual"><span>visual</span><i></i><i></i><em>multiple slots</em></div>
+          <div class="owned-memory-lane textual"><span>text</span><i></i><i></i><em>multiple slots</em></div>
+        </div>
+        <div class="memory-principles">
+          <span><b>Persistent</b><small>survives the current batch</small></span>
+          <span><b>Identity-owned</b><small>another identity cannot absorb the update</small></span>
+          <span><b>Multi-slot</b><small>one person can retain heterogeneous modes</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="motivation-bridge reveal">
+      <div class="motivation-bridge-flow" aria-label="From identity label to IAPR">
+        <span>Identity label</span><b>→</b><span>ownership + updates</span><b>→</b><span>persistent reference</span><b>→</b><strong>IAPR</strong>
+      </div>
+      <p>IAPR does not replace identity supervision. It gives that supervision persistent, observation-derived references to organize around.</p>
+      <a href="#method">See how IAPR builds and uses the memory <span aria-hidden="true">↓</span></a>
+    </div>
   </section>
 
-  <section id="method" class="section">
+  <section id="method" class="section method-section">
     <header class="section-header reveal">
-      <p class="section-kicker">What IAPR does</p>
-      <h2 class="section-title">Turn identity into a persistent training reference.</h2>
-      <p class="section-lead">The core idea is organized as four training-time steps, from persistent identity references to hard-negative separation.</p>
+      <p class="section-kicker">How IAPR works</p>
+      <h2 class="section-title">Follow the training signal, not the equations.</h2>
+      <p class="section-lead">The base TBPS retriever stays intact. IAPR takes its final image and text embeddings, projects them into a lightweight prototype space, and adds four training-time operations.</p>
     </header>
+
+    <div class="method-overview reveal" aria-label="Simplified IAPR pipeline">
+      <div class="pipeline-node pipeline-base"><span>Base TBPS</span><small>image + text embeddings</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-node pipeline-project"><span>Prototype projection</span><small>lightweight heads</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-node pipeline-memory"><span>IOPM</span><small>identity-owned memory</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-node pipeline-transfer"><span>SSTT</span><small>cross-modal structure</small></div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-node pipeline-loss"><span>Identity-prototype loss</span><small>local ID competition</small></div>
+    </div>
 
     <div class="method-shell reveal">
       <div class="method-toolbar" role="tablist" aria-label="IAPR stages">
-        <button class="method-step" role="tab" aria-selected="true" data-stage="remember"><span class="step-number">01</span><span class="step-label">Remember</span></button>
-        <button class="method-step" role="tab" aria-selected="false" data-stage="assign"><span class="step-number">02</span><span class="step-label">Assign</span></button>
-        <button class="method-step" role="tab" aria-selected="false" data-stage="translate"><span class="step-number">03</span><span class="step-label">Translate</span></button>
-        <button class="method-step" role="tab" aria-selected="false" data-stage="separate"><span class="step-number">04</span><span class="step-label">Separate</span></button>
+        <button class="method-step" role="tab" aria-selected="true" data-stage="remember"><span class="step-number">01</span><span class="step-label">Remember</span><small>IOPM</small></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="restrict"><span class="step-number">02</span><span class="step-label">Restrict</span><small>IRA</small></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="transfer"><span class="step-number">03</span><span class="step-label">Transfer</span><small>SSTT</small></button>
+        <button class="method-step" role="tab" aria-selected="false" data-stage="separate"><span class="step-number">04</span><span class="step-label">Separate</span><small>L<sub>ip</sub></small></button>
       </div>
 
       <div class="method-body">
-        <div class="method-canvas" id="methodCanvas" data-stage="remember" aria-live="polite">
-          <div class="method-flow">
-            <div class="method-node observation-node">
-              <span class="node-label">Training pair</span>
-              <div class="modality-pair"><span class="visual-pill">image</span><span class="text-pill">text</span></div>
-              <strong>ID 17</strong>
-            </div>
-            <div class="flow-connector" aria-hidden="true">→</div>
-            <div class="method-node memory-node">
-              <span class="node-label">Identity-owned memory</span>
-              <div class="memory-row active"><span>ID 17</span><i></i><i></i><i></i></div>
-              <div class="memory-row muted"><span>ID 08</span><i></i><i></i><i></i></div>
-              <div class="memory-row muted"><span>ID 31</span><i></i><i></i><i></i></div>
-            </div>
-            <div class="flow-connector" aria-hidden="true">→</div>
-            <div class="method-node target-node">
-              <span class="node-label">Same-space target</span>
-              <div class="target-orbit"><span class="positive-dot"></span><span class="negative-dot"></span><span class="margin-arrow">↔</span></div>
-              <strong>local identity competition</strong>
-            </div>
-          </div>
-        </div>
-
+        <div class="method-canvas" id="methodCanvas" data-stage="remember" aria-live="polite"></div>
         <aside class="method-copy">
-          <span class="interaction-hint">Click a stage to follow the training signal.</span>
-          <h3 id="stageTitle">Persistent identity prototypes</h3>
-          <p id="stageBody">IAPR keeps multiple visual and textual prototype slots for every training identity, so identity-level references survive beyond the current mini-batch.</p>
-          <div class="method-takeaway" id="stageTakeaway">Remember the identity across mini-batches.</div>
+          <span class="interaction-hint">Click a stage to follow one training example.</span>
+          <div class="method-chip" id="stageChip">Identity-Owned Prototype Memory</div>
+          <h3 id="stageTitle">Keep multiple references for each identity.</h3>
+          <p id="stageBody">Visual and textual prototype slots are owned by a training identity and updated from the observations assigned to them. Multiple slots let one identity retain more than one appearance or language mode.</p>
+          <div class="method-takeaway" id="stageTakeaway">The memory survives when the mini-batch is gone.</div>
         </aside>
       </div>
     </div>
 
-    <div class="training-strip reveal" aria-label="IAPR is removed at inference">
-      <div class="training-side"><b>Training</b><span>Base retriever + IAPR auxiliary branch</span></div>
-      <div class="scissors" aria-hidden="true">✂</div>
-      <div class="training-side"><b>Inference</b><span>Original base retriever and original scoring function</span></div>
+    <div class="method-note-grid reveal" aria-label="IAPR implementation details">
+      <div><b>Memory update</b><span>Assigned observations update prototype memories with EMA.</span></div>
+      <div><b>No cross-ID assignment</b><span>Other identities cannot absorb a sample's prototype update.</span></div>
+      <div><b>Same-space comparison</b><span>Cross-modal grouping is transferred, but targets stay in the supervised modality.</span></div>
+      <div><b>Auxiliary only</b><span>The original base objective remains active throughout training.</span></div>
     </div>
+
+    <div class="training-story reveal" aria-labelledby="trainingStoryTitle">
+      <div class="training-story-head">
+        <p class="section-kicker">Training → deployment</p>
+        <h3 id="trainingStoryTitle">Warm up first. Build the memory. Cut the branch at inference.</h3>
+      </div>
+      <div class="training-timeline">
+        <article class="timeline-phase phase-warmup">
+          <span class="phase-number">Epochs 1–5</span>
+          <b>Base retriever only</b>
+          <p>Let the retrieval embeddings become task-aware before using them to define identity references.</p>
+        </article>
+        <div class="timeline-junction"><span>Epoch 6</span><b>initialize</b><small>identity-wise K-means</small></div>
+        <article class="timeline-phase phase-active">
+          <span class="phase-number">Epoch 6 → end</span>
+          <b>Base + IAPR</b>
+          <p>Assign within identity, update memories, build translated targets, then apply the prototype loss.</p>
+        </article>
+        <div class="timeline-cut" aria-hidden="true"><span>✂</span><small>discard</small></div>
+        <article class="timeline-phase phase-inference">
+          <span class="phase-number">Inference</span>
+          <b>Original retriever</b>
+          <p>No prototype memory, projection head, translated target bank, or extra scoring module.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="section results-section">
+    <header class="section-header reveal">
+      <p class="section-kicker">Consistent gains</p>
+      <h2 class="section-title">Not one lucky model. Not one lucky dataset.</h2>
+      <p class="section-lead">Across five CLIP-based retrievers and three TBPS benchmarks, every paired IAPR run improves both Rank-1 and mAP over its corresponding base retriever.</p>
+    </header>
+
+    <div class="results-headline reveal">
+      <div class="results-big"><strong>15 / 15</strong><span>retriever × dataset pairs improve in both R@1 and mAP</span></div>
+      <div class="results-stat"><strong>+1.09</strong><span>avg. R@1 points</span></div>
+      <div class="results-stat"><strong>+0.78</strong><span>avg. mAP points</span></div>
+      <div class="results-stat"><strong>0</strong><span>added inference modules</span></div>
+    </div>
+
+    <div class="gain-matrix reveal" aria-label="IAPR gains over each base retriever">
+      <div class="matrix-corner"><span>Δ over base</span><small>R@1 / mAP</small></div>
+      <div class="matrix-col">CUHK-PEDES</div>
+      <div class="matrix-col">ICFG-PEDES</div>
+      <div class="matrix-col">RSTPReid</div>
+
+      <div class="matrix-row">CLIP</div>
+      <div class="gain-cell"><b>+0.53</b><span>+0.18</span><small>71.56→72.09 · 64.36→64.54</small></div>
+      <div class="gain-cell"><b>+1.39</b><span>+1.31</span><small>61.60→62.99 · 38.00→39.31</small></div>
+      <div class="gain-cell"><b>+0.65</b><span>+0.12</span><small>62.60→63.25 · 49.78→49.90</small></div>
+
+      <div class="matrix-row">IRRA</div>
+      <div class="gain-cell"><b>+0.38</b><span>+0.47</span><small>68.53→68.91 · 62.60→63.07</small></div>
+      <div class="gain-cell"><b>+0.84</b><span>+1.11</span><small>57.90→58.74 · 36.72→37.83</small></div>
+      <div class="gain-cell"><b>+1.45</b><span>+0.12</span><small>59.25→60.70 · 48.79→48.91</small></div>
+
+      <div class="matrix-row">RDE</div>
+      <div class="gain-cell"><b>+0.77</b><span>+0.96</span><small>71.09→71.86 · 64.45→65.41</small></div>
+      <div class="gain-cell"><b>+0.59</b><span>+1.45</span><small>63.66→64.25 · 40.57→42.02</small></div>
+      <div class="gain-cell gain-cell--strong"><b>+3.35</b><span>+1.90</span><small>57.75→61.10 · 46.53→48.43</small></div>
+
+      <div class="matrix-row">DM-Adapter</div>
+      <div class="gain-cell"><b>+1.15</b><span>+0.62</span><small>68.23→69.38 · 63.21→63.83</small></div>
+      <div class="gain-cell"><b>+1.15</b><span>+1.08</span><small>58.42→59.57 · 37.51→38.59</small></div>
+      <div class="gain-cell"><b>+1.20</b><span>+0.52</span><small>58.45→59.65 · 47.33→47.85</small></div>
+
+      <div class="matrix-row">ITSELF</div>
+      <div class="gain-cell"><b>+0.58</b><span>+0.25</span><small>74.55→75.13 · 67.31→67.56</small></div>
+      <div class="gain-cell"><b>+0.65</b><span>+1.17</span><small>67.23→67.88 · 42.43→43.60</small></div>
+      <div class="gain-cell"><b>+1.60</b><span>+0.46</span><small>66.60→68.20 · 53.60→54.06</small></div>
+    </div>
+
+    <div class="overhead-strip reveal">
+      <div><b>5</b><span>retrievers</span></div>
+      <div><b>3</b><span>benchmarks</span></div>
+      <div><b>&lt; 2%</b><span>extra trainable parameters</span></div>
+      <div><b>0</b><span>inference-time overhead</span></div>
+    </div>
+
+    <div class="ablation-block reveal" id="ablation">
+      <div class="ablation-copy">
+        <p class="section-kicker">Why each component matters</p>
+        <h3>Persistence alone is not enough.</h3>
+        <p>Prototype memory by itself is mixed. Identity-restricted assignment makes the memory identity-aware, while same-space translated targets make cross-modal supervision modality-compatible. The full combination is the strongest configuration in the reported RDE ablation.</p>
+        <div class="ablation-tabs" role="tablist" aria-label="Ablation dataset">
+          <button type="button" role="tab" aria-selected="true" data-ablation-dataset="cuhk">CUHK-PEDES</button>
+          <button type="button" role="tab" aria-selected="false" data-ablation-dataset="icfg">ICFG-PEDES</button>
+          <button type="button" role="tab" aria-selected="false" data-ablation-dataset="rstp">RSTPReid</button>
+        </div>
+      </div>
+      <div class="ablation-chart" data-ablation-chart aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="analysis" class="section analysis-section">
+    <header class="section-header reveal">
+      <p class="section-kicker">What changes in the retrieval space?</p>
+      <h2 class="section-title">The correct identity gets more room to breathe.</h2>
+      <p class="section-lead">IAPR does more than improve the final ranking. It changes the local competition between the best same-identity match and the strongest identity-wrong competitor.</p>
+    </header>
+
+    <article class="analysis-card reveal">
+      <div class="analysis-copy">
+        <span class="panel-label">Identity-level ambiguity</span>
+        <h3>Fewer queries remain near the identity boundary.</h3>
+        <div class="margin-demo" aria-label="Illustration of a larger positive-negative margin">
+          <div class="margin-row"><span>Base</span><i class="margin-positive"></i><b class="margin-line short"></b><i class="margin-negative"></i><small>tight competition</small></div>
+          <div class="margin-row"><span>IAPR</span><i class="margin-positive"></i><b class="margin-line long"></b><i class="margin-negative"></i><small>larger separation</small></div>
+        </div>
+        <div class="analysis-stat"><b>30 / 30</b><span>near-margin model × dataset × threshold settings reduce ambiguity at ρ ∈ {0.01, 0.02}</span></div>
+      </div>
+      <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/ambiguity.png" data-lightbox-alt="Identity-level ambiguity reduction plot across retrievers and datasets">
+        <img src="assets/paper_figures/ambiguity.png" alt="Identity-level ambiguity reduction plot across retrievers and datasets" />
+        <span>Click to enlarge ↗</span>
+      </button>
+    </article>
+
+    <article class="analysis-card reverse reveal">
+      <div class="analysis-copy">
+        <span class="panel-label">Score-shift decomposition</span>
+        <h3>Most corrections come from better relative separation—not a uniform score boost.</h3>
+        <div class="shift-plane" aria-label="Simplified score-shift plane">
+          <div class="plane-axis plane-y">positive ↑</div>
+          <div class="plane-axis plane-x">hard negative →</div>
+          <div class="plane-zone zone-ideal"><b>Ideal</b><span>positive ↑<br />negative ↓</span></div>
+          <div class="plane-zone zone-neg"><b>Neg. suppressed more</b></div>
+          <div class="plane-zone zone-pos"><b>Pos. amplified more</b></div>
+          <div class="plane-diagonal"></div>
+        </div>
+        <div class="analysis-stat"><b>61.8 / 60.9 / 64.9%</b><span>margin-enlarging patterns on CUHK-PEDES / ICFG-PEDES / RSTPReid among base-misranked queries</span></div>
+      </div>
+      <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/shift_decomposition.png" data-lightbox-alt="Score-shift decomposition for base-misranked queries">
+        <img src="assets/paper_figures/shift_decomposition.png" alt="Score-shift decomposition for base-misranked queries" />
+        <span>Click to enlarge ↗</span>
+      </button>
+    </article>
   </section>
 
   <section id="qualitative" class="section qualitative-section">
     <header class="section-header reveal">
-      <p class="section-kicker">Interactive qualitative explorer</p>
-      <h2 class="section-title">Inspect retrieval changes one query at a time.</h2>
-      <p class="section-lead">Choose a retriever, benchmark, and case. The explorer keeps the same query visible while comparing the original retriever with the same retriever trained using IAPR.</p>
+      <p class="section-kicker">See it in retrieval</p>
+      <h2 class="section-title">Inspect the identity competition query by query.</h2>
+      <p class="section-lead">Choose a retriever, benchmark, and case. The query, gallery, and deployed inference pipeline stay the same; only training used IAPR.</p>
     </header>
 
     <div class="qual-explorer reveal" data-qual-explorer>
-      <div class="qual-interaction-hint" role="note">
-        <span>↗ EXPLORE</span>
-        <p>Switch the retriever or dataset, then select Case 01–03 to inspect the corresponding query and Top-5 rankings.</p>
-      </div>
-
       <div class="qual-control-bar">
         <div class="qual-control-group">
           <span class="qual-control-label">Retriever</span>
@@ -268,7 +501,7 @@
         <header class="qual-stage-head">
           <div>
             <p class="qual-stage-kicker" data-qual-stage-kicker>CLIP · CUHK-PEDES</p>
-            <h3>Same query. Same gallery. Better identity discrimination.</h3>
+            <h3>Same query. Same gallery. Same inference pipeline.</h3>
           </div>
           <button class="qual-original-button" type="button" data-qual-open-original>View full figure ↗</button>
         </header>
@@ -288,28 +521,19 @@
             <button type="button" role="tab" aria-selected="false" data-qual-case="1">02</button>
             <button type="button" role="tab" aria-selected="false" data-qual-case="2">03</button>
           </div>
+          <span class="same-pipeline-badge">training changes · inference does not</span>
         </div>
 
         <div class="qual-focus-grid">
           <article class="qual-query-panel">
             <div class="qual-panel-label"><span>Query</span><small>selected case</small></div>
-            <div class="qual-crop qual-crop--query" data-qual-crop="query">
-              <img alt="Selected text query crop" data-qual-crop-image draggable="false" />
-            </div>
+            <div class="qual-crop qual-crop--query" data-qual-crop="query"><img alt="Selected text query crop" data-qual-crop-image draggable="false" /></div>
           </article>
 
           <div class="qual-ranking-story">
             <article class="qual-ranking-panel qual-ranking-panel--base">
-              <div class="qual-ranking-head">
-                <div>
-                  <span class="qual-ranking-eyebrow">Original retriever</span>
-                  <strong data-qual-base-label>CLIP</strong>
-                </div>
-                <span class="qual-ranking-state">Top-5 retrieval</span>
-              </div>
-              <div class="qual-crop qual-crop--ranking" data-qual-crop="base">
-                <img alt="Selected base-retriever Top-5 ranking crop" data-qual-crop-image draggable="false" />
-              </div>
+              <div class="qual-ranking-head"><div><span class="qual-ranking-eyebrow">Original retriever</span><strong data-qual-base-label>CLIP</strong></div><span class="qual-ranking-state">Top-5 retrieval</span></div>
+              <div class="qual-crop qual-crop--ranking" data-qual-crop="base"><img alt="Selected base-retriever Top-5 ranking crop" data-qual-crop-image draggable="false" /></div>
             </article>
 
             <div class="qual-training-bridge" aria-label="IAPR changes training while the inference pipeline remains unchanged">
@@ -319,25 +543,14 @@
             </div>
 
             <article class="qual-ranking-panel qual-ranking-panel--iapr">
-              <div class="qual-ranking-head">
-                <div>
-                  <span class="qual-ranking-eyebrow">+ IAPR</span>
-                  <strong data-qual-iapr-label>CLIP–IAPR</strong>
-                </div>
-                <span class="qual-ranking-state qual-ranking-state--accent">Top-5 retrieval</span>
-              </div>
-              <div class="qual-crop qual-crop--ranking" data-qual-crop="iapr">
-                <img alt="Selected IAPR-trained Top-5 ranking crop" data-qual-crop-image draggable="false" />
-              </div>
+              <div class="qual-ranking-head"><div><span class="qual-ranking-eyebrow">+ IAPR</span><strong data-qual-iapr-label>CLIP–IAPR</strong></div><span class="qual-ranking-state qual-ranking-state--accent">Top-5 retrieval</span></div>
+              <div class="qual-crop qual-crop--ranking" data-qual-crop="iapr"><img alt="Selected IAPR-trained Top-5 ranking crop" data-qual-crop-image draggable="false" /></div>
             </article>
           </div>
         </div>
 
         <footer class="qual-stage-footer">
-          <div class="qual-legend" aria-label="Qualitative figure legend">
-            <span><i class="legend-dot correct"></i> correct identity</span>
-            <span><i class="legend-dot wrong"></i> identity-wrong</span>
-          </div>
+          <div class="qual-legend" aria-label="Qualitative figure legend"><span><i class="legend-dot correct"></i> correct identity</span><span><i class="legend-dot wrong"></i> identity-wrong</span></div>
           <p>Selected examples illustrate possible ranking changes; they are not a frequency estimate.</p>
         </footer>
         <p class="sr-only" aria-live="polite" data-qual-status></p>
@@ -345,54 +558,11 @@
     </div>
   </section>
 
-  <section id="evidence" class="section">
-    <header class="section-header reveal">
-      <p class="section-kicker">Evidence snapshot</p>
-      <h2 class="section-title">The gains are consistent — and the hard negatives move.</h2>
-      <p class="section-lead">Two diagnostics summarize how identity ambiguity and hard-negative competition change in the learned retrieval space.</p>
-    </header>
-
-    <div class="metric-strip reveal" aria-label="Main quantitative results">
-      <div class="metric-card"><strong>15 / 15</strong><span>retriever × dataset settings improve in both R@1 and mAP</span></div>
-      <div class="metric-card"><strong>+1.09</strong><span>average R@1 points</span></div>
-      <div class="metric-card"><strong>+0.78</strong><span>average mAP points</span></div>
-      <div class="metric-card"><strong>0</strong><span>added inference modules</span></div>
-    </div>
-
-    <div class="evidence-grid">
-      <article class="evidence-card reveal">
-        <div class="evidence-copy">
-          <span class="panel-label">Identity-level ambiguity</span>
-          <h3>Fewer queries remain near the identity decision boundary.</h3>
-          <p>At the near-margin thresholds used in the main analysis, ambiguity reduction is positive across every retriever–dataset setting.</p>
-          <div class="evidence-stat"><b>30 / 30</b><span>near-margin model × dataset × threshold settings reduce ambiguity</span></div>
-        </div>
-        <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/ambiguity.png" data-lightbox-alt="Identity-level ambiguity reduction plot across retrievers and datasets">
-          <img src="assets/paper_figures/ambiguity.png" alt="Identity-level ambiguity reduction plot across retrievers and datasets" />
-          <span>Click to enlarge ↗</span>
-        </button>
-      </article>
-
-      <article class="evidence-card reverse reveal">
-        <div class="evidence-copy">
-          <span class="panel-label">Score-shift decomposition</span>
-          <h3>Hard-negative suppression is a major correction mechanism.</h3>
-          <p>For base-misranked queries, IAPR usually enlarges the positive–negative margin through hard-negative suppression and direct positive–negative separation, rather than uniform positive amplification.</p>
-          <div class="evidence-stat"><b>≈61–65%</b><span>of base-misranked queries fall into margin-enlarging patterns, averaged by dataset</span></div>
-        </div>
-        <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/shift_decomposition.png" data-lightbox-alt="Score-shift decomposition for base-misranked queries">
-          <img src="assets/paper_figures/shift_decomposition.png" alt="Score-shift decomposition for base-misranked queries" />
-          <span>Click to enlarge ↗</span>
-        </button>
-      </article>
-    </div>
-  </section>
-
   <section class="section section-compact" id="closing">
     <div class="closing-card reveal">
       <div>
         <h2>Remember identity during training. Retrieve exactly as before.</h2>
-        <p>IAPR adds persistent identity-aware references during optimization, then removes the auxiliary branch at inference so retrieval continues with the original base-retriever scoring function.</p>
+        <p>Persistent identity-owned prototypes organize training around same-identity variation and hard identity-wrong competition, then disappear completely from the deployed retrieval pipeline.</p>
       </div>
     </div>
   </section>

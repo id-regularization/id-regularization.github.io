@@ -1,93 +1,189 @@
 (() => {
-  const hardNegatives = {
-    target: {
-      kicker: "True target",
-      title: "All query-grounding details match.",
-      body: "Shoulder-length straight dark hair, zipped hooded jacket with subtle side pockets, plain white low-top sneakers, a small black backpack with thin straps, and a beige tote held in the left hand.",
-      diff: '<span class="diff-good">✓ Identity-consistent reference</span>'
-    },
+  const motivationHardNegatives = {
     hn1: {
-      kicker: "Hard negative 1 · backpack mismatch",
-      title: "The overall appearance matches — the backpack does not.",
-      body: "This distractor keeps the dark green jacket, black pants, white shoes, black backpack, and beige tote, but the backpack is medium-sized with thick padded straps and a visible front pocket.",
-      diff: '<span class="diff-key">Query:</span> small plain backpack · thin straps <span class="diff-arrow">→</span> <span class="diff-bad">HN:</span> medium backpack · thick straps · front pocket'
+      kicker: "Look-alike 1 · backpack",
+      title: "The overall appearance matches. The backpack construction does not.",
+      target: "small plain backpack · thin straps",
+      negative: "medium backpack · thick padded straps · front pocket"
     },
     hn2: {
-      kicker: "Hard negative 2 · jacket mismatch",
-      title: "One construction detail changes the jacket identity cue.",
-      body: "The distractor is still dressed almost identically, but the jacket is a hooded pullover with no front zipper and a large kangaroo pocket instead of the target’s zipped jacket with subtle side pockets.",
-      diff: '<span class="diff-key">Query:</span> front zipper · side pockets <span class="diff-arrow">→</span> <span class="diff-bad">HN:</span> pullover · kangaroo pocket'
+      kicker: "Look-alike 2 · jacket",
+      title: "One construction detail changes the jacket cue.",
+      target: "front zipper · subtle side pockets",
+      negative: "pullover · kangaroo pocket · no front zipper"
     },
     hn3: {
-      kicker: "Hard negative 3 · shoes mismatch",
-      title: "The color is right, but the shoe construction is wrong.",
-      body: "Both people wear white sneakers. The hard negative switches the target’s plain white low-top sneakers for white high-top sneakers with a dark sole.",
-      diff: '<span class="diff-key">Query:</span> plain white low-tops <span class="diff-arrow">→</span> <span class="diff-bad">HN:</span> high-tops · dark sole'
+      kicker: "Look-alike 3 · shoes",
+      title: "The color matches, but the shoe construction changes.",
+      target: "plain white low-top sneakers",
+      negative: "white high-top sneakers · dark sole"
     },
     hn4: {
-      kicker: "Hard negative 4 · hair + tote-side mismatch",
-      title: "Two small relational cues break the match.",
-      body: "The distractor changes the shoulder-length straight hair into a loose low ponytail and carries the beige tote in the right hand instead of the left.",
-      diff: '<span class="diff-key">Query:</span> shoulder-length hair · tote left <span class="diff-arrow">→</span> <span class="diff-bad">HN:</span> low ponytail · tote right'
+      kicker: "Look-alike 4 · hair + tote side",
+      title: "Two small relational cues break the identity match.",
+      target: "straight shoulder-length hair · tote in left hand",
+      negative: "loose low ponytail · tote in right hand"
     }
   };
 
-  const hnCards = [...document.querySelectorAll(".hn-card")];
-  const hnDetailKicker = document.getElementById("hnDetailKicker");
-  const hnDetailTitle = document.getElementById("hnDetailTitle");
-  const hnDetailBody = document.getElementById("hnDetailBody");
-  const hnDiff = document.getElementById("hnDiff");
+  const motivationCards = [...document.querySelectorAll("[data-motivation-hn]")];
+  const motivationNeighborDots = [...document.querySelectorAll("[data-neighbor-hn]")];
+  const motivationComparisonKicker = document.getElementById("motivationComparisonKicker");
+  const motivationComparisonTitle = document.getElementById("motivationComparisonTitle");
+  const motivationComparisonDetail = document.getElementById("motivationComparisonDetail");
+  let pinnedMotivationHardNegative = null;
 
-  function setHardNegative(key) {
-    const data = hardNegatives[key];
-    if (!data || !hnDetailKicker || !hnDetailTitle || !hnDetailBody || !hnDiff) return;
-    hnCards.forEach((card) => {
-      const selected = card.dataset.hn === key;
-      card.classList.toggle("is-selected", selected);
-      card.setAttribute("aria-pressed", String(selected));
+  function renderMotivationHardNegative(key, preview = false) {
+    const data = motivationHardNegatives[key];
+    motivationCards.forEach((card) => {
+      const active = !!data && card.dataset.motivationHn === key;
+      card.classList.toggle("is-active", active);
+      card.classList.toggle("is-preview", active && preview);
+      card.setAttribute("aria-pressed", String(!preview && pinnedMotivationHardNegative === card.dataset.motivationHn));
     });
-    hnDetailKicker.textContent = data.kicker;
-    hnDetailTitle.textContent = data.title;
-    hnDetailBody.textContent = data.body;
-    hnDiff.innerHTML = data.diff;
+    motivationNeighborDots.forEach((dot) => dot.classList.toggle("is-active", !!data && dot.dataset.neighborHn === key));
+
+    if (!motivationComparisonKicker || !motivationComparisonTitle || !motivationComparisonDetail) return;
+    if (!data) {
+      motivationComparisonKicker.textContent = "Compare a look-alike";
+      motivationComparisonTitle.textContent = "Hover or click a candidate to expose the identity-level difference.";
+      motivationComparisonDetail.innerHTML = `
+        <div class="comparison-side comparison-target"><span>Target</span><strong>identity-consistent details</strong></div>
+        <div class="comparison-not-equal" aria-hidden="true">≠</div>
+        <div class="comparison-side comparison-negative"><span>Look-alike</span><strong>same dominant appearance</strong></div>`;
+      return;
+    }
+
+    motivationComparisonKicker.textContent = data.kicker;
+    motivationComparisonTitle.textContent = data.title;
+    motivationComparisonDetail.innerHTML = `
+      <div class="comparison-side comparison-target"><span>Target</span><strong>${data.target}</strong></div>
+      <div class="comparison-not-equal" aria-hidden="true">≠</div>
+      <div class="comparison-side comparison-negative"><span>Look-alike</span><strong>${data.negative}</strong></div>`;
   }
 
-  hnCards.forEach((card, index) => {
-    card.addEventListener("click", () => setHardNegative(card.dataset.hn));
+  motivationCards.forEach((card, index) => {
+    const key = card.dataset.motivationHn;
+    card.addEventListener("pointerenter", () => renderMotivationHardNegative(key, pinnedMotivationHardNegative !== key));
+    card.addEventListener("pointerleave", () => renderMotivationHardNegative(pinnedMotivationHardNegative, false));
+    card.addEventListener("focus", () => renderMotivationHardNegative(key, pinnedMotivationHardNegative !== key));
+    card.addEventListener("blur", () => renderMotivationHardNegative(pinnedMotivationHardNegative, false));
+    card.addEventListener("click", () => {
+      pinnedMotivationHardNegative = key;
+      renderMotivationHardNegative(key, false);
+    });
     card.addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const delta = event.key === "ArrowRight" ? 1 : -1;
-      const nextIndex = (index + delta + hnCards.length) % hnCards.length;
-      hnCards[nextIndex].focus();
-      setHardNegative(hnCards[nextIndex].dataset.hn);
+      const next = motivationCards[(index + delta + motivationCards.length) % motivationCards.length];
+      next.focus();
     });
   });
 
+  renderMotivationHardNegative(null);
+
   const methodStages = {
     remember: {
-      title: "Persistent identity prototypes",
-      body: "IAPR keeps multiple visual and textual prototype slots for every training identity, so identity-level references survive beyond the current mini-batch.",
-      takeaway: "Remember the identity across mini-batches."
+      chip: "Identity-Owned Prototype Memory (IOPM)",
+      title: "Keep multiple references for each identity.",
+      body: "Visual and textual prototype slots are owned by a training identity and updated from the observations assigned to them. Multiple slots let one identity retain more than one appearance or language mode.",
+      takeaway: "The memory survives when the mini-batch is gone.",
+      scene: `
+        <div class="scene scene-remember">
+          <div class="scene-inputs">
+            <div class="embedding-card visual-embed"><span>image embedding</span><b>zᵛᵢ</b><small>ID 17</small></div>
+            <div class="embedding-card text-embed"><span>text embedding</span><b>zᵗᵢ</b><small>ID 17</small></div>
+          </div>
+          <div class="scene-arrow-stack" aria-hidden="true"><span>update</span><b>→</b></div>
+          <div class="identity-bank">
+            <div class="bank-head"><strong>Identity-owned memory</strong><small>persistent across batches</small></div>
+            <div class="bank-row bank-row-active">
+              <span class="bank-id">ID 17</span>
+              <div class="bank-modality"><small>visual</small><i></i><i></i></div>
+              <div class="bank-modality text"><small>text</small><i></i><i></i></div>
+            </div>
+            <div class="bank-row"><span class="bank-id">ID 08</span><div class="bank-modality"><small>visual</small><i></i><i></i></div><div class="bank-modality text"><small>text</small><i></i><i></i></div></div>
+            <div class="bank-row"><span class="bank-id">ID 31</span><div class="bank-modality"><small>visual</small><i></i><i></i></div><div class="bank-modality text"><small>text</small><i></i><i></i></div></div>
+          </div>
+          <div class="scene-callout"><b>More than one slot</b><span>One identity can keep distinct modes instead of collapsing everything into a single center.</span></div>
+        </div>`
     },
-    assign: {
-      title: "Only assign inside the correct identity",
-      body: "Identity-Restricted Assignment limits each observation to prototype slots owned by its ground-truth identity. Visually similar people cannot absorb that update.",
-      takeaway: "Restrict assignment by identity, not global similarity."
+    restrict: {
+      chip: "Identity-Restricted Assignment (IRA)",
+      title: "Let a sample choose only inside its own identity.",
+      body: "For an ID 17 observation, assignment searches only ID 17 prototype slots. Prototypes owned by other identities are blocked from assignment and cannot be updated by this sample.",
+      takeaway: "Other identities stay out of the update—but can still become negatives later.",
+      scene: `
+        <div class="scene scene-restrict">
+          <div class="restrict-sample"><span>current sample</span><b>ID 17</b><small>find the closest own slot</small></div>
+          <div class="restrict-arrow" aria-hidden="true">→</div>
+          <div class="restrict-memory">
+            <div class="restrict-row allowed"><span>ID 17</span><div><i></i><i class="chosen"></i><i></i></div><b>✓ selectable</b></div>
+            <div class="restrict-row blocked"><span>ID 08</span><div><i></i><i></i><i></i></div><b>🔒 blocked</b></div>
+            <div class="restrict-row blocked"><span>ID 31</span><div><i></i><i></i><i></i></div><b>🔒 blocked</b></div>
+          </div>
+          <div class="scene-callout"><b>Ownership matters</b><span>Visual similarity alone cannot make another person absorb ID 17's memory update.</span></div>
+        </div>`
     },
-    translate: {
-      title: "Share structure without forcing mismatched spaces",
-      body: "Same-Space Translated Targets transfer which observations belong together across modalities while constructing the target inside the feature space being supervised.",
-      takeaway: "Transfer the grouping structure — not an opposite-modality prototype vector."
+    transfer: {
+      chip: "Same-Space Translated Targets (SSTT)",
+      title: "Transfer the grouping—not the opposite-modality vector.",
+      body: "Assignments discovered in one modality tell IAPR which paired observations belong together. Their paired embeddings are then aggregated in the other modality, so the supervision target remains in the same feature space as the representation being optimized.",
+      takeaway: "Grouping crosses modalities. Comparisons stay within modality.",
+      scene: `
+        <div class="scene scene-transfer">
+          <div class="space-card text-space">
+            <div class="space-head"><span>TEXT SPACE</span><small>assignment discovered here</small></div>
+            <div class="space-cluster"><i></i><i></i><i></i><b>slot 1</b></div>
+            <p>These text observations choose the same ID-owned slot.</p>
+          </div>
+          <div class="transfer-bridge">
+            <span>assignment pattern</span>
+            <b>⇢</b>
+            <small>not the prototype vector</small>
+          </div>
+          <div class="space-card visual-space">
+            <div class="space-head"><span>VISUAL SPACE</span><small>target built here</small></div>
+            <div class="paired-visuals"><i></i><i></i><i></i><b>aggregate</b><em>→</em><strong>★</strong></div>
+            <p>The paired image embeddings form a visual-space target.</p>
+          </div>
+          <div class="same-space-rule"><span>text assignment → visual target</span><span>visual assignment → text target</span></div>
+        </div>`
     },
     separate: {
-      title: "Focus on the identity-wrong competitor",
-      body: "The prototype objective contrasts same-identity targets with the most similar identity-wrong references, concentrating supervision on the local competition that produces top-ranked errors.",
-      takeaway: "Increase separation where the hard negative actually competes."
+      chip: "Identity-Prototype Loss (Lᵢₚ)",
+      title: "Separate the current sample from its hardest wrong identities.",
+      body: "Same-identity translated targets are positives. Identity-wrong targets are candidates for negatives, and the most similar wrong references are selected for the prototype loss.",
+      takeaway: "Pull toward the right identity; push away the wrong identities that actually compete.",
+      scene: `
+        <div class="scene scene-separate">
+          <div class="competition-board">
+            <div class="positive-side">
+              <span>same identity</span>
+              <div class="target-dots positive"><i></i><i></i><i></i></div>
+              <small>all owned by ID 17</small>
+            </div>
+            <div class="sample-center"><b>zᵛᵢ</b><span>ID 17</span><em>pull</em><em>push</em></div>
+            <div class="negative-side">
+              <span>hard identity-wrong</span>
+              <div class="target-dots negative"><i></i><i></i><i></i><i></i></div>
+              <small>Top-K most similar wrong references</small>
+            </div>
+          </div>
+          <div class="lookalike-strip">
+            <div class="lookalike-query"><span>Why this matters</span><p>Dominant attributes can match several people.</p></div>
+            <figure class="lookalike target"><img src="assets/examples/target.png" alt="True target person" /><figcaption>same identity</figcaption></figure>
+            <figure class="lookalike"><img src="assets/examples/hn_1.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
+            <figure class="lookalike"><img src="assets/examples/hn_2.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
+            <figure class="lookalike"><img src="assets/examples/hn_3.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
+          </div>
+        </div>`
     }
   };
 
   const methodCanvas = document.getElementById("methodCanvas");
+  const stageChip = document.getElementById("stageChip");
   const stageTitle = document.getElementById("stageTitle");
   const stageBody = document.getElementById("stageBody");
   const stageTakeaway = document.getElementById("stageTakeaway");
@@ -95,14 +191,17 @@
 
   function setMethodStage(stage) {
     const data = methodStages[stage];
-    if (!data || !methodCanvas || !stageTitle || !stageBody || !stageTakeaway) return;
+    if (!data || !methodCanvas || !stageChip || !stageTitle || !stageBody || !stageTakeaway) return;
     methodCanvas.dataset.stage = stage;
+    methodCanvas.innerHTML = data.scene;
+    stageChip.textContent = data.chip;
     stageTitle.textContent = data.title;
     stageBody.textContent = data.body;
     stageTakeaway.textContent = data.takeaway;
     methodButtons.forEach((button) => {
-      button.setAttribute("aria-selected", String(button.dataset.stage === stage));
-      button.tabIndex = button.dataset.stage === stage ? 0 : -1;
+      const selected = button.dataset.stage === stage;
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
     });
   }
 
@@ -111,15 +210,81 @@
     button.addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
-      const nextIndex = event.key === "ArrowRight"
-        ? (index + 1) % methodButtons.length
-        : (index - 1 + methodButtons.length) % methodButtons.length;
-      methodButtons[nextIndex].focus();
-      setMethodStage(methodButtons[nextIndex].dataset.stage);
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      const next = methodButtons[(index + delta + methodButtons.length) % methodButtons.length];
+      next.focus();
+      setMethodStage(next.dataset.stage);
     });
   });
 
-  if (methodCanvas && methodButtons.length) setMethodStage(methodCanvas.dataset.stage || "remember");
+  if (methodCanvas && methodButtons.length) setMethodStage("remember");
+
+  const ablationData = {
+    cuhk: {
+      label: "CUHK-PEDES",
+      rows: [
+        ["RDE", 71.09, 64.45, "base retriever"],
+        ["+ PM", 70.99, 64.51, "memory alone"],
+        ["+ PM + IRA", 71.10, 64.64, "identity restriction"],
+        ["+ PM + SSTT", 71.22, 64.72, "same-space transfer"],
+        ["Full IAPR", 71.86, 65.41, "PM + IRA + SSTT"]
+      ]
+    },
+    icfg: {
+      label: "ICFG-PEDES",
+      rows: [
+        ["RDE", 63.66, 40.57, "base retriever"],
+        ["+ PM", 63.68, 40.74, "memory alone"],
+        ["+ PM + IRA", 63.76, 40.81, "identity restriction"],
+        ["+ PM + SSTT", 63.90, 40.81, "same-space transfer"],
+        ["Full IAPR", 64.25, 42.02, "PM + IRA + SSTT"]
+      ]
+    },
+    rstp: {
+      label: "RSTPReid",
+      rows: [
+        ["RDE", 57.75, 46.53, "base retriever"],
+        ["+ PM", 56.50, 44.97, "memory alone"],
+        ["+ PM + IRA", 58.30, 45.98, "identity restriction"],
+        ["+ PM + SSTT", 60.60, 48.04, "same-space transfer"],
+        ["Full IAPR", 61.10, 48.43, "PM + IRA + SSTT"]
+      ]
+    }
+  };
+
+  const ablationChart = document.querySelector("[data-ablation-chart]");
+  const ablationTabs = [...document.querySelectorAll("[data-ablation-dataset]")];
+
+  function renderAblation(datasetKey) {
+    const data = ablationData[datasetKey];
+    if (!data || !ablationChart) return;
+    ablationChart.innerHTML = `
+      <div class="ablation-chart-head"><strong>${data.label}</strong><span>R@1</span><span>mAP</span></div>
+      ${data.rows.map((row, index) => `
+        <div class="ablation-row ${index === data.rows.length - 1 ? "is-full" : ""}">
+          <div class="ablation-name"><b>${row[0]}</b><small>${row[3]}</small></div>
+          <div class="ablation-metric"><span>${row[1].toFixed(2)}</span><i style="--bar:${row[1]}%"></i></div>
+          <div class="ablation-metric"><span>${row[2].toFixed(2)}</span><i style="--bar:${row[2]}%"></i></div>
+        </div>`).join("")}
+    `;
+  }
+
+  ablationTabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+      ablationTabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
+      renderAblation(tab.dataset.ablationDataset);
+    });
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      const next = ablationTabs[(index + delta + ablationTabs.length) % ablationTabs.length];
+      next.focus();
+      next.click();
+    });
+  });
+
+  renderAblation("cuhk");
 
   const qualitativeSourceFiles = {
     clip: {
@@ -654,4 +819,5 @@
     }, { threshold: 0.1 });
     revealNodes.forEach((node) => observer.observe(node));
   }
+
 })();
