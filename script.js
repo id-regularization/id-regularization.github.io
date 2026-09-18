@@ -1,87 +1,184 @@
 (() => {
   const motivationHardNegatives = {
     hn1: {
-      kicker: "Look-alike 1 · backpack",
+      label: "Candidate B · backpack",
       title: "The overall appearance matches. The backpack construction does not.",
       target: "small plain backpack · thin straps",
-      negative: "medium backpack · thick padded straps · front pocket"
+      negative: "medium backpack · thick padded straps · front pocket",
+      image: "assets/examples/hn_1.png",
+      focus: "backpack",
+      negativeLabel: "CANDIDATE B · WRONG ID"
     },
     hn2: {
-      kicker: "Look-alike 2 · jacket",
+      label: "Candidate C · jacket",
       title: "One construction detail changes the jacket cue.",
       target: "front zipper · subtle side pockets",
-      negative: "pullover · kangaroo pocket · no front zipper"
+      negative: "pullover · kangaroo pocket · no front zipper",
+      image: "assets/examples/hn_2.png",
+      focus: "jacket",
+      negativeLabel: "CANDIDATE C · WRONG ID"
     },
     hn3: {
-      kicker: "Look-alike 3 · shoes",
+      label: "Candidate D · shoes",
       title: "The color matches, but the shoe construction changes.",
       target: "plain white low-top sneakers",
-      negative: "white high-top sneakers · dark sole"
+      negative: "white high-top sneakers · dark sole",
+      image: "assets/examples/hn_3.png",
+      focus: "shoes",
+      negativeLabel: "CANDIDATE D · WRONG ID"
     },
     hn4: {
-      kicker: "Look-alike 4 · hair + tote side",
+      label: "Candidate E · hair + tote side",
       title: "Two small relational cues break the identity match.",
       target: "straight shoulder-length hair · tote in left hand",
-      negative: "loose low ponytail · tote in right hand"
+      negative: "loose low ponytail · tote in right hand",
+      image: "assets/examples/hn_4.png",
+      focus: "hair-tote",
+      negativeLabel: "CANDIDATE E · WRONG ID"
     }
   };
 
-  const motivationCards = [...document.querySelectorAll("[data-motivation-hn]")];
-  const motivationNeighborDots = [...document.querySelectorAll("[data-neighbor-hn]")];
-  const motivationComparisonKicker = document.getElementById("motivationComparisonKicker");
-  const motivationComparisonTitle = document.getElementById("motivationComparisonTitle");
-  const motivationComparisonDetail = document.getElementById("motivationComparisonDetail");
-  let pinnedMotivationHardNegative = null;
+  const motivationStory = document.querySelector("[data-motivation-story]");
+  const motivationBeats = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-beat]")] : [];
+  const motivationScenes = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-scene]")] : [];
+  const motivationCandidates = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-candidate]")] : [];
+  const motivationRevealButton = motivationStory?.querySelector("[data-motivation-reveal]");
+  const motivationDetail = motivationStory?.querySelector("[data-motivation-detail]");
+  const motivationDetailKicker = motivationStory?.querySelector("[data-motivation-detail-kicker]");
+  const motivationDetailTitle = motivationStory?.querySelector("[data-motivation-detail-title]");
+  const motivationDetailTarget = motivationStory?.querySelector("[data-motivation-detail-target]");
+  const motivationDetailNegative = motivationStory?.querySelector("[data-motivation-detail-negative]");
+  const motivationDetailNegativeLabel = motivationStory?.querySelector("[data-motivation-detail-negative-label]");
+  const motivationDetailImage = motivationStory?.querySelector("[data-motivation-detail-image]");
+  const motivationDetailFigures = motivationStory ? [...motivationStory.querySelectorAll("[data-detail-focus]")] : [];
+  let motivationBeat = 1;
+  let motivationIdentityRevealed = false;
+  let selectedMotivationCandidate = null;
 
-  function renderMotivationHardNegative(key, preview = false) {
-    const data = motivationHardNegatives[key];
-    motivationCards.forEach((card) => {
-      const active = !!data && card.dataset.motivationHn === key;
-      card.classList.toggle("is-active", active);
-      card.classList.toggle("is-preview", active && preview);
-      card.setAttribute("aria-pressed", String(!preview && pinnedMotivationHardNegative === card.dataset.motivationHn));
+  function setMotivationBeat(nextBeat, { focus = false } = {}) {
+    const parsed = Number.parseInt(nextBeat, 10);
+    if (!motivationStory || ![1, 2, 3].includes(parsed)) return;
+    motivationBeat = parsed;
+    motivationStory.dataset.beat = String(parsed);
+
+    motivationBeats.forEach((beat) => {
+      const active = Number.parseInt(beat.dataset.motivationBeat, 10) === parsed;
+      beat.classList.toggle("is-active", active);
+      beat.setAttribute("aria-pressed", String(active));
+      if (active && focus) beat.focus({ preventScroll: true });
     });
-    motivationNeighborDots.forEach((dot) => dot.classList.toggle("is-active", !!data && dot.dataset.neighborHn === key));
+    motivationScenes.forEach((scene) => scene.classList.toggle("is-active", Number.parseInt(scene.dataset.motivationScene, 10) === parsed));
+  }
 
-    if (!motivationComparisonKicker || !motivationComparisonTitle || !motivationComparisonDetail) return;
-    if (!data) {
-      motivationComparisonKicker.textContent = "Compare a look-alike";
-      motivationComparisonTitle.textContent = "Hover or click a candidate to expose the identity-level difference.";
-      motivationComparisonDetail.innerHTML = `
-        <div class="comparison-side comparison-target"><span>Target</span><strong>identity-consistent details</strong></div>
-        <div class="comparison-not-equal" aria-hidden="true">≠</div>
-        <div class="comparison-side comparison-negative"><span>Look-alike</span><strong>same dominant appearance</strong></div>`;
+  function setMotivationReveal(revealed) {
+    if (!motivationStory) return;
+    motivationIdentityRevealed = !!revealed;
+    motivationStory.classList.toggle("identities-revealed", motivationIdentityRevealed);
+    if (motivationRevealButton) {
+      motivationRevealButton.textContent = motivationIdentityRevealed ? "Hide identities" : "Reveal identities";
+      motivationRevealButton.setAttribute("aria-pressed", String(motivationIdentityRevealed));
+    }
+  }
+
+  function renderMotivationCandidate(key, { preview = false } = {}) {
+    if (!motivationStory) return;
+    const isTarget = key === "target";
+    const data = motivationHardNegatives[key];
+    if (!isTarget && !data) return;
+
+    motivationCandidates.forEach((candidate) => {
+      const active = candidate.dataset.motivationCandidate === key;
+      candidate.classList.toggle("is-active", active);
+      candidate.classList.toggle("is-preview", active && preview);
+      candidate.setAttribute("aria-pressed", String(active && !preview));
+    });
+
+    if (preview) return;
+    selectedMotivationCandidate = key;
+    setMotivationReveal(true);
+    if (!motivationDetail) return;
+    motivationDetail.hidden = false;
+
+    if (isTarget) {
+      if (motivationDetailKicker) motivationDetailKicker.textContent = "Candidate A · same identity";
+      if (motivationDetailTitle) motivationDetailTitle.textContent = "This candidate is the identity-correct target.";
+      if (motivationDetailTarget) motivationDetailTarget.textContent = "query cues + identity-consistent local details";
+      if (motivationDetailNegative) motivationDetailNegative.textContent = "same image shown for reference";
+      if (motivationDetailNegativeLabel) motivationDetailNegativeLabel.textContent = "CANDIDATE A · SAME ID";
+      if (motivationDetailImage) {
+        motivationDetailImage.src = "assets/examples/target.png";
+        motivationDetailImage.alt = "True target detail";
+      }
+      motivationDetailFigures.forEach((figure) => figure.dataset.focusCue = "target");
       return;
     }
 
-    motivationComparisonKicker.textContent = data.kicker;
-    motivationComparisonTitle.textContent = data.title;
-    motivationComparisonDetail.innerHTML = `
-      <div class="comparison-side comparison-target"><span>Target</span><strong>${data.target}</strong></div>
-      <div class="comparison-not-equal" aria-hidden="true">≠</div>
-      <div class="comparison-side comparison-negative"><span>Look-alike</span><strong>${data.negative}</strong></div>`;
+    if (motivationDetailKicker) motivationDetailKicker.textContent = data.label;
+    if (motivationDetailTitle) motivationDetailTitle.textContent = data.title;
+    if (motivationDetailTarget) motivationDetailTarget.textContent = data.target;
+    if (motivationDetailNegative) motivationDetailNegative.textContent = data.negative;
+    if (motivationDetailNegativeLabel) motivationDetailNegativeLabel.textContent = data.negativeLabel;
+    if (motivationDetailImage) {
+      motivationDetailImage.src = data.image;
+      motivationDetailImage.alt = `${data.label} detail`;
+    }
+    motivationDetailFigures.forEach((figure) => figure.dataset.focusCue = data.focus);
   }
 
-  motivationCards.forEach((card, index) => {
-    const key = card.dataset.motivationHn;
-    card.addEventListener("pointerenter", () => renderMotivationHardNegative(key, pinnedMotivationHardNegative !== key));
-    card.addEventListener("pointerleave", () => renderMotivationHardNegative(pinnedMotivationHardNegative, false));
-    card.addEventListener("focus", () => renderMotivationHardNegative(key, pinnedMotivationHardNegative !== key));
-    card.addEventListener("blur", () => renderMotivationHardNegative(pinnedMotivationHardNegative, false));
-    card.addEventListener("click", () => {
-      pinnedMotivationHardNegative = key;
-      renderMotivationHardNegative(key, false);
-    });
-    card.addEventListener("keydown", (event) => {
-      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  motivationBeats.forEach((beat, index) => {
+    beat.addEventListener("click", () => setMotivationBeat(beat.dataset.motivationBeat));
+    beat.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
-      const delta = event.key === "ArrowRight" ? 1 : -1;
-      const next = motivationCards[(index + delta + motivationCards.length) % motivationCards.length];
-      next.focus();
+      const forward = ["ArrowDown", "ArrowRight"].includes(event.key);
+      const next = motivationBeats[(index + (forward ? 1 : -1) + motivationBeats.length) % motivationBeats.length];
+      setMotivationBeat(next.dataset.motivationBeat, { focus: true });
     });
   });
 
-  renderMotivationHardNegative(null);
+  motivationCandidates.forEach((candidate, index) => {
+    const key = candidate.dataset.motivationCandidate;
+    candidate.addEventListener("pointerenter", () => {
+      if (selectedMotivationCandidate === key) return;
+      renderMotivationCandidate(key, { preview: true });
+    });
+    candidate.addEventListener("pointerleave", () => {
+      motivationCandidates.forEach((item) => item.classList.toggle("is-active", item.dataset.motivationCandidate === selectedMotivationCandidate));
+      motivationCandidates.forEach((item) => item.classList.remove("is-preview"));
+    });
+    candidate.addEventListener("focus", () => {
+      if (selectedMotivationCandidate !== key) renderMotivationCandidate(key, { preview: true });
+    });
+    candidate.addEventListener("blur", () => {
+      motivationCandidates.forEach((item) => item.classList.toggle("is-active", item.dataset.motivationCandidate === selectedMotivationCandidate));
+      motivationCandidates.forEach((item) => item.classList.remove("is-preview"));
+    });
+    candidate.addEventListener("click", () => renderMotivationCandidate(key));
+    candidate.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      motivationCandidates[(index + delta + motivationCandidates.length) % motivationCandidates.length].focus();
+    });
+  });
+
+  motivationRevealButton?.addEventListener("click", () => setMotivationReveal(!motivationIdentityRevealed));
+
+  if (motivationStory && motivationBeats.length) {
+    setMotivationBeat(1);
+    setMotivationReveal(false);
+
+    if ("IntersectionObserver" in window) {
+      const beatObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        setMotivationBeat(visible.target.dataset.motivationBeat);
+      }, { rootMargin: "-28% 0px -42% 0px", threshold: [0.15, 0.35, 0.6] });
+      motivationBeats.forEach((beat) => beatObserver.observe(beat));
+    }
+  }
 
   const methodReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const iaprArchitecture = document.querySelector("[data-iapr-architecture]");
