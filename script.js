@@ -83,141 +83,41 @@
 
   renderMotivationHardNegative(null);
 
-  const methodStages = {
-    remember: {
-      chip: "Identity-Owned Prototype Memory (IOPM)",
-      title: "Keep multiple references for each identity.",
-      body: "Visual and textual prototype slots are owned by a training identity and updated from the observations assigned to them. Multiple slots let one identity retain more than one appearance or language mode.",
-      takeaway: "The memory survives when the mini-batch is gone.",
-      scene: `
-        <div class="scene scene-remember">
-          <div class="scene-inputs">
-            <div class="embedding-card visual-embed"><span>image embedding</span><b>zᵛᵢ</b><small>ID 17</small></div>
-            <div class="embedding-card text-embed"><span>text embedding</span><b>zᵗᵢ</b><small>ID 17</small></div>
-          </div>
-          <div class="scene-arrow-stack" aria-hidden="true"><span>update</span><b>→</b></div>
-          <div class="identity-bank">
-            <div class="bank-head"><strong>Identity-owned memory</strong><small>persistent across batches</small></div>
-            <div class="bank-row bank-row-active">
-              <span class="bank-id">ID 17</span>
-              <div class="bank-modality"><small>visual</small><i></i><i></i></div>
-              <div class="bank-modality text"><small>text</small><i></i><i></i></div>
-            </div>
-            <div class="bank-row"><span class="bank-id">ID 08</span><div class="bank-modality"><small>visual</small><i></i><i></i></div><div class="bank-modality text"><small>text</small><i></i><i></i></div></div>
-            <div class="bank-row"><span class="bank-id">ID 31</span><div class="bank-modality"><small>visual</small><i></i><i></i></div><div class="bank-modality text"><small>text</small><i></i><i></i></div></div>
-          </div>
-          <div class="scene-callout"><b>More than one slot</b><span>One identity can keep distinct modes instead of collapsing everything into a single center.</span></div>
-        </div>`
-    },
-    restrict: {
-      chip: "Identity-Restricted Assignment (IRA)",
-      title: "Let a sample choose only inside its own identity.",
-      body: "For an ID 17 observation, assignment searches only ID 17 prototype slots. Prototypes owned by other identities are blocked from assignment and cannot be updated by this sample.",
-      takeaway: "Other identities stay out of the update—but can still become negatives later.",
-      scene: `
-        <div class="scene scene-restrict">
-          <div class="restrict-sample"><span>current sample</span><b>ID 17</b><small>find the closest own slot</small></div>
-          <div class="restrict-arrow" aria-hidden="true">→</div>
-          <div class="restrict-memory">
-            <div class="restrict-row allowed"><span>ID 17</span><div><i></i><i class="chosen"></i><i></i></div><b>✓ selectable</b></div>
-            <div class="restrict-row blocked"><span>ID 08</span><div><i></i><i></i><i></i></div><b>🔒 blocked</b></div>
-            <div class="restrict-row blocked"><span>ID 31</span><div><i></i><i></i><i></i></div><b>🔒 blocked</b></div>
-          </div>
-          <div class="scene-callout"><b>Ownership matters</b><span>Visual similarity alone cannot make another person absorb ID 17's memory update.</span></div>
-        </div>`
-    },
-    transfer: {
-      chip: "Same-Space Translated Targets (SSTT)",
-      title: "Transfer the grouping—not the opposite-modality vector.",
-      body: "Assignments discovered in one modality tell IAPR which paired observations belong together. Their paired embeddings are then aggregated in the other modality, so the supervision target remains in the same feature space as the representation being optimized.",
-      takeaway: "Grouping crosses modalities. Comparisons stay within modality.",
-      scene: `
-        <div class="scene scene-transfer">
-          <div class="space-card text-space">
-            <div class="space-head"><span>TEXT SPACE</span><small>assignment discovered here</small></div>
-            <div class="space-cluster"><i></i><i></i><i></i><b>slot 1</b></div>
-            <p>These text observations choose the same ID-owned slot.</p>
-          </div>
-          <div class="transfer-bridge">
-            <span>assignment pattern</span>
-            <b>⇢</b>
-            <small>not the prototype vector</small>
-          </div>
-          <div class="space-card visual-space">
-            <div class="space-head"><span>VISUAL SPACE</span><small>target built here</small></div>
-            <div class="paired-visuals"><i></i><i></i><i></i><b>aggregate</b><em>→</em><strong>★</strong></div>
-            <p>The paired image embeddings form a visual-space target.</p>
-          </div>
-          <div class="same-space-rule"><span>text assignment → visual target</span><span>visual assignment → text target</span></div>
-        </div>`
-    },
-    separate: {
-      chip: "Identity-Prototype Loss (Lᵢₚ)",
-      title: "Separate the current sample from its hardest wrong identities.",
-      body: "Same-identity translated targets are positives. Identity-wrong targets are candidates for negatives, and the most similar wrong references are selected for the prototype loss.",
-      takeaway: "Pull toward the right identity; push away the wrong identities that actually compete.",
-      scene: `
-        <div class="scene scene-separate">
-          <div class="competition-board">
-            <div class="positive-side">
-              <span>same identity</span>
-              <div class="target-dots positive"><i></i><i></i><i></i></div>
-              <small>all owned by ID 17</small>
-            </div>
-            <div class="sample-center"><b>zᵛᵢ</b><span>ID 17</span><em>pull</em><em>push</em></div>
-            <div class="negative-side">
-              <span>hard identity-wrong</span>
-              <div class="target-dots negative"><i></i><i></i><i></i><i></i></div>
-              <small>Top-K most similar wrong references</small>
-            </div>
-          </div>
-          <div class="lookalike-strip">
-            <div class="lookalike-query"><span>Why this matters</span><p>Dominant attributes can match several people.</p></div>
-            <figure class="lookalike target"><img src="assets/examples/target.png" alt="True target person" /><figcaption>same identity</figcaption></figure>
-            <figure class="lookalike"><img src="assets/examples/hn_1.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
-            <figure class="lookalike"><img src="assets/examples/hn_2.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
-            <figure class="lookalike"><img src="assets/examples/hn_3.png" alt="Identity-wrong look-alike" /><figcaption>wrong ID</figcaption></figure>
-          </div>
-        </div>`
-    }
-  };
+  const methodReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const iaprArchitecture = document.querySelector("[data-iapr-architecture]");
+  const iaprModeButtons = iaprArchitecture ? [...iaprArchitecture.querySelectorAll("[data-iapr-mode]")] : [];
 
-  const methodCanvas = document.getElementById("methodCanvas");
-  const stageChip = document.getElementById("stageChip");
-  const stageTitle = document.getElementById("stageTitle");
-  const stageBody = document.getElementById("stageBody");
-  const stageTakeaway = document.getElementById("stageTakeaway");
-  const methodButtons = [...document.querySelectorAll(".method-step")];
+  function setIaprMode(mode, focusButton = false) {
+    if (!iaprArchitecture || !["training", "inference"].includes(mode)) return;
+    iaprArchitecture.dataset.mode = mode;
 
-  function setMethodStage(stage) {
-    const data = methodStages[stage];
-    if (!data || !methodCanvas || !stageChip || !stageTitle || !stageBody || !stageTakeaway) return;
-    methodCanvas.dataset.stage = stage;
-    methodCanvas.innerHTML = data.scene;
-    stageChip.textContent = data.chip;
-    stageTitle.textContent = data.title;
-    stageBody.textContent = data.body;
-    stageTakeaway.textContent = data.takeaway;
-    methodButtons.forEach((button) => {
-      const selected = button.dataset.stage === stage;
+    iaprModeButtons.forEach((button) => {
+      const selected = button.dataset.iaprMode === mode;
       button.setAttribute("aria-selected", String(selected));
       button.tabIndex = selected ? 0 : -1;
+      if (selected && focusButton) button.focus();
     });
+
+    if (!methodReduceMotion) {
+      iaprArchitecture.classList.remove("is-mode-changing");
+      void iaprArchitecture.offsetWidth;
+      iaprArchitecture.classList.add("is-mode-changing");
+      window.setTimeout(() => iaprArchitecture?.classList.remove("is-mode-changing"), 520);
+    }
   }
 
-  methodButtons.forEach((button, index) => {
-    button.addEventListener("click", () => setMethodStage(button.dataset.stage));
+  iaprModeButtons.forEach((button, index) => {
+    button.addEventListener("click", () => setIaprMode(button.dataset.iaprMode));
     button.addEventListener("keydown", (event) => {
       if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const delta = event.key === "ArrowRight" ? 1 : -1;
-      const next = methodButtons[(index + delta + methodButtons.length) % methodButtons.length];
-      next.focus();
-      setMethodStage(next.dataset.stage);
+      const next = iaprModeButtons[(index + delta + iaprModeButtons.length) % iaprModeButtons.length];
+      setIaprMode(next.dataset.iaprMode, true);
     });
   });
 
-  if (methodCanvas && methodButtons.length) setMethodStage("remember");
+  if (iaprArchitecture) setIaprMode("training");
 
   const ablationData = {
     cuhk: {
