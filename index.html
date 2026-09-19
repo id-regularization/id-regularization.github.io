@@ -378,228 +378,279 @@
   </section>
 
 
-  <section id="method" class="section method-section method-v3">
-    <header class="section-header method-v3-header reveal">
+  <section id="method" class="section method-section method-v9">
+    <header class="section-header method-v9-header reveal">
       <p class="section-kicker">Identity-Aware Prototype Regularization</p>
       <h2 class="section-title">Turn the missing reference into an identity-owned prototype memory.</h2>
       <p class="section-lead">IAPR instantiates the persistent-reference requirement with identity-owned visual and textual prototype memories, then uses them only as a training-time regularizer. The deployed retriever remains unchanged.</p>
     </header>
 
-    <div class="method-requirement-bridge-v8 reveal" aria-label="From motivation requirement to IAPR mechanism">
-      <div class="method-requirement-side-v8">
-        <span>MOTIVATION REQUIREMENT</span>
-        <strong>Persistent identity reference</strong>
-        <small>carry observation-derived evidence across mini-batches</small>
-      </div>
-      <div class="method-requirement-arrow-v8" aria-hidden="true"><small>instantiate</small><b>→</b></div>
-      <div class="method-mechanism-side-v8">
-        <span>IAPR MECHANISM</span>
-        <strong>Identity-Owned Prototype Memory</strong>
-        <small>identity-owned · multi-slot · updated from observations</small>
-      </div>
-    </div>
-
-    <div class="iapr-architecture-card reveal" data-iapr-architecture data-mode="training">
-      <div class="iapr-architecture-head">
-        <div>
-          <span class="architecture-eyebrow">Same base retriever · two views</span>
-          <h3>Attach during training. Remove at inference.</h3>
-        </div>
-        <div class="architecture-toggle" role="tablist" aria-label="Training or inference view">
-          <button type="button" role="tab" aria-selected="true" data-iapr-mode="training">Training</button>
-          <button type="button" role="tab" aria-selected="false" data-iapr-mode="inference">Inference</button>
-        </div>
-      </div>
-
-      <div class="iapr-architecture-stage">
-        <div class="base-retriever-panel">
-          <div class="architecture-panel-tag architecture-panel-tag--base"><span></span>Base TBPS Retriever</div>
-
-          <div class="base-path base-path--visual">
-            <div class="base-input base-input--visual"><i></i><span>Image</span></div>
-            <div class="base-path-arrow" aria-hidden="true">→</div>
-            <div class="base-encoder"><small>existing module</small><strong>Vision encoder</strong></div>
-            <div class="base-path-arrow" aria-hidden="true">→</div>
-            <div class="base-embedding"><small>final embedding</small><strong>v<sub>i</sub></strong></div>
+    <div class="method-story-v9">
+      <div class="method-prologue-v9 reveal" aria-label="From the missing persistent reference to identity-owned prototype memory">
+        <div class="prologue-requirement-v9">
+          <span class="method-mini-label-v9">Motivation requirement</span>
+          <strong>Persistent identity reference</strong>
+          <div class="ephemeral-observations-v9" aria-hidden="true">
+            <span><i></i><small>t₁</small></span>
+            <span><i></i><small>t₂</small></span>
+            <span><i></i><small>t₃</small></span>
           </div>
+          <small>observation-derived evidence should survive the current mini-batch</small>
+        </div>
 
-          <div class="base-path base-path--text">
-            <div class="base-input base-input--text"><i></i><span>Text</span></div>
-            <div class="base-path-arrow" aria-hidden="true">→</div>
-            <div class="base-encoder"><small>existing module</small><strong>Text encoder</strong></div>
-            <div class="base-path-arrow" aria-hidden="true">→</div>
-            <div class="base-embedding"><small>final embedding</small><strong>t<sub>i</sub></strong></div>
+        <div class="prologue-runway-v9" aria-hidden="true">
+          <span>instantiate</span>
+          <i></i>
+          <b>→</b>
+        </div>
+
+        <div class="prologue-memory-v9">
+          <span class="method-mini-label-v9">IAPR mechanism</span>
+          <div class="prologue-memory-title-v9">
+            <strong>Identity-Owned Prototype Memory</strong>
+            <span>ID 17</span>
           </div>
+          <div class="prologue-memory-slots-v9" aria-hidden="true">
+            <div><small>visual</small><i></i><i class="is-filled"></i><i></i></div>
+            <div><small>textual</small><i></i><i></i><i class="is-filled"></i></div>
+          </div>
+          <small>identity-owned · multi-slot · updated from observations</small>
+        </div>
+      </div>
 
-          <div class="base-score-card">
-            <div class="base-score-icon" aria-hidden="true"><i></i><i></i><b>↔</b></div>
-            <div>
-              <small class="mode-copy mode-copy--training">original objective stays active</small>
-              <small class="mode-copy mode-copy--inference">original deployment path</small>
-              <strong class="mode-copy mode-copy--training">Base retrieval + L<sub>base</sub></strong>
-              <strong class="mode-copy mode-copy--inference">Original retrieval score</strong>
+      <section class="method-scene-v9 architecture-scene-v9 reveal" data-iapr-architecture data-mode="training" aria-labelledby="architectureTitleV9">
+        <header class="architecture-head-v9">
+          <div>
+            <span class="architecture-eyebrow">One attachment point · same base retriever</span>
+            <h3 id="architectureTitleV9">Attach during training. Remove at inference.</h3>
+            <p>The auxiliary path reads only the final image and text embeddings. Everything inside the base retriever stays structurally untouched.</p>
+          </div>
+          <div class="architecture-toggle" role="tablist" aria-label="Training or inference view">
+            <button type="button" role="tab" aria-selected="true" data-iapr-mode="training">Training</button>
+            <button type="button" role="tab" aria-selected="false" data-iapr-mode="inference">Inference</button>
+          </div>
+        </header>
+
+        <div class="architecture-canvas-v9">
+          <div class="base-system-v9">
+            <div class="system-label-v9 system-label-v9--base"><i></i><span>Base TBPS retriever</span></div>
+
+            <div class="base-lanes-v9">
+              <div class="base-lane-v9">
+                <div class="lane-input-v9 lane-input-v9--image"><i aria-hidden="true"></i><span>Image</span></div>
+                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <div class="lane-encoder-v9"><small>existing module</small><strong>Vision encoder</strong></div>
+                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <div class="lane-embedding-v9"><small>final embedding</small><strong>v<sub>i</sub></strong></div>
+              </div>
+
+              <div class="base-lane-v9">
+                <div class="lane-input-v9 lane-input-v9--text"><i aria-hidden="true"></i><span>Text</span></div>
+                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <div class="lane-encoder-v9"><small>existing module</small><strong>Text encoder</strong></div>
+                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <div class="lane-embedding-v9"><small>final embedding</small><strong>t<sub>i</sub></strong></div>
+              </div>
+            </div>
+
+            <div class="base-objective-v9">
+              <div class="base-score-glyph-v9" aria-hidden="true"><i></i><span>↔</span><i></i></div>
+              <div>
+                <small class="mode-copy-v9 mode-copy-v9--training">original objective stays active</small>
+                <small class="mode-copy-v9 mode-copy-v9--inference">original deployment path</small>
+                <strong class="mode-copy-v9 mode-copy-v9--training">Base retrieval + L<sub>base</sub></strong>
+                <strong class="mode-copy-v9 mode-copy-v9--inference">Original retrieval score</strong>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="iapr-attach-rail" aria-hidden="true">
-          <span></span><b>attach here</b><span></span>
-        </div>
-
-        <div class="iapr-training-branch">
-          <div class="architecture-panel-tag architecture-panel-tag--iapr"><span></span>Training-only IAPR</div>
-          <div class="iapr-branch-flow">
-            <div class="iapr-mini-node"><small>project</small><strong>g<sub>v</sub>, g<sub>t</sub></strong></div>
-            <div class="iapr-mini-arrow">→</div>
-            <div class="iapr-mini-node"><small>remember</small><strong>IOPM + IRA</strong></div>
-            <div class="iapr-mini-arrow">→</div>
-            <div class="iapr-mini-node"><small>translate</small><strong>SSTT</strong></div>
-            <div class="iapr-mini-arrow">→</div>
-            <div class="iapr-mini-node iapr-mini-node--loss"><small>regularize</small><strong>L<sub>ip</sub></strong></div>
+          <div class="attachment-zone-v9" aria-hidden="true">
+            <div class="attachment-line-v9"></div>
+            <div class="attachment-socket-v9">
+              <i></i><i></i>
+              <span>v<sub>i</sub> / t<sub>i</sub></span>
+              <small>attach here</small>
+            </div>
           </div>
-          <div class="iapr-gradient-note"><span>auxiliary gradient</span><b>↶</b><small>regularizes the base embeddings during training</small></div>
-        </div>
 
-        <div class="iapr-cut-state" aria-hidden="true">
-          <span class="iapr-cut-icon">✂</span>
-          <strong>IAPR removed</strong>
-          <small>projection heads · memories · translated targets · hard-negative mining</small>
-        </div>
-      </div>
+          <div class="iapr-branch-v9" data-iapr-training-branch>
+            <div class="system-label-v9 system-label-v9--iapr"><i></i><span>Training-only IAPR</span></div>
 
-      <div class="iapr-mode-summary" aria-live="polite">
-        <div class="mode-summary-copy mode-summary-copy--training">
-          <span>TRAINING</span>
-          <strong>L<sub>total</sub> = L<sub>base</sub> + λ<sub>ip</sub>L<sub>ip</sub></strong>
-          <small>The base objective is preserved; IAPR contributes an auxiliary identity-aware regularization signal.</small>
-        </div>
-        <div class="mode-summary-copy mode-summary-copy--inference">
-          <span>INFERENCE</span>
-          <strong>Base retriever only · original scoring</strong>
-          <small>No IAPR module, prototype memory, translated target bank, or additional scoring path remains.</small>
-        </div>
-        <div class="mode-summary-facts">
-          <span><b>Final embeddings only</b><small>architecture-agnostic attachment</small></span>
-          <span><b>Base objective preserved</b><small>regularizer, not replacement</small></span>
-          <span><b>Original scoring</b><small>zero inference-time module</small></span>
-        </div>
-      </div>
-    </div>
+            <div class="iapr-flow-v9" aria-label="Project, remember, translate, and regularize">
+              <div class="flow-step-v9 flow-step-v9--project">
+                <span>Project</span>
+                <strong>g<sub>v</sub>, g<sub>t</sub></strong>
+              </div>
+              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <div class="flow-step-v9 flow-step-v9--memory">
+                <span>Remember</span>
+                <strong>IOPM + IRA</strong>
+                <div class="flow-memory-v9" aria-hidden="true"><i></i><i class="is-hot"></i><i></i><b>ID 17</b></div>
+              </div>
+              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <div class="flow-step-v9 flow-step-v9--translate">
+                <span>Translate</span>
+                <strong>SSTT</strong>
+                <div class="flow-translate-v9" aria-hidden="true"><i></i><b>⇢</b><i></i></div>
+              </div>
+              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <div class="flow-step-v9 flow-step-v9--loss">
+                <span>Regularize</span>
+                <strong>L<sub>ip</sub></strong>
+              </div>
+            </div>
 
-    <div class="iapr-compatibility reveal" aria-label="IAPR compatibility with five TBPS retrievers">
-      <div class="compatibility-copy">
-        <span class="architecture-eyebrow">Plug-and-play</span>
-        <h3>One attachment point. Five different retrievers.</h3>
-        <p>IAPR consumes the final image and text representations, so the internal retrieval architecture does not need to be redesigned.</p>
-      </div>
-      <div class="compatibility-flow" aria-hidden="true">
-        <div class="compatibility-models"><span>CLIP</span><span>IRRA</span><span>RDE</span><span>DM-Adapter</span><span>ITSELF</span></div>
-        <div class="compatibility-arrow"><b>→</b><small>final embeddings</small></div>
-        <div class="compatibility-port"><i></i><strong>v<sub>i</sub> / t<sub>i</sub></strong><small>single interface</small></div>
-        <div class="compatibility-arrow compatibility-arrow--accent"><b>→</b><small>training only</small></div>
-        <div class="compatibility-iapr"><span>IAPR</span><small>same auxiliary branch</small></div>
-      </div>
-    </div>
+            <div class="gradient-return-v9">
+              <span>auxiliary gradient</span>
+              <div aria-hidden="true"><i></i><b>↶</b></div>
+              <small>shapes the base embeddings during training</small>
+            </div>
+          </div>
 
-    <div class="iapr-mechanism-head reveal">
-      <span class="architecture-eyebrow">How IAPR regularizes</span>
-      <h3>Three ideas, in the order the supervision is built.</h3>
-      <p>The website view keeps the mechanism conceptual: remember each identity, transfer grouping structure across modalities, then focus the loss on the local identity competition.</p>
-    </div>
-
-    <div class="iapr-mechanism-grid">
-      <article class="iapr-mechanism-card reveal">
-        <div class="mechanism-index"><span>01</span><small>IOPM + IRA</small></div>
-        <div class="mechanism-visual memory-visual" aria-hidden="true">
-          <div class="memory-sample"><i></i><b>ID 17</b><small>current observation</small></div>
-          <div class="memory-route"><span>own identity only</span><b>→</b></div>
-          <div class="memory-rows">
-            <div class="memory-identity memory-identity--active"><strong><i>▣</i>ID 17</strong><span><b>V</b><i></i><i class="is-selected"></i></span><span class="is-text"><b>T</b><i></i><i></i></span></div>
-            <div class="memory-identity"><strong><i>▣</i>ID 08</strong><span><b>V</b><i></i><i></i></span><span class="is-text"><b>T</b><i></i><i></i></span></div>
-            <div class="memory-identity"><strong><i>▣</i>ID 31</strong><span><b>V</b><i></i><i></i></span><span class="is-text"><b>T</b><i></i><i></i></span></div>
+          <div class="inference-ghost-v9" aria-hidden="true">
+            <span class="inference-cut-v9">✂</span>
+            <strong>IAPR disconnected</strong>
+            <small>projection heads · memories · translated targets · hard-negative mining</small>
           </div>
         </div>
-        <div class="mechanism-copy">
-          <h4>Remember each identity across batches.</h4>
-          <p>Each training identity owns multiple visual and textual prototype slots. Identity-restricted assignment lets an observation select and update only the slots owned by its ground-truth identity.</p>
-          <div class="mechanism-rule"><b>Persistent</b><span>observation-derived references survive the current mini-batch</span></div>
-        </div>
-      </article>
 
-      <article class="iapr-mechanism-card reveal">
-        <div class="mechanism-index"><span>02</span><small>SSTT</small></div>
-        <div class="mechanism-visual transfer-visual" aria-hidden="true">
-          <div class="transfer-space transfer-space--text">
-            <span>TEXT SPACE</span>
-            <div class="transfer-cluster"><i></i><i></i><i></i><b>same slot</b></div>
-            <small>assignment discovered here</small>
+        <div class="architecture-dock-v9">
+          <div class="architecture-mode-copy-v9" aria-live="polite" data-iapr-mode-status>
+            <div class="mode-status-v9 mode-status-v9--training">
+              <span>TRAINING</span>
+              <strong>L<sub>total</sub> = L<sub>base</sub> + λ<sub>ip</sub>L<sub>ip</sub></strong>
+              <small>The base objective remains intact; IAPR supplies an auxiliary identity-aware regularization signal.</small>
+            </div>
+            <div class="mode-status-v9 mode-status-v9--inference">
+              <span>INFERENCE</span>
+              <strong>Base retriever only · original scoring</strong>
+              <small>No IAPR module or additional scoring path remains.</small>
+            </div>
           </div>
-          <div class="transfer-structure"><small>grouping</small><b>⇢</b><em>not the vector</em></div>
-          <div class="transfer-space transfer-space--visual">
-            <span>VISUAL SPACE</span>
-            <div class="transfer-points"><i></i><i></i><i></i><b>→</b><strong>★</strong></div>
-            <small>target constructed here</small>
+
+          <div class="compatibility-dock-v9" aria-label="IAPR attaches to the final embeddings of five TBPS retrievers">
+            <div class="compatibility-copy-v9">
+              <span>Plug-and-play</span>
+              <strong>Different retrievers. One interface.</strong>
+            </div>
+            <div class="retriever-row-v9">
+              <span>CLIP</span><span>IRRA</span><span>RDE</span><span>DM-Adapter</span><span>ITSELF</span>
+            </div>
+            <div class="retriever-converge-v9" aria-hidden="true"><i></i><b>→</b></div>
+            <div class="retriever-port-v9"><i></i><i></i><strong>v<sub>i</sub> / t<sub>i</sub></strong><small>final embeddings</small></div>
           </div>
         </div>
-        <div class="mechanism-copy">
-          <h4>Transfer the grouping—not the feature vector.</h4>
-          <p>Assignments from one modality define which paired embeddings are aggregated in the other modality. The structural information crosses modalities while the supervisory target stays in the feature space being regularized.</p>
-          <div class="mechanism-rule"><b>Cross-modal structure</b><span>same-space supervision</span></div>
-        </div>
-      </article>
+      </section>
 
-      <article class="iapr-mechanism-card reveal">
-        <div class="mechanism-index"><span>03</span><small>Identity-prototype loss</small></div>
-        <div class="mechanism-visual competition-visual" aria-hidden="true">
-          <div class="competition-anchor"><span>z<sub>i</sub></span><small>ID 17</small></div>
-          <div class="competition-group competition-group--positive"><b>same ID</b><i></i><i></i><i></i></div>
-          <div class="competition-group competition-group--negative"><b>hard wrong IDs</b><i></i><i></i><i></i></div>
-          <div class="competition-force competition-force--pull"><span>pull</span><b>←</b></div>
-          <div class="competition-force competition-force--push"><b>→</b><span>push</span></div>
-        </div>
-        <div class="mechanism-copy">
-          <h4>Separate the right identity from the strongest competitors.</h4>
-          <p>Same-identity translated targets act as positives. IAPR then selects the most similar identity-wrong references and concentrates regularization on the competition that matters most near the top of the ranking.</p>
-          <div class="mechanism-rule"><b>Local competition</b><span>pull toward same identity · push hardest wrong references away</span></div>
-        </div>
-      </article>
-    </div>
+      <section class="method-scene-v9 mechanism-scene-v9" aria-labelledby="mechanismTitleV9">
+        <header class="mechanism-head-v9 reveal">
+          <span class="architecture-eyebrow">How IAPR regularizes</span>
+          <h3 id="mechanismTitleV9">Remember → transfer → compete.</h3>
+          <p>Three ideas build the supervision in sequence. The red spine shows what is carried forward from persistent identity memory to the final local identity competition.</p>
+        </header>
 
-    <div class="iapr-technical-strip reveal" aria-label="Training details">
-      <span><b>Warm-up</b><small>epochs 1–5 use L<sub>base</sub> only</small></span>
-      <span><b>Activate</b><small>initialize identity-wise memories at epoch 6</small></span>
-      <span><b>Update</b><small>prototype and translated-target buffers use EMA</small></span>
-      <span><b>Regularize</b><small>hard identity-wrong targets focus L<sub>ip</sub></small></span>
-    </div>
+        <div class="mechanism-path-v9 reveal">
+          <div class="mechanism-spine-v9" aria-hidden="true"><i></i></div>
 
-    <div class="iapr-deployment reveal">
-      <div class="deployment-copy">
-        <span class="architecture-eyebrow">Training → deployment</span>
-        <h3>Train richer. Deploy unchanged.</h3>
-        <p>The auxiliary branch shapes the learned retrieval space during optimization, then disappears. The deployed system is still the original base retriever and its original image–text scoring function.</p>
-      </div>
-      <div class="deployment-diagram" aria-label="IAPR is discarded after training">
-        <div class="deployment-training">
-          <span>TRAINING</span>
-          <div class="deployment-stack"><b>Base retriever</b><i>+</i><strong>IAPR</strong></div>
-          <small>identity-aware regularization</small>
+          <article class="mechanism-stage-v9 mechanism-stage-v9--memory">
+            <div class="stage-marker-v9"><span>01</span><b>Remember</b><small>IOPM + IRA</small></div>
+            <div class="stage-visual-v9 memory-stage-visual-v9" aria-hidden="true">
+              <div class="memory-observation-v9"><i></i><strong>ID 17</strong><small>new observation</small></div>
+              <div class="memory-own-route-v9"><span>own identity only</span><b>→</b></div>
+              <div class="memory-bank-v9">
+                <div class="memory-bank-row-v9 is-active"><strong>ID 17</strong><span><b>V</b><i></i><i class="is-selected"></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
+                <div class="memory-bank-row-v9"><strong>ID 08</strong><span><b>V</b><i></i><i></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
+                <div class="memory-bank-row-v9"><strong>ID 31</strong><span><b>V</b><i></i><i></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
+              </div>
+            </div>
+            <div class="stage-copy-v9">
+              <h4>Remember each identity across batches.</h4>
+              <p>Each training identity owns multiple visual and textual prototype slots. Identity-restricted assignment lets an observation select and update only the slots owned by its ground-truth identity.</p>
+              <span><b>Persistent</b> observation-derived references survive the current mini-batch.</span>
+            </div>
+          </article>
+
+          <article class="mechanism-stage-v9 mechanism-stage-v9--transfer">
+            <div class="stage-marker-v9"><span>02</span><b>Transfer</b><small>SSTT</small></div>
+            <div class="stage-visual-v9 transfer-stage-visual-v9" aria-hidden="true">
+              <div class="same-space-v9 same-space-v9--text">
+                <span>TEXT SPACE</span>
+                <div class="space-cluster-v9"><i></i><i></i><i></i><b>same slot</b></div>
+                <small>assignment discovered here</small>
+              </div>
+              <div class="structure-bridge-v9"><small>grouping</small><b>⇢</b><em>not the vector</em></div>
+              <div class="same-space-v9 same-space-v9--visual">
+                <span>VISUAL SPACE</span>
+                <div class="visual-target-v9"><i></i><i></i><i></i><b>→</b><strong>★</strong></div>
+                <small>target constructed here</small>
+              </div>
+            </div>
+            <div class="stage-copy-v9">
+              <h4>Transfer the grouping—not the feature vector.</h4>
+              <p>Assignments from one modality define which paired embeddings are aggregated in the other modality. Structural information crosses modalities while the supervisory target stays in the feature space being regularized.</p>
+              <span><b>Cross-modal structure</b> crosses; feature spaces remain local.</span>
+            </div>
+          </article>
+
+          <article class="mechanism-stage-v9 mechanism-stage-v9--competition">
+            <div class="stage-marker-v9"><span>03</span><b>Compete</b><small>Identity-prototype loss</small></div>
+            <div class="stage-visual-v9 competition-stage-visual-v9" aria-hidden="true">
+              <div class="competition-core-v9"><strong>z<sub>i</sub></strong><small>ID 17</small></div>
+              <div class="competition-positive-v9"><span>same ID</span><i></i><i></i><i></i></div>
+              <div class="competition-negative-field-v9"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="competition-hard-v9"><span>Top-K hard wrong IDs</span><i></i><i></i><i></i></div>
+              <div class="force-v9 force-v9--pull"><span>pull</span><b>←</b></div>
+              <div class="force-v9 force-v9--push"><b>→</b><span>push</span></div>
+            </div>
+            <div class="stage-copy-v9">
+              <h4>Separate the right identity from the strongest competitors.</h4>
+              <p>Same-identity translated targets act as positives. IAPR selects the most similar identity-wrong references and focuses regularization on the local competition that matters most near the top of the ranking.</p>
+              <span><b>Local competition</b> pulls the same identity close and pushes the hardest wrong references away.</span>
+            </div>
+          </article>
         </div>
-        <div class="deployment-cut"><span>✂</span><b>discard IAPR</b></div>
-        <div class="deployment-inference">
-          <span>INFERENCE</span>
-          <div class="deployment-stack"><b>Base retriever</b></div>
-          <small>original scoring</small>
+
+        <div class="training-timeline-v9 reveal" aria-label="IAPR training timeline">
+          <div class="timeline-track-v9" aria-hidden="true"><i></i></div>
+          <div class="timeline-step-v9 timeline-step-v9--warmup"><span>01</span><b>Warm-up</b><small>epochs 1–5 · L<sub>base</sub> only</small></div>
+          <div class="timeline-step-v9 timeline-step-v9--activate"><span>02</span><b>Activate</b><small>epoch 6 · initialize identity-wise memories</small></div>
+          <div class="timeline-step-v9 timeline-step-v9--update"><span>03</span><b>Update</b><small>prototype + translated targets use EMA</small></div>
+          <div class="timeline-step-v9 timeline-step-v9--regularize"><span>04</span><b>Regularize</b><small>hard identity-wrong targets focus L<sub>ip</sub></small></div>
         </div>
-      </div>
-      <div class="deployment-facts">
-        <span><b>&lt; 2%</b><small>extra trainable parameters during training</small></span>
-        <span><b>0</b><small>extra inference modules</small></span>
-        <span><b>Same</b><small>retrieval scoring function</small></span>
-      </div>
+      </section>
+
+      <section class="deployment-scene-v9 reveal" aria-labelledby="deploymentTitleV9">
+        <div class="deployment-copy-v9">
+          <span class="architecture-eyebrow">Training → deployment</span>
+          <h3 id="deploymentTitleV9">Train richer. Deploy unchanged.</h3>
+          <p>The auxiliary branch shapes the learned retrieval space during optimization, then disappears. Deployment keeps the original base retriever and its original image–text scoring function.</p>
+        </div>
+
+        <div class="deployment-transition-v9" aria-label="IAPR is attached in training and discarded at inference">
+          <div class="deployment-phase-v9 deployment-phase-v9--training">
+            <span>TRAINING</span>
+            <div><b>Base retriever</b><em>+</em><strong>IAPR</strong></div>
+            <small>identity-aware regularization</small>
+          </div>
+          <div class="deployment-discard-v9" aria-hidden="true"><i></i><span>✂</span><b>discard IAPR</b><i></i></div>
+          <div class="deployment-phase-v9 deployment-phase-v9--inference">
+            <span>INFERENCE</span>
+            <div><b>Base retriever</b></div>
+            <small>original scoring</small>
+          </div>
+        </div>
+
+        <div class="deployment-facts-v9">
+          <span><b>&lt; 2%</b><small>extra trainable parameters during training</small></span>
+          <span><b>0</b><small>extra inference modules</small></span>
+          <span><b>Same</b><small>retrieval scoring function</small></span>
+        </div>
+      </section>
     </div>
   </section>
 
-  <section id="results" class="section results-section">
+  
+<section id="results" class="section results-section">
     <header class="section-header reveal">
       <p class="section-kicker">Consistent gains</p>
       <h2 class="section-title">Not one lucky model. Not one lucky dataset.</h2>

@@ -674,16 +674,18 @@
   const methodReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const iaprArchitecture = document.querySelector("[data-iapr-architecture]");
   const iaprModeButtons = iaprArchitecture ? [...iaprArchitecture.querySelectorAll("[data-iapr-mode]")] : [];
+  const iaprTrainingBranch = iaprArchitecture?.querySelector("[data-iapr-training-branch]");
 
   function setIaprMode(mode, focusButton = false) {
     if (!iaprArchitecture || !["training", "inference"].includes(mode)) return;
     iaprArchitecture.dataset.mode = mode;
+    iaprTrainingBranch?.setAttribute("aria-hidden", String(mode === "inference"));
 
     iaprModeButtons.forEach((button) => {
       const selected = button.dataset.iaprMode === mode;
       button.setAttribute("aria-selected", String(selected));
       button.tabIndex = selected ? 0 : -1;
-      if (selected && focusButton) button.focus();
+      if (selected && focusButton) button.focus({ preventScroll: true });
     });
 
     if (!methodReduceMotion) {
