@@ -519,7 +519,7 @@
                   <i class="regulate-negative-v10"></i>
                   <span class="regulate-pull-v10">pull</span>
                   <span class="regulate-push-v10">push</span>
-                  <b>Top-K wrong ID</b>
+                  <b>Top-K hard wrong IDs</b>
                 </div>
                 <em class="flow-loss-symbol-v10">L<sub>ip</sub></em>
               </div>
@@ -701,15 +701,15 @@
                     <path d="M360 171 H402" class="diagram-route-v10 remember-route-out-v10" marker-end="url(#arrowRedRemember)"/>
 
                     <g class="remember-bank-v10" filter="url(#softShadowRemember)">
-                      <rect x="410" y="72" width="292" height="226" rx="22" class="remember-bank-shell-v10"/>
+                      <rect x="410" y="72" width="292" height="216" rx="22" class="remember-bank-shell-v10"/>
                       <g class="remember-row-v10 remember-row-v10--active">
                         <rect x="424" y="86" width="264" height="64" rx="14"/>
                         <text x="442" y="108" class="diagram-strong-v10">ID 17</text>
-                        <text x="442" y="132" class="diagram-axis-blue-v10">V</text>
+                        <text x="446" y="132" class="diagram-axis-blue-v10">V</text>
                         <rect x="468" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--probe1"/>
                         <rect x="532" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--selected"/>
                         <rect x="596" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--probe3"/>
-                        <text x="442" y="148" class="diagram-axis-red-v10">T</text>
+                        <text x="446" y="148" class="diagram-axis-red-v10">T</text>
                         <rect x="468" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
                         <rect x="532" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
                         <rect x="596" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
@@ -772,16 +772,16 @@
                       <text x="380" y="197" text-anchor="middle" class="diagram-mini-purple-v10">assignment only</text>
                     </g>
                     <path d="M251 167 H296" class="translate-bridge-line-v10" marker-end="url(#arrowPurpleTranslate)"/>
-                    <path d="M464 167 H510" class="translate-bridge-line-v10" marker-end="url(#arrowPurpleTranslate)"/>
+                    <path d="M464 167 H483" class="translate-bridge-line-v10" marker-end="url(#arrowPurpleTranslate)"/>
                     <text x="380" y="232" text-anchor="middle" class="diagram-note-v10">not the feature vector</text>
 
                     <g class="translate-space-v10 translate-space-v10--visual">
                       <ellipse cx="601" cy="181" rx="112" ry="126"/>
                       <circle cx="548" cy="137" r="10"/><circle cx="584" cy="205" r="10"/><circle cx="621" cy="164" r="10"/>
                       <circle cx="663" cy="116" r="9" class="translate-dim-v10"/><circle cx="660" cy="230" r="9" class="translate-dim-v10"/>
-                      <path d="M548 137 L640 181 M584 205 L640 181 M621 164 L640 181" class="translate-target-lines-v10" marker-end="url(#arrowBlueTranslate)"/>
-                      <text x="646" y="190" class="translate-target-star-v10">★</text>
-                      <text x="601" y="278" text-anchor="middle" class="diagram-callout-v10">target constructed here</text>
+                      <path d="M548 137 L632 181 M584 205 L632 181 M621 164 L632 181" class="translate-target-lines-v10" marker-end="url(#arrowBlueTranslate)"/>
+                      <text x="632" y="192" text-anchor="middle" class="translate-target-star-v10">★</text>
+                      <text x="601" y="268" text-anchor="middle" class="diagram-callout-v10 translate-target-caption-v12">target constructed here</text>
                     </g>
                     <text x="380" y="330" text-anchor="middle" class="translate-claim-v10">STRUCTURE CROSSES. FEATURES STAY LOCAL.</text>
                   </svg>
@@ -806,45 +806,45 @@
                     <text x="585" y="43" class="diagram-label-v10">IDENTITY-WRONG BANK</text>
 
                     <g class="regularize-positive-v10">
-                      <rect x="54" y="96" width="156" height="96" rx="22"/>
-                      <circle cx="93" cy="145" r="14"/><circle cx="132" cy="145" r="14"/><circle cx="171" cy="145" r="14"/>
-                      <text x="132" y="219" text-anchor="middle" class="diagram-callout-v10">translated positives</text>
+                      <rect x="64" y="102" width="158" height="92" rx="22"/>
+                      <circle cx="103" cy="148" r="14"/><circle cx="143" cy="148" r="14"/><circle cx="183" cy="148" r="14"/>
+                      <text x="143" y="218" text-anchor="middle" class="diagram-callout-v10">translated positives</text>
                     </g>
 
                     <g class="regularize-query-v10">
-                      <circle cx="372" cy="160" r="58"/>
-                      <text x="372" y="153" text-anchor="middle" class="diagram-query-v10">zᵢ</text>
-                      <text x="372" y="178" text-anchor="middle" class="diagram-note-v10">ID 17</text>
+                      <circle cx="370" cy="160" r="58"/>
+                      <text x="370" y="153" text-anchor="middle" class="diagram-query-v10">zᵢ</text>
+                      <text x="370" y="178" text-anchor="middle" class="diagram-note-v10">ID 17</text>
                     </g>
 
-                    <path d="M220 160 H305" class="regularize-pull-v10" marker-end="url(#arrowGreenReg)"/>
-                    <text x="263" y="145" text-anchor="middle" class="diagram-mini-green-v10">PULL</text>
+                    <path d="M232 160 H302" class="regularize-pull-v10" marker-end="url(#arrowGreenReg)"/>
+                    <text x="267" y="143" text-anchor="middle" class="diagram-mini-green-v10">PULL</text>
 
                     <g class="regularize-bank-v10">
-                      <circle cx="520" cy="103" r="11"/><circle cx="566" cy="126" r="11"/><circle cx="620" cy="99" r="11"/><circle cx="665" cy="139" r="11"/>
-                      <circle cx="531" cy="208" r="11"/><circle cx="584" cy="225" r="11"/><circle cx="647" cy="215" r="11"/>
+                      <circle cx="522" cy="101" r="11"/><circle cx="565" cy="125" r="11"/><circle cx="620" cy="98" r="11"/><circle cx="663" cy="136" r="11"/>
+                      <circle cx="530" cy="164" r="10"/><circle cx="585" cy="159" r="10"/><circle cx="643" cy="166" r="10"/>
                     </g>
 
                     <g class="regularize-scan-v10">
-                      <path d="M493 77 V246"/>
-                      <path d="M680 77 V246"/>
+                      <path d="M500 76 V174"/>
+                      <path d="M678 76 V174"/>
                     </g>
 
                     <g class="regularize-hard-v10">
-                      <rect x="514" y="186" width="160" height="88" rx="20"/>
-                      <text x="594" y="209" text-anchor="middle" class="diagram-strong-red-v10">TOP-K HARD WRONG IDs</text>
-                      <circle cx="548" cy="238" r="14"/><circle cx="594" cy="238" r="14"/><circle cx="640" cy="238" r="14"/>
+                      <rect x="508" y="188" width="172" height="88" rx="20"/>
+                      <text x="594" y="210" text-anchor="middle" class="diagram-strong-red-v10">TOP-K HARD WRONG IDs</text>
+                      <circle cx="548" cy="240" r="14"/><circle cx="594" cy="240" r="14"/><circle cx="640" cy="240" r="14"/>
                     </g>
 
-                    <path d="M436 211 H503" class="regularize-push-v10" marker-end="url(#arrowRedReg)"/>
-                    <text x="469" y="196" text-anchor="middle" class="diagram-mini-red-v10">PUSH</text>
+                    <path d="M438 211 H497" class="regularize-push-v10" marker-end="url(#arrowRedReg)"/>
+                    <text x="468" y="194" text-anchor="middle" class="diagram-mini-red-v10">PUSH</text>
 
                     <g class="regularize-margin-v10">
-                      <text x="238" y="318" class="diagram-note-v10">before</text>
-                      <circle cx="302" cy="314" r="7"/><line x1="312" y1="314" x2="352" y2="314"/><circle cx="362" cy="314" r="7"/>
-                      <text x="424" y="318" class="diagram-note-v10">after</text>
-                      <circle cx="480" cy="314" r="7"/><line x1="490" y1="314" x2="578" y2="314"/><circle cx="588" cy="314" r="7"/>
-                      <text x="630" y="318" class="diagram-callout-v10">larger local margin</text>
+                      <text x="224" y="318" class="diagram-note-v10">before</text>
+                      <circle cx="286" cy="314" r="7"/><line x1="296" y1="314" x2="344" y2="314"/><circle cx="354" cy="314" r="7"/>
+                      <text x="405" y="318" class="diagram-note-v10">after</text>
+                      <circle cx="462" cy="314" r="7"/><line x1="472" y1="314" x2="574" y2="314"/><circle cx="584" cy="314" r="7"/>
+                      <text x="612" y="318" class="diagram-callout-v10 regularize-margin-label-v12">larger local margin</text>
                     </g>
                   </svg>
                 </div>

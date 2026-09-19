@@ -7197,3 +7197,198 @@ body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .analysis-mechanism-card.is-dominant { transform: none; }
 }
+
+/* =========================================================
+   Method geometry polish v12 — attachment, memory, SSTT, loss
+   ========================================================= */
+
+/* 1) Give the single attachment point enough breathing room and a strict
+   vertical reading order: modality dots -> embeddings -> attach label. */
+@media (min-width: 1081px) {
+  .architecture-scene-v9[data-mode="training"] .attachment-zone-v9 {
+    flex-basis: 92px;
+  }
+}
+
+.attachment-socket-v9 {
+  grid-template-columns: 11px 11px;
+  grid-template-rows: 11px auto auto;
+  gap: 5px 6px;
+  width: 84px;
+  padding: .68rem .48rem .62rem;
+  border-radius: 20px;
+}
+.attachment-socket-v9 > i {
+  width: 10px;
+  height: 10px;
+}
+.attachment-socket-v9 > span {
+  margin-top: 1px;
+  font-size: .68rem;
+  line-height: 1.05;
+}
+.attachment-socket-v9 > small {
+  margin-top: 1px;
+  font-size: .53rem;
+  line-height: 1;
+  letter-spacing: .035em;
+}
+
+/* 2) Make the compact regularization card read as one local competition. */
+.method-v9 .flow-step-v9--loss {
+  padding-bottom: .64rem;
+}
+.method-v9 .flow-step-v9--loss > strong {
+  min-height: 2.05em;
+  font-size: .67rem;
+  line-height: 1.08;
+}
+.regulate-mini-v10 {
+  min-height: 76px;
+  margin-top: .16rem;
+}
+.regulate-query-v10 {
+  left: calc(50% - 13px);
+  top: 30%;
+  width: 27px;
+  height: 27px;
+}
+.regulate-positive-v10 {
+  left: 7%;
+  top: 25%;
+  width: 17px;
+  height: 17px;
+}
+.regulate-negative-v10 {
+  right: 7%;
+  top: 24%;
+  width: 17px;
+  height: 17px;
+}
+.regulate-pull-v10,
+.regulate-push-v10 {
+  top: 31%;
+  font-size: .42rem;
+  line-height: 1;
+}
+.regulate-pull-v10 { left: 21%; }
+.regulate-push-v10 { right: 20%; }
+.regulate-mini-v10::before,
+.regulate-mini-v10::after { top: 48%; }
+.regulate-mini-v10::before {
+  left: 20%;
+  width: 27%;
+}
+.regulate-mini-v10::after {
+  left: 59%;
+  width: 22%;
+}
+.regulate-mini-v10 > b {
+  right: 50%;
+  bottom: 1px;
+  width: 100%;
+  color: var(--negative-strong);
+  font-size: .41rem;
+  line-height: 1;
+  text-align: center;
+  transform: translateX(50%);
+  white-space: nowrap;
+}
+.flow-loss-symbol-v10 {
+  margin-top: .02rem;
+  font-size: .72rem;
+  line-height: 1;
+}
+
+/* 3) Strengthen identity ownership without adding visual clutter. */
+.remember-bank-shell-v10 {
+  stroke: #d8d0ca;
+  stroke-width: 1.25;
+}
+.remember-row-v10--active > rect {
+  fill: #fff4f4;
+  stroke: #df9599;
+  stroke-width: 1.25;
+}
+.remember-row-v10--muted { opacity: .84; }
+.remember-row-v10--muted > rect:first-child {
+  fill: #fbfaf9;
+}
+.remember-slot-v10,
+.remember-slot-text-v10 {
+  vector-effect: non-scaling-stroke;
+}
+
+/* 4) SSTT: the target is visually authoritative inside the destination space;
+   the incoming purple route terminates at the visual-space boundary. */
+.translate-space-v10--visual ellipse {
+  stroke-width: 1.35;
+}
+.translate-target-lines-v10 {
+  stroke-width: 1.9;
+}
+.translate-target-star-v10 {
+  font-size: 37px;
+  filter: drop-shadow(0 3px 7px rgba(40,93,159,.16));
+}
+.translate-target-caption-v12 {
+  fill: #4f5b6a;
+  font-weight: 790;
+}
+
+/* 5) Regularize: separate the wrong-ID pool from its selected Top-K subset,
+   keep the query as the center of competition, and clarify the margin cue. */
+.regularize-positive-v10 rect {
+  fill: rgba(238,249,243,.88);
+  stroke-width: 1.3;
+}
+.regularize-query-v10 circle {
+  stroke-width: 1.7;
+}
+.regularize-bank-v10 circle {
+  opacity: .30;
+}
+.regularize-bank-v10 circle:nth-child(5),
+.regularize-bank-v10 circle:nth-child(6),
+.regularize-bank-v10 circle:nth-child(7) {
+  opacity: .38;
+}
+.regularize-hard-v10 rect {
+  fill: #fff2f2;
+  stroke-width: 1.45;
+}
+.regularize-pull-v10,
+.regularize-push-v10 {
+  stroke-width: 2.35;
+}
+.diagram-mini-green-v10,
+.diagram-mini-red-v10 {
+  font-size: 9.5px;
+  font-weight: 900;
+}
+.regularize-margin-v10 line {
+  stroke: #aaa39c;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.regularize-margin-label-v12 {
+  fill: #4d5159;
+  font-weight: 800;
+}
+
+/* Preserve the compact horizontal attachment chip on narrower canvases. */
+@media (max-width: 780px) {
+  .attachment-socket-v9 {
+    grid-template-columns: 10px 10px auto auto;
+    grid-template-rows: auto;
+    width: auto;
+    padding: .44rem .68rem;
+    border-radius: 999px;
+    gap: 4px 6px;
+  }
+  .attachment-socket-v9 > span,
+  .attachment-socket-v9 > small {
+    grid-column: auto;
+    margin-top: 0;
+  }
+}
