@@ -44,6 +44,7 @@
   const motivationCandidates = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-candidate]")] : [];
   const motivationRevealButton = motivationStory?.querySelector("[data-motivation-reveal]");
   const motivationDetail = motivationStory?.querySelector("[data-motivation-detail]");
+  const motivationDetailClose = motivationStory?.querySelector("[data-motivation-detail-close]");
   const motivationDetailKicker = motivationStory?.querySelector("[data-motivation-detail-kicker]");
   const motivationDetailTitle = motivationStory?.querySelector("[data-motivation-detail-title]");
   const motivationDetailTarget = motivationStory?.querySelector("[data-motivation-detail-target]");
@@ -77,6 +78,14 @@
     if (motivationRevealButton) {
       motivationRevealButton.textContent = motivationIdentityRevealed ? "Hide identities" : "Reveal identities";
       motivationRevealButton.setAttribute("aria-pressed", String(motivationIdentityRevealed));
+    }
+    if (!motivationIdentityRevealed) {
+      selectedMotivationCandidate = null;
+      motivationCandidates.forEach((item) => {
+        item.classList.remove("is-active", "is-preview");
+        item.setAttribute("aria-pressed", "false");
+      });
+      if (motivationDetail) motivationDetail.hidden = true;
     }
   }
 
@@ -216,6 +225,75 @@
   });
 
   motivationRevealButton?.addEventListener("click", () => setMotivationReveal(!motivationIdentityRevealed));
+  motivationDetailClose?.addEventListener("click", () => {
+    selectedMotivationCandidate = null;
+    motivationCandidates.forEach((item) => {
+      item.classList.remove("is-active", "is-preview");
+      item.setAttribute("aria-pressed", "false");
+    });
+    if (motivationDetail) motivationDetail.hidden = true;
+  });
+
+  // Compact three-slide motivation deck. Vertical page scrolling remains untouched;
+  // users move through the story with the tabs or previous/next controls.
+  const motivationDeck = document.querySelector("[data-motivation-deck]");
+  const motivationSlides = motivationDeck ? [...motivationDeck.querySelectorAll("[data-motivation-slide]")] : [];
+  const motivationSlideTabs = motivationDeck ? [...motivationDeck.querySelectorAll("[data-motivation-slide-tab]")] : [];
+  const motivationPrev = motivationDeck?.querySelector("[data-motivation-prev]");
+  const motivationNext = motivationDeck?.querySelector("[data-motivation-next]");
+  const motivationCurrent = motivationDeck?.querySelector("[data-motivation-current]");
+  let activeMotivationSlide = 0;
+
+  function setMotivationSlide(index, { focusTab = false } = {}) {
+    if (!motivationDeck || !motivationSlides.length) return;
+    const nextIndex = Math.max(0, Math.min(motivationSlides.length - 1, Number(index) || 0));
+    const previousIndex = activeMotivationSlide;
+    motivationDeck.dataset.slideDirection = nextIndex < previousIndex ? "backward" : "forward";
+    activeMotivationSlide = nextIndex;
+
+    motivationSlides.forEach((slide, slideIndex) => {
+      const active = slideIndex === nextIndex;
+      slide.classList.toggle("is-active", active);
+      slide.setAttribute("aria-hidden", String(!active));
+      slide.toggleAttribute("inert", !active);
+    });
+
+    motivationSlideTabs.forEach((tab, tabIndex) => {
+      const active = tabIndex === nextIndex;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && focusTab) tab.focus({ preventScroll: true });
+    });
+
+    if (motivationCurrent) motivationCurrent.textContent = String(nextIndex + 1).padStart(2, "0");
+    if (motivationPrev) motivationPrev.disabled = nextIndex === 0;
+    if (motivationNext) motivationNext.disabled = nextIndex === motivationSlides.length - 1;
+
+    // Keep the retrieval-detail interaction local to slide 01.
+    if (nextIndex !== 0 && motivationDetail && !motivationDetail.hidden) {
+      motivationDetail.hidden = true;
+      selectedMotivationCandidate = null;
+      motivationCandidates.forEach((item) => item.classList.remove("is-active", "is-preview"));
+    }
+  }
+
+  motivationSlideTabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => setMotivationSlide(index));
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + motivationSlideTabs.length) % motivationSlideTabs.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % motivationSlideTabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = motivationSlideTabs.length - 1;
+      setMotivationSlide(nextIndex, { focusTab: true });
+    });
+  });
+
+  motivationPrev?.addEventListener("click", () => setMotivationSlide(activeMotivationSlide - 1));
+  motivationNext?.addEventListener("click", () => setMotivationSlide(activeMotivationSlide + 1));
+  if (motivationDeck && motivationSlides.length) setMotivationSlide(0);
 
   if (motivationStory && motivationBeats.length) {
     setMotivationBeat(1);

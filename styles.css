@@ -1738,437 +1738,330 @@ body { overflow-x: clip; }
 
 
 /* =========================================================
-   Motivation v3 — one continuous visual story
+   Motivation v6 — compact horizontal story deck
    ========================================================= */
-.motivation-v3 { position: relative; padding-top: calc(var(--space-20) + .5rem); }
-.motivation-v3-header { max-width: 940px; margin-bottom: clamp(2rem, 4vw, 3.6rem); }
-.motivation-v3-header .section-lead { max-width: 840px; }
-
-.motivation-story-shell {
+.motivation-v6-header { max-width: 900px; margin-bottom: 1.45rem; }
+.motivation-deck-v6 { --motivation-slide-offset: 0; display: grid; gap: .72rem; }
+.motivation-deck-tabs-v6 {
   display: grid;
-  grid-template-columns: minmax(250px, .36fr) minmax(0, .64fr);
-  gap: clamp(1.7rem, 4vw, 4rem);
-  align-items: start;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: .4rem;
+  padding: .32rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.68);
 }
-
-/* Each beat owns enough vertical scroll space for the sticky visual to remain
-   pinned through the full three-step story. */
-.motivation-narrative { display: grid; gap: 0; }
-.motivation-beat {
+.motivation-deck-tabs-v6 button {
   appearance: none;
-  position: relative;
-  min-height: 70vh;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  gap: 1rem;
-  align-content: center;
-  width: 100%;
-  padding: 2rem .2rem 2rem 0;
+  grid-template-columns: 34px minmax(0,1fr);
+  gap: .02rem .58rem;
+  align-items: center;
+  min-width: 0;
+  padding: .56rem .65rem;
   border: 0;
-  border-top: 1px solid var(--line);
+  border-radius: 12px;
   background: transparent;
-  color: inherit;
+  color: var(--text-2);
   cursor: pointer;
   text-align: left;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
 }
-.motivation-beat:last-child { border-bottom: 1px solid var(--line); }
-.motivation-beat::before {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 3px;
-  height: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  content: "";
-  transform: translateY(-50%);
-  transition: height .24s ease;
+.motivation-deck-tabs-v6 button:hover,
+.motivation-deck-tabs-v6 button:focus-visible { background: rgba(255,255,255,.82); color: var(--text); }
+.motivation-deck-tabs-v6 button[aria-selected="true"] {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(22,24,29,.04), 0 7px 18px rgba(22,24,29,.04);
 }
-.motivation-beat:hover::before,
-.motivation-beat:focus-visible::before { height: 28%; }
-.motivation-beat.is-active::before { height: 62%; }
-.motivation-beat-index {
-  width: 42px;
-  height: 42px;
+.motivation-deck-tabs-v6 button > span {
+  grid-row: 1 / span 2;
+  width: 30px;
+  height: 30px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--line);
+  border: 1px solid #e0d6cd;
   border-radius: 50%;
-  background: rgba(255,255,255,.72);
   color: var(--text-3);
-  font-size: .75rem;
-  font-weight: 850;
-  transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+  font-size: .66rem;
+  font-weight: 880;
 }
-.motivation-beat.is-active .motivation-beat-index {
-  border-color: #e0a3a3;
-  background: var(--surface-accent);
-  color: var(--accent-strong);
-  transform: scale(1.04);
-}
-.motivation-beat-copy { display: grid; align-content: start; gap: .46rem; padding-top: .1rem; }
-.motivation-beat-copy small {
-  color: var(--accent-strong);
-  font-size: .72rem;
-  font-weight: 850;
-  letter-spacing: .085em;
-  text-transform: uppercase;
-}
-.motivation-beat-copy strong {
-  max-width: 390px;
-  font-size: clamp(1.32rem, 2.2vw, 1.76rem);
-  line-height: 1.08;
-  letter-spacing: -.035em;
-}
-.motivation-beat-copy > span { max-width: 410px; color: var(--text-2); font-size: .94rem; line-height: 1.55; }
-.motivation-beat:not(.is-active) .motivation-beat-copy strong,
-.motivation-beat:not(.is-active) .motivation-beat-copy > span { opacity: .62; }
+.motivation-deck-tabs-v6 button[aria-selected="true"] > span { border-color: #e8b2b2; color: var(--accent-strong); background: #fff5f5; }
+.motivation-deck-tabs-v6 b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .78rem; }
+.motivation-deck-tabs-v6 small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-3); font-size: .62rem; }
 
-.motivation-stage-wrap {
-  position: sticky;
-  top: 84px;
-  align-self: start;
-  min-width: 0;
-  height: max-content;
-  z-index: 2;
-}
-.motivation-stage {
-  position: relative;
-  top: auto;
-  min-height: min(760px, calc(100vh - 116px));
+.motivation-deck-window-v6 {
   overflow: hidden;
-  border: 1px solid #ddd8ce;
-  border-radius: 30px;
-  background: #fbfaf7;
-  box-shadow: 0 20px 64px rgba(34, 27, 27, .09);
-  isolation: isolate;
-}
-.motivation-stage::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+  border: 1px solid #e3ddd5;
+  border-radius: 26px;
   background:
-    radial-gradient(circle at 92% 2%, rgba(198,40,40,.075), transparent 22rem),
-    radial-gradient(circle at 4% 92%, rgba(79,134,232,.05), transparent 20rem);
-  content: "";
+    radial-gradient(circle at 92% 0%, rgba(198,40,40,.045), transparent 24rem),
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(251,248,245,.88));
+  box-shadow: 0 16px 42px rgba(42,31,31,.055);
 }
-.motivation-scene {
-  position: absolute;
-  inset: 0;
-  display: grid;
+.motivation-deck-track-v6 {
+  position: relative;
+  width: 100%;
+}
+.motivation-slide-v6 {
+  min-width: 0;
+  min-height: 610px;
+  display: none;
   align-content: start;
   gap: 1rem;
-  padding: clamp(1.1rem, 2.3vw, 1.65rem);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(10px) scale(.995);
-  transition: opacity .24s ease, transform .32s cubic-bezier(.22,.8,.28,1), visibility 0s linear .32s;
-  will-change: opacity, transform;
+  padding: clamp(1.1rem,2.2vw,1.55rem);
 }
-.motivation-scene.is-active {
-  position: relative;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: none;
-  transition-delay: 0s;
-}
-.motivation-stage-eyebrow { display: flex; align-items: center; gap: .55rem; min-height: 28px; }
-.motivation-stage-eyebrow > span {
-  width: 28px;
-  height: 28px;
+.motivation-slide-v6.is-active {
   display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #261b1c;
-  color: white;
-  font-size: .66rem;
-  font-weight: 850;
+  animation: motivationSlideInV6 .3s cubic-bezier(.22,.78,.24,1) both;
 }
-.motivation-stage-eyebrow b { color: var(--text-2); font-size: .76rem; letter-spacing: .075em; text-transform: uppercase; }
+.motivation-deck-v6[data-slide-direction="backward"] .motivation-slide-v6.is-active {
+  animation-name: motivationSlideInBackV6;
+}
+@keyframes motivationSlideInV6 {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes motivationSlideInBackV6 {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.motivation-slide-head-v6 {
+  display: grid;
+  grid-template-columns: minmax(0,1.1fr) minmax(270px,.9fr);
+  gap: 1rem 2rem;
+  align-items: end;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid #e5ddd4;
+}
+.motivation-slide-head-v6 > div { display: grid; gap: .28rem; }
+.motivation-slide-head-v6 span { color: var(--accent-strong); font-size: .68rem; font-weight: 880; letter-spacing: .085em; text-transform: uppercase; }
+.motivation-slide-head-v6 h3 { margin: 0; font-size: clamp(1.55rem,2.8vw,2.15rem); line-height: 1.06; letter-spacing: -.04em; }
+.motivation-slide-head-v6 p { margin: 0; color: var(--text-2); font-size: .86rem; line-height: 1.5; }
 
-/* Scene 1 — gallery ambiguity */
-.motivation-query-v3 {
+/* Slide 1 — retrieval challenge */
+.motivation-gallery-v6 { position: relative; display: grid; gap: .62rem; }
+.motivation-query-v6 { display: grid; grid-template-columns: auto minmax(0,1fr); gap: .35rem .85rem; align-items: start; padding: .72rem .8rem; border: 1px solid #eadede; border-radius: 14px; background: rgba(255,255,255,.8); }
+.motivation-query-v6-label { grid-row: 1 / span 2; display: grid; align-content: center; gap: .02rem; min-width: 76px; }
+.motivation-query-v6-label span { color: var(--accent-strong); font-size: .62rem; font-weight: 880; letter-spacing: .075em; }
+.motivation-query-v6-label small { color: var(--text-3); font-size: .58rem; }
+.motivation-query-v6 p { margin: 0; color: var(--text); font-size: .81rem; line-height: 1.42; }
+.motivation-query-tags-v6 { display: flex; flex-wrap: wrap; gap: .24rem; }
+.motivation-query-tags-v6 span { padding: .17rem .34rem; border: 1px solid #e7dfd6; border-radius: 999px; background: #fff; color: var(--text-3); font-size: .56rem; font-weight: 700; }
+.motivation-match-rule-v6 { display: grid; grid-template-columns: 1fr auto 1fr; gap: .48rem; align-items: center; color: var(--text-3); }
+.motivation-match-rule-v6 span { height: 1px; background: linear-gradient(90deg,transparent,#d8d0c6); }
+.motivation-match-rule-v6 span:last-child { background: linear-gradient(90deg,#d8d0c6,transparent); }
+.motivation-match-rule-v6 b { font-size: .58rem; font-weight: 760; letter-spacing: .04em; text-transform: uppercase; }
+.motivation-candidates-v6 { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .52rem; }
+.motivation-person-v6 { position: relative; min-width: 0; appearance: none; padding: .32rem; border: 1px solid #e5dfd7; border-radius: 13px; background: rgba(255,255,255,.86); cursor: pointer; text-align: left; transition: transform .16s ease,border-color .16s ease,box-shadow .16s ease; }
+.motivation-person-v6:hover,.motivation-person-v6:focus-visible,.motivation-person-v6.is-active { transform: translateY(-2px); border-color: #d9aaa7; box-shadow: 0 8px 20px rgba(67,43,43,.06); }
+.motivation-person-v6 img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 9px; }
+.motivation-person-id-v6 { position: absolute; left: .52rem; top: .52rem; z-index: 2; width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: rgba(29,25,25,.82); color: white; font-size: .6rem; font-weight: 860; }
+.motivation-person-result-v6 { display: grid; gap: .01rem; padding: .38rem .1rem .04rem; opacity: .08; transform: translateY(2px); transition: opacity .16s ease,transform .16s ease; }
+.identities-revealed .motivation-person-result-v6,.motivation-person-v6.is-active .motivation-person-result-v6,.motivation-person-v6.is-preview .motivation-person-result-v6 { opacity: 1; transform: none; }
+.motivation-person-result-v6 b { font-size: .64rem; }
+.motivation-person-result-v6 small { color: var(--text-3); font-size: .54rem; }
+.motivation-person-v6[data-motivation-candidate="target"] .motivation-person-result-v6 b { color: var(--positive-strong); }
+.motivation-person-v6:not([data-motivation-candidate="target"]) .motivation-person-result-v6 b { color: var(--negative-strong); }
+.motivation-gallery-footer-v6 { display: flex; align-items: center; justify-content: space-between; gap: .9rem; }
+.motivation-gallery-footer-v6 > div { display: grid; gap: .02rem; }
+.motivation-gallery-footer-v6 strong { font-size: .76rem; }
+.motivation-gallery-footer-v6 span { color: var(--text-3); font-size: .65rem; }
+.motivation-reveal-button-v6 { appearance: none; flex: 0 0 auto; padding: .44rem .64rem; border: 1px solid #ddb6b4; border-radius: 999px; background: #fff7f7; color: var(--accent-strong); cursor: pointer; font-size: .65rem; font-weight: 820; }
+.motivation-detail-v6 { margin-top: .1rem; padding: .7rem .75rem; border: 1px solid #e7dfd6; border-radius: 14px; background: rgba(255,255,255,.9); animation: motivationDetailInV6 .2s ease both; }
+.motivation-detail-v6[hidden] { display: none; }
+@keyframes motivationDetailInV6 { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+.motivation-detail-head-v6 { display:flex; align-items:center; justify-content:space-between; gap:.8rem; margin-bottom:.58rem; }
+.motivation-detail-head-v6 > div { display:grid; gap:.02rem; }
+.motivation-detail-head-v6 span { color:var(--accent-strong); font-size:.58rem; font-weight:850; letter-spacing:.05em; text-transform:uppercase; }
+.motivation-detail-head-v6 strong { font-size:.8rem; }
+.motivation-detail-head-v6 button { width: 27px; height: 27px; display:grid; place-items:center; appearance:none; border:1px solid var(--line); border-radius:50%; background:white; color:var(--text-3); cursor:pointer; font-size:1rem; }
+.motivation-detail-grid-v6 { display:grid; grid-template-columns:1fr auto 1fr; gap:.65rem; align-items:center; }
+.motivation-detail-person-v6 { margin:0; display:grid; grid-template-columns:72px minmax(0,1fr); gap:.55rem; align-items:center; }
+.motivation-detail-image-v6 { overflow:hidden; aspect-ratio:3/4; border:1px solid #e5ded5; border-radius:10px; background:#f4f1ec; }
+.motivation-detail-image-v6 img { width:100%; height:100%; object-fit:cover; }
+.motivation-detail-person-v6 figcaption { display:grid; gap:.06rem; }
+.motivation-detail-person-v6 figcaption span { color:var(--text-3); font-size:.56rem; font-weight:820; letter-spacing:.055em; }
+.motivation-detail-person-v6 figcaption strong { font-size:.69rem; line-height:1.32; }
+.motivation-detail-not-equal-v6 { color:#bdb5aa; font-size:1.1rem; font-weight:900; }
+
+/* Shared semantic image + caption observation glyph. */
+.motivation-observation-glyph-v6 { display: inline-flex; align-items: center; justify-content: center; gap: .42rem; }
+.motivation-photo-glyph-v6 { position: relative; width: 45px; height: 55px; border: 1px solid #d8dce1; border-radius: 8px; background: linear-gradient(180deg,#fbfcfe,#f1f3f5); box-shadow: 0 3px 9px rgba(31,39,48,.04); }
+.motivation-photo-glyph-v6::after { position: absolute; left: 5px; bottom: 5px; width: 3px; height: 18px; border-radius: 3px; background: rgba(79,134,232,.72); content: ""; }
+.motivation-photo-glyph-v6 i { position: absolute; left: 50%; top: 9px; width: 12px; height: 12px; border-radius: 50%; background: #6d737a; transform: translateX(-50%); }
+.motivation-photo-glyph-v6 b { position: absolute; left: 50%; bottom: 6px; width: 22px; height: 25px; border-radius: 9px 9px 6px 6px; background: #747a80; transform: translateX(-50%); }
+.motivation-caption-glyph-v6 { position: relative; width: 56px; min-height: 42px; display: grid; align-content: center; gap: 5px; padding: 6px 5px 6px 12px; }
+.motivation-caption-glyph-v6::before { position: absolute; left: 1px; top: 4px; color: rgba(232,148,69,.9); content: "“"; font-family: Georgia,serif; font-size: 1.45rem; line-height: 1; }
+.motivation-caption-glyph-v6 i { height: 2px; border-radius: 999px; background: #8a8580; }
+.motivation-caption-glyph-v6 i:nth-child(2) { width: 74%; }
+.motivation-caption-glyph-v6 i:nth-child(3) { width: 88%; }
+.motivation-observation-glyph-v6--alt .motivation-photo-glyph-v6 { transform: rotate(-3deg); }
+.motivation-observation-glyph-v6--third .motivation-photo-glyph-v6 { transform: rotate(3deg); }
+.motivation-observation-glyph-v6--alt .motivation-caption-glyph-v6 i:nth-child(1) { width: 80%; }
+.motivation-observation-glyph-v6--third .motivation-caption-glyph-v6 i:nth-child(2) { width: 62%; }
+
+/* Slide 2 — existing supervision + missing persistent reference. */
+.motivation-supervision-compact-v6 { display: grid; grid-template-columns: minmax(210px,.36fr) minmax(0,.64fr); gap: 1.2rem; align-items: center; padding: .65rem 0 1rem; border-bottom: 1px solid #e4ddd4; }
+.motivation-id-statement-v6 { display: grid; gap: .08rem; padding-right: 1.2rem; border-right: 1px solid #e4ddd4; }
+.motivation-id-statement-v6 small { color: var(--accent-strong); font-size: .61rem; font-weight: 880; letter-spacing: .08em; }
+.motivation-id-statement-v6 strong { font-size: 2rem; line-height: 1; letter-spacing: -.045em; }
+.motivation-id-statement-v6 span { margin-top: .18rem; max-width: 210px; color: var(--text-3); font-size: .68rem; line-height: 1.4; }
+.motivation-supervision-verbs-v6 { display: grid; grid-template-columns: repeat(3,1fr); gap: .8rem; }
+.motivation-supervision-verbs-v6 span { display: grid; grid-template-columns: 28px 1fr; gap: .02rem .5rem; align-items: center; }
+.motivation-supervision-verbs-v6 i { grid-row: 1 / span 2; width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #ddd4ca; border-radius: 50%; color: var(--text-3); font-size: .56rem; font-style: normal; font-weight: 850; }
+.motivation-supervision-verbs-v6 b { font-size: .78rem; }
+.motivation-supervision-verbs-v6 small { color: var(--text-3); font-size: .62rem; }
+.motivation-local-story-v6 { display: grid; gap: .85rem; padding-top: .4rem; }
+.motivation-local-copy-v6 { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.motivation-local-copy-v6 span { color: var(--accent-strong); font-size: .64rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
+.motivation-local-copy-v6 strong { max-width: 640px; font-size: .82rem; text-align: right; }
+.motivation-local-observations-v6 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; max-width: 900px; width: 100%; margin: 0 auto; }
+.motivation-observation-node-v6 { display: grid; justify-items: center; text-align: center; }
+.motivation-observation-node-v6 > span { color: var(--accent-strong); font-size: .6rem; font-weight: 850; }
+.motivation-observation-node-v6 .motivation-observation-glyph-v6 { margin: .25rem 0 .2rem; }
+.motivation-observation-node-v6 > strong { font-size: .72rem; }
+.motivation-observation-node-v6 > small { color: var(--text-3); font-size: .59rem; }
+.motivation-empty-rail-v6 { display: grid; grid-template-columns: 1fr 30px 1fr; gap: .45rem; align-items: center; max-width: 860px; width: 100%; margin: .15rem auto 0; }
+.motivation-empty-rail-v6 > span { height: 1px; background: repeating-linear-gradient(90deg,#bbb2a8 0 8px,transparent 8px 15px); }
+.motivation-empty-rail-v6 > i { width: 30px; height: 30px; display:grid; place-items:center; border:1px dashed #aba197; border-radius:50%; color:#857a72; font-style:normal; font-size:.68rem; font-weight:850; }
+.motivation-empty-rail-v6 > div { grid-column: 1 / -1; display:grid; gap:.04rem; justify-items:center; text-align:center; margin-top:-.12rem; }
+.motivation-empty-rail-v6 small { color: var(--text-3); font-size: .57rem; font-weight: 840; letter-spacing: .07em; }
+.motivation-empty-rail-v6 strong { font-size: .78rem; }
+
+/* Slide 3 — before/after treatment of the same observations. */
+.motivation-before-after-v6 { display: grid; grid-template-columns: minmax(0,1fr) 42px minmax(0,1fr); gap: .65rem; align-items: stretch; }
+.motivation-before-v6,.motivation-after-v6 { min-width:0; display:grid; align-content:start; gap:.72rem; padding:1rem; border:1px solid #e2dbd2; border-radius:18px; background:rgba(255,255,255,.72); }
+.motivation-after-v6 { border-color:#e7b1b1; background:linear-gradient(180deg,#fffafa,#fff); }
+.motivation-before-v6 header,.motivation-after-v6 header { display:grid; gap:.1rem; }
+.motivation-before-v6 header small,.motivation-after-v6 header small { color:var(--text-3); font-size:.58rem; font-weight:860; letter-spacing:.07em; }
+.motivation-after-v6 header small { color:var(--accent-strong); }
+.motivation-before-v6 header strong,.motivation-after-v6 header strong { font-size:.78rem; line-height:1.35; }
+.motivation-before-after-arrow-v6 { display:grid; place-items:center; color:#b7ada3; font-size:1.55rem; font-weight:900; }
+.motivation-mini-observations-v6,.motivation-memory-sources-v6 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; }
+.motivation-mini-observations-v6 span,.motivation-memory-sources-v6 span { display:grid; justify-items:center; gap:.2rem; }
+.motivation-mini-observations-v6 b,.motivation-memory-sources-v6 b { color:var(--text-3); font-size:.58rem; }
+.motivation-mini-observations-v6 i { width:42px; height:28px; display:grid; place-items:center; border:1px solid #d8d2ca; border-radius:8px; background:#fff; color:#77726d; font-size:.58rem; font-style:normal; }
+.motivation-memory-sources-v6 i { width:32px; height:32px; border:1px solid #d8d2ca; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 8px #f3f1ed; }
+.motivation-fade-path-v6,.motivation-memory-converge-v6 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; height:36px; }
+.motivation-fade-path-v6 span { position:relative; }
+.motivation-fade-path-v6 span::after { position:absolute; left:50%; top:0; height:31px; border-left:1px dashed #c9c1b8; content:""; }
+.motivation-nothing-v6 { display:flex; align-items:center; justify-content:center; gap:.5rem; color:var(--text-3); }
+.motivation-nothing-v6 i { width:27px; height:27px; display:grid; place-items:center; border:1px dashed #aaa096; border-radius:50%; font-style:normal; font-size:.64rem; font-weight:850; }
+.motivation-nothing-v6 strong { font-size:.71rem; }
+.motivation-memory-converge-v6 span { position:relative; }
+.motivation-memory-converge-v6 span::before { position:absolute; left:50%; top:0; width:1px; height:22px; background:#d8b8b3; content:""; }
+.motivation-memory-converge-v6 span::after { position:absolute; left:50%; top:21px; width:50%; height:15px; border-bottom:1px solid #d8b8b3; content:""; }
+.motivation-memory-converge-v6 span:first-child::after { border-right:1px solid #d8b8b3; border-radius:0 0 10px 0; }
+.motivation-memory-converge-v6 span:nth-child(2)::after { width:1px; border:0; background:#d8b8b3; }
+.motivation-memory-converge-v6 span:last-child::after { left:auto; right:50%; border-left:1px solid #d8b8b3; border-radius:0 0 0 10px; }
+.motivation-memory-core-v6 { display:grid; grid-template-columns:140px 1fr; gap:.38rem .8rem; align-items:center; padding:.72rem .8rem; border-top:2px solid rgba(198,40,40,.45); border-bottom:1px solid #ded7ce; }
+.motivation-memory-core-v6 > div:first-child { grid-row:1 / span 2; display:grid; gap:.03rem; padding-right:.8rem; border-right:1px solid #e4ddd4; }
+.motivation-memory-core-v6 small { color:var(--accent-strong); font-size:.54rem; font-weight:860; letter-spacing:.065em; }
+.motivation-memory-core-v6 strong { font-size:.9rem; }
+.motivation-prototype-line-v6 { display:grid; grid-template-columns:48px repeat(3,22px); gap:.35rem; align-items:center; }
+.motivation-prototype-line-v6 b { color:var(--text-3); font-size:.57rem; text-transform:uppercase; }
+.motivation-prototype-line-v6 i { position:relative; width:21px; height:21px; border:1px solid #9cbdeb; border-radius:50%; background:#fff; }
+.motivation-prototype-line-v6 i::after { position:absolute; inset:6px; border-radius:50%; background:var(--visual); content:""; }
+.motivation-prototype-line-v6--text i { border-color:#e6bb89; border-radius:5px; transform:rotate(45deg) scale(.86); }
+.motivation-prototype-line-v6--text i::after { border-radius:2px; background:var(--textual); }
+.motivation-principles-inline-v6 { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.45rem 1rem; padding:.56rem .7rem; border-top:1px solid #e4ddd4; border-bottom:1px solid #e4ddd4; color:var(--text-3); font-size:.63rem; }
+.motivation-principles-inline-v6 b { color:var(--text); }
+
+.motivation-slide-punchline-v6 { margin:auto 0 0; padding-top:.72rem; border-top:1px solid #e4ddd4; color:var(--text-2); font-size:.78rem; text-align:center; }
+.motivation-slide-punchline-v6 strong { color:var(--text); }
+
+.motivation-deck-footer-v6 { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:.7rem; }
+.motivation-deck-footer-v6 button { appearance:none; justify-self:start; min-width:92px; padding:.42rem .62rem; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.8); color:var(--text-2); cursor:pointer; font-size:.66rem; font-weight:780; }
+.motivation-deck-footer-v6 button:last-child { justify-self:end; }
+.motivation-deck-footer-v6 button:hover:not(:disabled),.motivation-deck-footer-v6 button:focus-visible:not(:disabled) { border-color:#dca4a4; color:var(--accent-strong); background:#fff; }
+.motivation-deck-footer-v6 button:disabled { opacity:.32; cursor:default; }
+.motivation-deck-footer-v6 > span { color:var(--text-3); font-size:.66rem; letter-spacing:.08em; }
+.motivation-deck-footer-v6 > span b { color:var(--accent-strong); }
+
+.motivation-takeaway-v6 {
+  position: relative;
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  gap: .55rem 1rem;
+  grid-template-columns: auto minmax(0,1fr);
+  gap: 1rem 1.2rem;
   align-items: start;
-  padding: .95rem 1rem;
-  border: 1px solid #e4d8d8;
-  border-radius: 18px;
-  background: rgba(255,255,255,.82);
-}
-.motivation-query-v3-label { grid-row: 1 / span 2; display: grid; gap: .05rem; align-content: start; }
-.motivation-query-v3-label span { color: var(--accent-strong); font-size: .72rem; font-weight: 900; letter-spacing: .085em; }
-.motivation-query-v3-label small { color: var(--text-3); font-size: .67rem; }
-.motivation-query-v3 p { margin: 0; color: var(--text); font-size: .9rem; line-height: 1.48; }
-.motivation-query-tags { display: flex; flex-wrap: wrap; gap: .28rem; }
-.motivation-query-tags span {
-  padding: .2rem .4rem;
-  border: 1px solid #e8e2d9;
-  border-radius: 999px;
-  background: #fff;
-  color: var(--text-3);
-  font-size: .64rem;
-  font-weight: 720;
-}
-.motivation-match-arrow { display: grid; grid-template-columns: 1fr auto 1fr; gap: .55rem; align-items: center; color: var(--text-3); }
-.motivation-match-arrow span { height: 1px; background: linear-gradient(90deg, transparent, #c9c3b9); }
-.motivation-match-arrow span:last-child { background: linear-gradient(90deg, #c9c3b9, transparent); }
-.motivation-match-arrow b { font-size: .68rem; font-weight: 760; letter-spacing: .04em; }
-.motivation-candidates { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .55rem; }
-.motivation-person {
-  appearance: none;
-  position: relative;
-  min-width: 0;
-  padding: .35rem;
+  margin-top: 1rem;
+  padding: clamp(1.15rem,2.5vw,1.55rem);
   overflow: hidden;
-  border: 1px solid #dedbd3;
-  border-radius: 15px;
-  background: white;
-  cursor: pointer;
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, opacity .18s ease;
-}
-.motivation-person:hover,
-.motivation-person:focus-visible,
-.motivation-person.is-preview { transform: translateY(-2px); border-color: #c7bbb4; box-shadow: 0 10px 24px rgba(23,24,29,.07); }
-.motivation-person.is-active { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(23,24,29,.10); }
-.motivation-person img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 10px; background: var(--surface-soft); }
-.motivation-person-id {
-  position: absolute;
-  top: .58rem;
-  left: .58rem;
-  z-index: 2;
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(24,25,30,.78);
-  color: white;
-  font-size: .66rem;
-  font-weight: 900;
-  backdrop-filter: blur(6px);
-}
-.motivation-person-result {
-  display: grid;
-  gap: .03rem;
-  max-height: 0;
-  padding: 0 .08rem;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-3px);
-  transition: max-height .22s ease, padding .22s ease, opacity .22s ease, transform .22s ease;
-}
-.motivation-person-result b { font-size: .71rem; line-height: 1.2; }
-.motivation-person-result small { color: var(--text-3); font-size: .61rem; line-height: 1.2; }
-.identities-revealed .motivation-person-result { max-height: 44px; padding: .42rem .08rem .08rem; opacity: 1; transform: none; }
-.identities-revealed .motivation-person[data-motivation-candidate="target"] { border-color: #8ecbad; }
-.identities-revealed .motivation-person[data-motivation-candidate="target"] .motivation-person-result b { color: var(--positive-strong); }
-.identities-revealed .motivation-person:not([data-motivation-candidate="target"]) { border-color: #e4b6ba; }
-.identities-revealed .motivation-person:not([data-motivation-candidate="target"]) .motivation-person-result b { color: var(--negative-strong); }
-.identities-revealed .motivation-person.is-active[data-motivation-candidate="target"] { box-shadow: 0 0 0 3px rgba(22,154,99,.12), 0 12px 28px rgba(23,24,29,.08); }
-.identities-revealed .motivation-person.is-active:not([data-motivation-candidate="target"]) { box-shadow: 0 0 0 3px rgba(217,87,100,.11), 0 12px 28px rgba(23,24,29,.08); }
-.motivation-gallery-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .05rem; }
-.motivation-gallery-message { display: grid; gap: .08rem; min-width: 0; }
-.motivation-gallery-message strong { font-size: .84rem; }
-.motivation-gallery-message span { color: var(--text-3); font-size: .72rem; line-height: 1.4; }
-.motivation-reveal-button {
-  appearance: none;
-  flex: 0 0 auto;
-  min-height: 36px;
-  padding: .45rem .65rem;
-  border: 1px solid #d7a1a1;
-  border-radius: 10px;
-  background: var(--surface-accent);
-  color: var(--accent-strong);
-  cursor: pointer;
-  font-size: .74rem;
-  font-weight: 820;
-}
-.motivation-reveal-button:hover { background: #ffe5e5; }
-.motivation-detail {
-  display: grid;
-  gap: .65rem;
-  padding: .8rem;
-  border-top: 1px solid var(--line);
-  animation: motivationDetailIn .24s ease both;
-}
-.motivation-detail[hidden] { display: none; }
-@keyframes motivationDetailIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
-.motivation-detail-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
-.motivation-detail-head > div { display: grid; gap: .06rem; }
-.motivation-detail-head span { color: var(--accent-strong); font-size: .65rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
-.motivation-detail-head strong { font-size: .82rem; line-height: 1.3; }
-.motivation-detail-head > small { color: var(--text-3); font-size: .64rem; }
-.motivation-detail-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: .65rem; align-items: center; }
-.motivation-detail-person { display: grid; grid-template-columns: 92px minmax(0,1fr); gap: .65rem; align-items: center; margin: 0; }
-.motivation-detail-image { height: 78px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
-.motivation-detail-image img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.55); transform-origin: 50% 45%; }
-.motivation-detail-person[data-focus-cue="backpack"] .motivation-detail-image img { transform: scale(1.7); transform-origin: 50% 36%; }
-.motivation-detail-person[data-focus-cue="jacket"] .motivation-detail-image img { transform: scale(1.65); transform-origin: 50% 42%; }
-.motivation-detail-person[data-focus-cue="shoes"] .motivation-detail-image img { transform: scale(1.8); transform-origin: 50% 86%; }
-.motivation-detail-person[data-focus-cue="hair-tote"] .motivation-detail-image img { transform: scale(1.5); transform-origin: 50% 44%; }
-.motivation-detail-person figcaption { display: grid; gap: .12rem; }
-.motivation-detail-person figcaption span { font-size: .61rem; font-weight: 880; letter-spacing: .06em; }
-.motivation-detail-target figcaption span { color: var(--positive-strong); }
-.motivation-detail-negative figcaption span { color: var(--negative-strong); }
-.motivation-detail-person figcaption strong { color: var(--text-2); font-size: .72rem; line-height: 1.35; }
-.motivation-detail-not-equal { color: var(--accent-strong); font-size: 1.45rem; font-weight: 900; }
-
-/* Scene 2 — identity supervision and the missing reference */
-.motivation-scene-supervision,
-.motivation-scene-memory { align-content: center; }
-.motivation-supervision-line { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: .45rem; align-items: center; }
-.motivation-supervision-line > span {
-  min-height: 88px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: .06rem .48rem;
-  align-content: center;
-  padding: .7rem;
-  border-bottom: 2px solid #d8d2c8;
-  background: rgba(255,255,255,.46);
-}
-.motivation-supervision-line i { grid-row: 1 / span 2; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #292021; color: white; font-style: normal; font-size: .6rem; font-weight: 850; }
-.motivation-supervision-line b { font-size: .8rem; }
-.motivation-supervision-line small { color: var(--text-3); font-size: .67rem; }
-.motivation-supervision-line em { color: #b8b0a5; font-style: normal; font-weight: 900; }
-.motivation-timeline { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: .6rem; align-items: center; margin-top: .45rem; }
-.motivation-timepoint {
-  min-width: 0;
-  display: grid;
-  gap: .12rem;
-  padding: .8rem;
-  border: 1px solid #dedad2;
-  border-radius: 16px;
-  background: rgba(255,255,255,.82);
-}
-.motivation-timepoint > span { color: var(--text-3); font-size: .65rem; font-weight: 840; letter-spacing: .05em; text-transform: uppercase; }
-.motivation-timepoint strong { font-size: .78rem; }
-.motivation-timepoint small { color: var(--text-3); font-size: .64rem; }
-.motivation-timepoint > b { justify-self: start; margin-top: .38rem; padding: .22rem .38rem; border-radius: 999px; background: var(--surface-accent); color: var(--accent-strong); font-size: .58rem; }
-.motivation-observation { display: flex; gap: .35rem; align-items: center; min-height: 42px; margin: .28rem 0; }
-.motivation-observation i { display: block; border: 3px solid white; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
-.motivation-visual-token { width: 34px; height: 42px; border-radius: 11px 11px 9px 9px; background: var(--visual); }
-.motivation-text-token { width: 42px; height: 28px; border-radius: 9px; background: var(--textual); }
-.motivation-visual-token.alt { transform: rotate(-4deg) scale(.94); opacity: .9; }
-.motivation-text-token.alt { width: 36px; opacity: .85; }
-.motivation-visual-token.third { transform: rotate(4deg) scale(1.02); opacity: .88; }
-.motivation-text-token.third { width: 46px; opacity: .92; }
-.motivation-time-arrow { color: #b9b2a8; font-size: 1.25rem; font-weight: 900; }
-.motivation-reference-lane { position: relative; display: grid; gap: .65rem; margin-top: .35rem; padding: .95rem 1rem; border-radius: 15px; }
-.motivation-reference-lane.is-missing { border: 1px dashed #c8c1b6; background: rgba(247,245,240,.62); }
-.motivation-reference-rail { display: grid; grid-template-columns: 1fr 22px 1fr; align-items: center; }
-.motivation-reference-rail span { height: 1px; background: repeating-linear-gradient(90deg,#bdb6ab 0 8px,transparent 8px 14px); }
-.motivation-reference-rail i { width: 22px; height: 22px; border: 1px solid #bdb6ab; border-radius: 50%; position: relative; }
-.motivation-reference-rail i::after { position: absolute; inset: 9px 4px; height: 1px; background: #bdb6ab; content: ""; transform: rotate(-38deg); }
-.motivation-reference-copy { display: grid; justify-items: center; gap: .08rem; text-align: center; }
-.motivation-reference-copy span { color: var(--text-3); font-size: .63rem; text-transform: uppercase; letter-spacing: .06em; }
-.motivation-reference-copy strong { font-size: .84rem; }
-.motivation-scene-note { margin: .1rem 0 0; padding: .8rem .9rem; border-left: 3px solid var(--accent); background: rgba(255,255,255,.58); color: var(--text-2); font-size: .76rem; line-height: 1.45; }
-.motivation-scene-note strong { color: var(--text); }
-
-/* Scene 3 — the same timeline gains a persistent lane */
-.motivation-timeline-memory { margin-top: .5rem; }
-.motivation-timepoint.is-source { border-color: #d7d2c8; background: rgba(255,255,255,.72); }
-.motivation-memory-update { display: grid; grid-template-columns: 1fr auto 1fr; gap: .5rem; align-items: center; justify-items: center; margin-top: -.1rem; color: #7d756d; }
-.motivation-memory-update span { width: 100%; height: 1px; background: linear-gradient(90deg,transparent,#bdb6ab); }
-.motivation-memory-update span:nth-of-type(2) { background: linear-gradient(90deg,#bdb6ab,transparent); }
-.motivation-memory-update b { font-size: .64rem; font-weight: 760; }
-.motivation-memory-update i { grid-column: 1 / -1; color: var(--accent-strong); font-style: normal; font-size: 1.2rem; line-height: .8; }
-.motivation-identity-memory {
-  position: relative;
-  padding: 1rem;
-  border: 1.5px solid #c67373;
-  border-radius: 19px;
-  background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,240,240,.68));
-  box-shadow: 0 13px 32px rgba(153,27,27,.08);
-}
-.motivation-identity-memory::before { position: absolute; inset: -1px auto -1px -1px; width: 4px; border-radius: 19px 0 0 19px; background: var(--accent); content: ""; }
-.motivation-identity-memory header { display: flex; justify-content: space-between; gap: .8rem; align-items: end; margin-bottom: .7rem; }
-.motivation-identity-memory header > div { display: grid; gap: .06rem; }
-.motivation-identity-memory header span { color: var(--accent-strong); font-size: .64rem; font-weight: 880; letter-spacing: .07em; }
-.motivation-identity-memory header strong { font-size: 1rem; }
-.motivation-identity-memory header small { color: var(--text-3); font-size: .65rem; }
-.motivation-memory-lane { display: grid; grid-template-columns: 56px 1fr 1fr auto; gap: .5rem; align-items: center; padding: .52rem .55rem; margin-top: .4rem; border-radius: 12px; background: rgba(255,255,255,.82); }
-.motivation-memory-lane b { color: var(--text-3); font-size: .66rem; text-transform: uppercase; }
-.motivation-memory-lane i { height: 30px; border: 1px solid; border-radius: 10px; }
-.motivation-memory-lane.visual i { border-color: #a9c7f1; background: var(--visual-soft); box-shadow: inset 0 0 0 5px rgba(79,134,232,.06); }
-.motivation-memory-lane.textual i { border-color: #edc18f; background: var(--textual-soft); box-shadow: inset 0 0 0 5px rgba(232,148,69,.06); }
-.motivation-memory-lane em { color: var(--text-3); font-size: .61rem; font-style: normal; }
-.motivation-memory-principles { display: grid; grid-template-columns: repeat(3,1fr); gap: .55rem; }
-.motivation-memory-principles span { display: grid; gap: .05rem; padding-top: .6rem; border-top: 2px solid #c9c2b8; }
-.motivation-memory-principles b { font-size: .72rem; }
-.motivation-memory-principles small { color: var(--text-3); font-size: .61rem; line-height: 1.3; }
-
-.motivation-bridge-v3 {
-  display: grid;
-  justify-items: center;
-  gap: .65rem;
-  margin-top: clamp(2rem, 4vw, 3rem);
-  padding: 1.35rem;
+  border: 1px solid #f1b0b0;
   border-radius: 22px;
-  background: #24191a;
-  color: white;
-  text-align: center;
-  box-shadow: var(--shadow-md);
+  background:
+    radial-gradient(circle at 94% 0%, rgba(198,40,40,.10), transparent 20rem),
+    linear-gradient(135deg,#fffafa,#fff0f0);
+  box-shadow: 0 12px 32px rgba(153,27,27,.06);
 }
-.motivation-bridge-path { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .44rem; }
-.motivation-bridge-path span,
-.motivation-bridge-path strong { padding: .35rem .55rem; border-radius: 999px; background: rgba(255,255,255,.08); font-size: .7rem; }
-.motivation-bridge-path strong { background: white; color: var(--accent-strong); }
-.motivation-bridge-path b { color: #c8bdbf; }
-.motivation-bridge-v3 p { margin: 0; max-width: 780px; color: #ddd3d4; font-size: .84rem; }
-.motivation-bridge-v3 a { display: inline-flex; align-items: center; gap: .4rem; padding: .48rem .7rem; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: white; text-decoration: none; font-size: .72rem; font-weight: 780; }
-.motivation-bridge-v3 a:hover { background: rgba(255,255,255,.08); }
+.motivation-takeaway-v6::before { position:absolute; inset:0 auto 0 0; width:5px; background:var(--accent); content:""; }
+.motivation-takeaway-label-v6 { display:inline-flex; align-items:center; justify-content:center; min-height:32px; padding:.35rem .6rem; border-radius:999px; background:var(--accent-strong); color:#fff; font-size:.72rem; font-weight:850; letter-spacing:.08em; }
+.motivation-takeaway-v6 > div { display:grid; gap:.22rem; }
+.motivation-takeaway-v6 strong { color:var(--text); font-size:clamp(1.05rem,2vw,1.32rem); line-height:1.25; letter-spacing:-.02em; }
+.motivation-takeaway-v6 p { margin:0; max-width:900px; color:var(--accent-strong); font-size:.88rem; line-height:1.5; font-weight:680; }
 
-@media (max-width: 980px) {
-  .motivation-story-shell { grid-template-columns: 1fr; gap: 1rem; }
-  .motivation-stage-wrap { position: relative; top: auto; height: auto; z-index: auto; }
-  .motivation-narrative { grid-template-columns: repeat(3, minmax(190px, 1fr)); gap: .55rem; overflow-x: auto; padding-bottom: .25rem; scroll-snap-type: x proximity; }
-  .motivation-beat { min-height: 0; grid-template-columns: 34px minmax(145px, 1fr); gap: .65rem; align-content: start; padding: .8rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.68); scroll-snap-align: start; }
-  .motivation-beat:last-child { border-bottom: 1px solid var(--line); }
-  .motivation-beat::before { display: none; }
-  .motivation-beat-index { width: 32px; height: 32px; }
-  .motivation-beat-copy { gap: .25rem; }
-  .motivation-beat-copy strong { font-size: 1rem; }
-  .motivation-beat-copy > span { display: none; }
-  .motivation-stage { position: relative; top: auto; min-height: 0; }
-  .motivation-scene { position: absolute; min-height: 0; }
-  .motivation-scene.is-active { position: relative; }
+@media (max-width: 900px) {
+  .motivation-slide-v6 { min-height: 650px; }
+  .motivation-slide-head-v6 { grid-template-columns:1fr; gap:.45rem; align-items:start; }
+  .motivation-supervision-compact-v6 { grid-template-columns:180px minmax(0,1fr); }
+  .motivation-before-after-v6 { grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); }
 }
 
 @media (max-width: 700px) {
-  .motivation-stage { border-radius: 22px; }
-  .motivation-scene { padding: .85rem; gap: .75rem; }
-  .motivation-query-v3 { grid-template-columns: 1fr; gap: .35rem; }
-  .motivation-query-v3-label { grid-row: auto; }
-  .motivation-query-tags { display: none; }
-  .motivation-candidates { grid-template-columns: repeat(5, minmax(105px, 1fr)); overflow-x: auto; padding-bottom: .3rem; scroll-snap-type: x mandatory; }
-  .motivation-person { scroll-snap-align: start; }
-  .motivation-gallery-footer { align-items: flex-start; flex-direction: column; }
-  .motivation-detail-head { align-items: flex-start; flex-direction: column; gap: .2rem; }
-  .motivation-detail-grid { grid-template-columns: 1fr; }
-  .motivation-detail-not-equal { transform: rotate(90deg); justify-self: center; line-height: .8; }
-  .motivation-detail-person { grid-template-columns: 88px minmax(0,1fr); }
-  .motivation-supervision-line { grid-template-columns: 1fr; }
-  .motivation-supervision-line em { display: none; }
-  .motivation-supervision-line > span { min-height: 64px; }
-  .motivation-timeline { grid-template-columns: 1fr; }
-  .motivation-time-arrow { transform: rotate(90deg); justify-self: center; line-height: .7; }
-  .motivation-memory-principles { grid-template-columns: 1fr; }
-  .motivation-memory-lane { grid-template-columns: 52px 1fr 1fr; }
-  .motivation-memory-lane em { grid-column: 2 / -1; }
+  .motivation-v6-header { margin-bottom:1rem; }
+  .motivation-deck-tabs-v6 { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+  .motivation-deck-tabs-v6::-webkit-scrollbar { display:none; }
+  .motivation-deck-tabs-v6 button { flex:0 0 210px; scroll-snap-align:start; }
+  .motivation-deck-window-v6 { border-radius:20px; }
+  .motivation-slide-v6 { min-height: 760px; padding:.9rem; }
+  .motivation-slide-head-v6 h3 { font-size:1.55rem; }
+  .motivation-query-v6 { grid-template-columns:1fr; }
+  .motivation-query-v6-label { grid-row:auto; }
+  .motivation-query-tags-v6 { display:none; }
+  .motivation-candidates-v6 { grid-template-columns:repeat(5,minmax(105px,1fr)); overflow-x:auto; padding-bottom:.28rem; scroll-snap-type:x mandatory; }
+  .motivation-person-v6 { scroll-snap-align:start; }
+  .motivation-gallery-footer-v6 { align-items:flex-start; flex-direction:column; }
+  .motivation-detail-grid-v6 { grid-template-columns:1fr; }
+  .motivation-detail-not-equal-v6 { transform:rotate(90deg); justify-self:center; line-height:.8; }
+  .motivation-detail-person-v6 { grid-template-columns:74px minmax(0,1fr); }
+  .motivation-supervision-compact-v6 { grid-template-columns:1fr; gap:.65rem; }
+  .motivation-id-statement-v6 { padding:0 0 .65rem; border-right:0; border-bottom:1px solid #e4ddd4; }
+  .motivation-supervision-verbs-v6 { grid-template-columns:1fr 1fr 1fr; gap:.4rem; }
+  .motivation-supervision-verbs-v6 span { grid-template-columns:1fr; justify-items:center; text-align:center; gap:.12rem; }
+  .motivation-supervision-verbs-v6 i { grid-row:auto; }
+  .motivation-local-copy-v6 { display:grid; gap:.18rem; }
+  .motivation-local-copy-v6 strong { text-align:left; }
+  .motivation-local-observations-v6 { gap:.35rem; }
+  .motivation-observation-glyph-v6 { gap:.18rem; }
+  .motivation-photo-glyph-v6 { width:37px; height:47px; }
+  .motivation-caption-glyph-v6 { width:44px; }
+  .motivation-observation-node-v6 > small { display:none; }
+  .motivation-before-after-v6 { grid-template-columns:1fr; }
+  .motivation-before-after-arrow-v6 { transform:rotate(90deg); min-height:20px; }
+  .motivation-before-v6,.motivation-after-v6 { padding:.8rem; }
+  .motivation-principles-inline-v6 { justify-content:flex-start; }
+  .motivation-takeaway-v6 { grid-template-columns:1fr; gap:.65rem; }
+  .motivation-takeaway-label-v6 { justify-self:start; }
+}
+
+@media (max-width: 480px) {
+  .motivation-slide-v6 { min-height: 800px; }
+  .motivation-supervision-verbs-v6 { grid-template-columns:1fr; }
+  .motivation-supervision-verbs-v6 span { grid-template-columns:28px 1fr; justify-items:start; text-align:left; }
+  .motivation-supervision-verbs-v6 i { grid-row:1 / span 2; }
+  .motivation-local-observations-v6 { grid-template-columns:1fr; gap:.55rem; }
+  .motivation-observation-node-v6 { grid-template-columns:30px 92px 1fr; justify-items:start; align-items:center; text-align:left; }
+  .motivation-observation-node-v6 > span { grid-row:1; }
+  .motivation-observation-node-v6 .motivation-observation-glyph-v6 { grid-column:2; grid-row:1; margin:0; }
+  .motivation-observation-node-v6 > strong { grid-column:3; grid-row:1; }
+  .motivation-empty-rail-v6 { margin-top:.2rem; }
+  .motivation-deck-footer-v6 button { min-width:78px; padding:.4rem .5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .motivation-scene,
-  .motivation-person,
-  .motivation-person-result,
-  .motivation-beat::before { transition: none !important; }
-  .motivation-detail { animation: none !important; }
+  .motivation-slide-v6,.motivation-person-v6,.motivation-person-result-v6 { transition:none !important; animation:none !important; }
+  .motivation-detail-v6 { animation:none !important; }
 }
 
 
