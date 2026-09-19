@@ -1052,49 +1052,177 @@
     </section>
   </section>
 
-  <section id="analysis" class="section analysis-section">
-    <header class="section-header reveal">
+  <section id="analysis" class="section analysis-section analysis-story" data-analysis-story>
+    <header class="section-header analysis-story-header reveal">
       <p class="section-kicker">What changes in the retrieval space?</p>
       <h2 class="section-title">The correct identity gets more room to breathe.</h2>
       <p class="section-lead">IAPR does more than improve the final ranking. It changes the local competition between the best same-identity match and the strongest identity-wrong competitor.</p>
     </header>
 
-    <article class="analysis-card reveal">
-      <div class="analysis-copy">
-        <span class="panel-label">Identity-level ambiguity</span>
-        <h3>Fewer queries remain near the identity boundary.</h3>
-        <div class="margin-demo" aria-label="Illustration of a larger positive-negative margin">
-          <div class="margin-row"><span>Base</span><i class="margin-positive"></i><b class="margin-line short"></b><i class="margin-negative"></i><small>tight competition</small></div>
-          <div class="margin-row"><span>IAPR</span><i class="margin-positive"></i><b class="margin-line long"></b><i class="margin-negative"></i><small>larger separation</small></div>
+    <article class="analysis-band analysis-band--ambiguity reveal" data-ambiguity-lab>
+      <header class="analysis-step-head">
+        <div class="analysis-step-copy">
+          <span class="analysis-step-index">01 / LESS AMBIGUITY</span>
+          <h3>Near the boundary, ambiguity consistently falls.</h3>
+          <p>For each query, compare the best same-identity match with the strongest identity-wrong competitor. A larger margin means the correct identity is more clearly separated.</p>
         </div>
-        <div class="analysis-stat"><b>30 / 30</b><span>near-margin model × dataset × threshold settings reduce ambiguity at ρ ∈ {0.01, 0.02}</span></div>
+        <div class="analysis-hero-stat" aria-label="Thirty out of thirty near-margin settings reduce ambiguity">
+          <strong>30 / 30</strong>
+          <span>near-margin settings<br />reduce ambiguity</span>
+          <small>ρ ∈ {0.01, 0.02}</small>
+        </div>
+      </header>
+
+      <div class="analysis-band-grid analysis-band-grid--ambiguity">
+        <div class="analysis-explainer-column">
+          <div class="analysis-margin-card" aria-label="Illustration of the positive-negative margin before and after IAPR">
+            <div class="analysis-margin-card-head">
+              <span>LOCAL COMPETITION</span>
+              <small>best positive ↔ hardest wrong identity</small>
+            </div>
+            <div class="analysis-margin-track analysis-margin-track--base">
+              <b>Base</b>
+              <div class="analysis-margin-axis">
+                <i class="analysis-margin-positive" aria-hidden="true"></i>
+                <span></span>
+                <i class="analysis-margin-negative" aria-hidden="true"></i>
+              </div>
+              <small>tight</small>
+            </div>
+            <div class="analysis-margin-track analysis-margin-track--iapr">
+              <b>IAPR</b>
+              <div class="analysis-margin-axis">
+                <i class="analysis-margin-positive" aria-hidden="true"></i>
+                <span></span>
+                <i class="analysis-margin-negative" aria-hidden="true"></i>
+              </div>
+              <small>separated</small>
+            </div>
+            <p><strong>Interpretation.</strong> Positive ΔA means fewer queries remain within the selected normalized margin of the hardest wrong identity.</p>
+          </div>
+
+          <div class="analysis-reading-note">
+            <span>READ THE PLOT</span>
+            <p>Every connected pair sits above <b>ΔA = 0</b>. The effect appears across all five retrievers and all three benchmarks in the near-margin regime.</p>
+          </div>
+
+          <details class="analysis-extended">
+            <summary>Extended threshold sweep</summary>
+            <p>Across ρ ∈ {0.01, 0.02, 0.05, 0.10}, IAPR reduces ambiguity in 56 of 60 reported settings; all 30 near-margin settings at ρ ∈ {0.01, 0.02} improve.</p>
+          </details>
+        </div>
+
+        <section class="analysis-chart-panel" aria-labelledby="ambiguityChartTitle">
+          <div class="analysis-chart-head">
+            <div>
+              <span>IDENTITY-LEVEL AMBIGUITY</span>
+              <strong id="ambiguityChartTitle">Base ambiguity → reduction after IAPR</strong>
+            </div>
+            <div class="analysis-dataset-tabs" role="tablist" aria-label="Filter ambiguity plot by benchmark">
+              <button type="button" role="tab" aria-selected="true" data-ambiguity-dataset="all">All</button>
+              <button type="button" role="tab" aria-selected="false" data-ambiguity-dataset="cuhk" tabindex="-1">CUHK</button>
+              <button type="button" role="tab" aria-selected="false" data-ambiguity-dataset="icfg" tabindex="-1">ICFG</button>
+              <button type="button" role="tab" aria-selected="false" data-ambiguity-dataset="rstp" tabindex="-1">RSTP</button>
+            </div>
+          </div>
+
+          <div class="ambiguity-chart-shell" data-ambiguity-chart aria-live="polite"></div>
+
+          <div class="ambiguity-chart-meta">
+            <div class="ambiguity-model-legend" aria-label="Highlight a retriever">
+              <button type="button" data-ambiguity-model="clip"><i></i>CLIP</button>
+              <button type="button" data-ambiguity-model="itself"><i></i>ITSELF</button>
+              <button type="button" data-ambiguity-model="irra"><i></i>IRRA</button>
+              <button type="button" data-ambiguity-model="rde"><i></i>RDE</button>
+              <button type="button" data-ambiguity-model="dm"><i></i>DM-Adapter</button>
+            </div>
+            <div class="ambiguity-symbol-legend" aria-label="Plot symbol legend">
+              <span><i class="symbol-circle"></i> RSTP</span>
+              <span><i class="symbol-square"></i> ICFG</span>
+              <span><i class="symbol-triangle">△</i> CUHK</span>
+              <span class="ambiguity-threshold-key"><i></i>ρ=.01 <i></i>ρ=.02</span>
+            </div>
+          </div>
+
+          <button class="analysis-paper-link figure-button" type="button" data-lightbox-src="assets/paper_figures/ambiguity.png" data-lightbox-alt="Identity-level ambiguity reduction plot across retrievers and datasets">View paper figure ↗</button>
+        </section>
       </div>
-      <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/ambiguity.png" data-lightbox-alt="Identity-level ambiguity reduction plot across retrievers and datasets">
-        <img src="assets/paper_figures/ambiguity.png" alt="Identity-level ambiguity reduction plot across retrievers and datasets" />
-        <span>Click to enlarge ↗</span>
-      </button>
     </article>
 
-    <article class="analysis-card reverse reveal">
-      <div class="analysis-copy">
-        <span class="panel-label">Score-shift decomposition</span>
-        <h3>Most corrections come from better relative separation—not a uniform score boost.</h3>
-        <div class="shift-plane" aria-label="Simplified score-shift plane">
-          <div class="plane-axis plane-y">positive ↑</div>
-          <div class="plane-axis plane-x">hard negative →</div>
-          <div class="plane-zone zone-ideal"><b>Ideal</b><span>positive ↑<br />negative ↓</span></div>
-          <div class="plane-zone zone-neg"><b>Neg. suppressed more</b></div>
-          <div class="plane-zone zone-pos"><b>Pos. amplified more</b></div>
-          <div class="plane-diagonal"></div>
+    <div class="analysis-story-bridge reveal" aria-hidden="true">
+      <span></span><b>So where does the extra separation come from?</b><span></span>
+    </div>
+
+    <article class="analysis-band analysis-band--mechanism reveal" data-shift-lab>
+      <header class="analysis-step-head analysis-step-head--mechanism">
+        <div class="analysis-step-copy">
+          <span class="analysis-step-index">02 / HOW THE MARGIN OPENS</span>
+          <h3>The correction is structured—not a uniform score boost.</h3>
+          <p>For queries misranked by the base retriever at ρ = 0, hold its selected positive–negative pair fixed and ask how IAPR changes those same two scores.</p>
         </div>
-        <div class="analysis-stat"><b>61.8 / 60.9 / 64.9%</b><span>margin-enlarging patterns on CUHK-PEDES / ICFG-PEDES / RSTPReid among base-misranked queries</span></div>
+        <div class="analysis-shift-control">
+          <span>Benchmark</span>
+          <div class="analysis-dataset-tabs analysis-dataset-tabs--shift" role="tablist" aria-label="Score-shift benchmark">
+            <button type="button" role="tab" aria-selected="true" data-shift-dataset="cuhk">CUHK-PEDES</button>
+            <button type="button" role="tab" aria-selected="false" data-shift-dataset="icfg" tabindex="-1">ICFG-PEDES</button>
+            <button type="button" role="tab" aria-selected="false" data-shift-dataset="rstp" tabindex="-1">RSTPReid</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="analysis-mechanism-summary">
+        <div class="analysis-mechanism-total">
+          <strong data-shift-total>61.8%</strong>
+          <span>of base-misranked queries move into a margin-enlarging pattern</span>
+          <small>average across five retrievers</small>
+        </div>
+        <div class="analysis-mechanism-insight" aria-live="polite">
+          <span>DOMINANT ROUTE</span>
+          <strong data-shift-title>Hard-negative suppression leads on CUHK-PEDES.</strong>
+          <p data-shift-copy>Both fixed scores often decrease, but the identity-wrong competitor decreases more strongly.</p>
+        </div>
       </div>
-      <button class="figure-button" type="button" data-lightbox-src="assets/paper_figures/shift_decomposition.png" data-lightbox-alt="Score-shift decomposition for base-misranked queries">
-        <img src="assets/paper_figures/shift_decomposition.png" alt="Score-shift decomposition for base-misranked queries" />
-        <span>Click to enlarge ↗</span>
-      </button>
+
+      <div class="analysis-mechanism-grid" data-shift-grid>
+        <article class="analysis-mechanism-card analysis-mechanism-card--blue" data-shift-family="ideal">
+          <header><span>DIRECT SEPARATION</span><strong>Positive ↑, Negative ↓</strong></header>
+          <div class="analysis-mechanism-bars">
+            <div class="analysis-mechanism-row is-favorable"><span>margin enlarges</span><i><em data-shift-bar="good"></em></i><b data-shift-value="good">21.9%</b></div>
+            <div class="analysis-mechanism-row is-reverse"><span>reverse</span><i><em data-shift-bar="bad"></em></i><b data-shift-value="bad">10.2%</b></div>
+          </div>
+          <p>Best case: the positive rises while the hard negative falls.</p>
+        </article>
+
+        <article class="analysis-mechanism-card analysis-mechanism-card--green" data-shift-family="negative">
+          <header><span>HARD-NEGATIVE CONTROL</span><strong>Negative suppressed more</strong></header>
+          <div class="analysis-mechanism-bars">
+            <div class="analysis-mechanism-row is-favorable"><span>margin enlarges</span><i><em data-shift-bar="good"></em></i><b data-shift-value="good">34.4%</b></div>
+            <div class="analysis-mechanism-row is-reverse"><span>reverse</span><i><em data-shift-bar="bad"></em></i><b data-shift-value="bad">4.0%</b></div>
+          </div>
+          <p>Both scores can fall; separation still improves when the wrong identity falls farther.</p>
+        </article>
+
+        <article class="analysis-mechanism-card analysis-mechanism-card--orange" data-shift-family="positive">
+          <header><span>POSITIVE AMPLIFICATION</span><strong>Positive amplified more</strong></header>
+          <div class="analysis-mechanism-bars">
+            <div class="analysis-mechanism-row is-favorable"><span>margin enlarges</span><i><em data-shift-bar="good"></em></i><b data-shift-value="good">5.5%</b></div>
+            <div class="analysis-mechanism-row is-reverse"><span>reverse</span><i><em data-shift-bar="bad"></em></i><b data-shift-value="bad">24.0%</b></div>
+          </div>
+          <p>Both scores can rise; separation improves only when the positive rises more.</p>
+        </article>
+      </div>
+
+      <footer class="analysis-mechanism-footer">
+        <p><strong>Takeaway.</strong> IAPR changes the relative competition around ambiguous queries. On CUHK-PEDES and ICFG-PEDES the average behavior is suppression-driven; RSTPReid shows stronger direct two-sided separation.</p>
+        <button class="analysis-paper-link figure-button" type="button" data-lightbox-src="assets/paper_figures/shift_decomposition.png" data-lightbox-alt="Score-shift decomposition for base-misranked queries">View paper figure ↗</button>
+      </footer>
     </article>
+
+    <a class="analysis-to-qualitative reveal" href="#qualitative">
+      <span>Next</span><strong>See what this looks like query by query</strong><b aria-hidden="true">↓</b>
+    </a>
   </section>
+
 
   <section id="qualitative" class="section qualitative-section">
     <header class="section-header reveal">

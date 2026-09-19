@@ -1394,6 +1394,283 @@
     setAblationConfig(activeAblationConfig);
   }
 
+  // Analysis: turn the paper diagnostics into a compact interactive story.
+  const analysisReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const ambiguityLab = document.querySelector("[data-ambiguity-lab]");
+  const ambiguityChart = ambiguityLab?.querySelector("[data-ambiguity-chart]");
+  const ambiguityDatasetTabs = ambiguityLab ? [...ambiguityLab.querySelectorAll("[data-ambiguity-dataset]")] : [];
+  const ambiguityModelButtons = ambiguityLab ? [...ambiguityLab.querySelectorAll("[data-ambiguity-model]")] : [];
+
+  const ambiguityData = {
+    cuhk: {
+      label: "CUHK-PEDES",
+      marker: "triangle",
+      clip:   [{ rho: ".01", base: 29.06, delta: .45 }, { rho: ".02", base: 29.74, delta: .61 }],
+      itself: [{ rho: ".01", base: 26.01, delta: .72 }, { rho: ".02", base: 26.64, delta: .84 }],
+      irra:   [{ rho: ".01", base: 32.26, delta: .27 }, { rho: ".02", base: 33.20, delta: .40 }],
+      rde:    [{ rho: ".01", base: 29.45, delta: .75 }, { rho: ".02", base: 30.12, delta: .96 }],
+      dm:     [{ rho: ".01", base: 32.50, delta: 1.07 }, { rho: ".02", base: 33.32, delta: 1.27 }]
+    },
+    icfg: {
+      label: "ICFG-PEDES",
+      marker: "square",
+      clip:   [{ rho: ".01", base: 39.30, delta: 1.31 }, { rho: ".02", base: 40.22, delta: 1.40 }],
+      itself: [{ rho: ".01", base: 33.73, delta: .79 }, { rho: ".02", base: 34.46, delta: .83 }],
+      irra:   [{ rho: ".01", base: 43.07, delta: .92 }, { rho: ".02", base: 44.05, delta: 1.06 }],
+      rde:    [{ rho: ".01", base: 37.12, delta: .63 }, { rho: ".02", base: 37.84, delta: .73 }],
+      dm:     [{ rho: ".01", base: 42.60, delta: 1.14 }, { rho: ".02", base: 43.49, delta: 1.07 }]
+    },
+    rstp: {
+      label: "RSTPReid",
+      marker: "circle",
+      clip:   [{ rho: ".01", base: 38.00, delta: .40 }, { rho: ".02", base: 38.75, delta: .45 }],
+      itself: [{ rho: ".01", base: 34.35, delta: 1.75 }, { rho: ".02", base: 35.00, delta: 1.45 }],
+      irra:   [{ rho: ".01", base: 41.25, delta: 1.30 }, { rho: ".02", base: 41.70, delta: .70 }],
+      rde:    [{ rho: ".01", base: 42.80, delta: 3.00 }, { rho: ".02", base: 43.20, delta: 2.30 }],
+      dm:     [{ rho: ".01", base: 42.35, delta: .45 }, { rho: ".02", base: 43.05, delta: .55 }]
+    }
+  };
+
+  const ambiguityModels = {
+    clip: { label: "CLIP", color: "#3f82b8" },
+    itself: { label: "ITSELF", color: "#ee8a2d" },
+    irra: { label: "IRRA", color: "#3aa657" },
+    rde: { label: "RDE", color: "#df5050" },
+    dm: { label: "DM-Adapter", color: "#966ac2" }
+  };
+
+  const ambiguityDatasetOrder = ["cuhk", "icfg", "rstp"];
+  const ambiguityModelOrder = ["clip", "itself", "irra", "rde", "dm"];
+  let activeAmbiguityDataset = "all";
+  let pinnedAmbiguityModel = null;
+
+  function ambiguityPoint(marker, x, y, color, filled, title) {
+    const fill = filled ? color : "#ffffff";
+    const common = `fill="${fill}" stroke="${color}" stroke-width="3" vector-effect="non-scaling-stroke"`;
+    if (marker === "square") {
+      return `<g><title>${title}</title><rect x="${(x - 8).toFixed(2)}" y="${(y - 8).toFixed(2)}" width="16" height="16" rx="1.5" ${common}/></g>`;
+    }
+    if (marker === "triangle") {
+      const points = `${x.toFixed(2)},${(y - 9).toFixed(2)} ${(x - 9).toFixed(2)},${(y + 8).toFixed(2)} ${(x + 9).toFixed(2)},${(y + 8).toFixed(2)}`;
+      return `<g><title>${title}</title><polygon points="${points}" ${common}/></g>`;
+    }
+    return `<g><title>${title}</title><circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="8" ${common}/></g>`;
+  }
+
+  function renderAmbiguityChart() {
+    if (!ambiguityChart) return;
+    const width = 720;
+    const height = 390;
+    const left = 66;
+    const right = 24;
+    const top = 24;
+    const bottom = 62;
+    const plotW = width - left - right;
+    const plotH = height - top - bottom;
+    const xMin = 24.5;
+    const xMax = 45.0;
+    const yMin = 0;
+    const yMax = 3.2;
+    const x = (value) => left + ((value - xMin) / (xMax - xMin)) * plotW;
+    const y = (value) => top + plotH - ((value - yMin) / (yMax - yMin)) * plotH;
+    const xTicks = [25, 30, 35, 40, 45];
+    const yTicks = [0, .5, 1, 1.5, 2, 2.5, 3];
+    const datasets = activeAmbiguityDataset === "all" ? ambiguityDatasetOrder : [activeAmbiguityDataset];
+
+    const grid = [
+      ...xTicks.map((tick) => `<line x1="${x(tick)}" y1="${top}" x2="${x(tick)}" y2="${top + plotH}" class="ambiguity-grid-line"/><text x="${x(tick)}" y="${height - 31}" text-anchor="middle" class="ambiguity-tick">${tick}</text>`),
+      ...yTicks.map((tick) => `<line x1="${left}" y1="${y(tick)}" x2="${left + plotW}" y2="${y(tick)}" class="ambiguity-grid-line${tick === 0 ? " ambiguity-zero-line" : ""}"/><text x="${left - 14}" y="${y(tick) + 4}" text-anchor="end" class="ambiguity-tick">${tick.toFixed(1)}</text>`)
+    ].join("");
+
+    const series = [];
+    datasets.forEach((datasetKey) => {
+      const dataset = ambiguityData[datasetKey];
+      ambiguityModelOrder.forEach((modelKey) => {
+        const model = ambiguityModels[modelKey];
+        const pair = dataset[modelKey];
+        const p1 = pair[0];
+        const p2 = pair[1];
+        const x1 = x(p1.base); const y1 = y(p1.delta);
+        const x2 = x(p2.base); const y2 = y(p2.delta);
+        series.push(`
+          <g class="ambiguity-series" data-ambiguity-series-model="${modelKey}" data-ambiguity-series-dataset="${datasetKey}">
+            <title>${model.label} · ${dataset.label}: ΔA ${p1.delta.toFixed(2)} pp at ρ=${p1.rho}, ${p2.delta.toFixed(2)} pp at ρ=${p2.rho}</title>
+            <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${model.color}" stroke-width="3" stroke-linecap="round" opacity=".72" vector-effect="non-scaling-stroke"/>
+            ${ambiguityPoint(dataset.marker, x1, y1, model.color, false, `${model.label}, ${dataset.label}, ρ=${p1.rho}: base ambiguity ${p1.base.toFixed(2)}%, reduction ${p1.delta.toFixed(2)} pp`)}
+            ${ambiguityPoint(dataset.marker, x2, y2, model.color, true, `${model.label}, ${dataset.label}, ρ=${p2.rho}: base ambiguity ${p2.base.toFixed(2)}%, reduction ${p2.delta.toFixed(2)} pp`)}
+          </g>`);
+      });
+    });
+
+    const contextLabel = activeAmbiguityDataset === "all" ? "all three benchmarks" : ambiguityData[activeAmbiguityDataset].label;
+    ambiguityChart.innerHTML = `
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="ambiguitySvgTitle ambiguitySvgDesc">
+        <title id="ambiguitySvgTitle">Identity-level ambiguity reduction for ${contextLabel}</title>
+        <desc id="ambiguitySvgDesc">The horizontal axis is base ambiguity rate and the vertical axis is percentage-point ambiguity reduction after IAPR. Each connected pair shows thresholds rho .01 and .02. All displayed reductions are positive.</desc>
+        ${grid}
+        <line x1="${left}" y1="${top}" x2="${left}" y2="${top + plotH}" class="ambiguity-axis-line"/>
+        <line x1="${left}" y1="${top + plotH}" x2="${left + plotW}" y2="${top + plotH}" class="ambiguity-axis-line"/>
+        ${series.join("")}
+        <text x="${left + plotW / 2}" y="${height - 5}" text-anchor="middle" class="ambiguity-axis-label">Base ambiguity ABase(ρ) (%)</text>
+        <text x="18" y="${top + plotH / 2}" text-anchor="middle" class="ambiguity-axis-label" transform="rotate(-90 18 ${top + plotH / 2})">Ambiguity reduction ΔA(ρ) (pp)</text>
+      </svg>`;
+    applyAmbiguityModelFocus(pinnedAmbiguityModel);
+  }
+
+  function applyAmbiguityModelFocus(modelKey) {
+    if (!ambiguityChart) return;
+    ambiguityChart.querySelectorAll("[data-ambiguity-series-model]").forEach((series) => {
+      series.classList.toggle("is-dimmed", !!modelKey && series.dataset.ambiguitySeriesModel !== modelKey);
+      series.classList.toggle("is-focused", !!modelKey && series.dataset.ambiguitySeriesModel === modelKey);
+    });
+  }
+
+  function setAmbiguityDataset(datasetKey, { focusButton = false } = {}) {
+    if (!["all", ...ambiguityDatasetOrder].includes(datasetKey)) return;
+    activeAmbiguityDataset = datasetKey;
+    ambiguityDatasetTabs.forEach((button) => {
+      const active = button.dataset.ambiguityDataset === datasetKey;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      if (active && focusButton) button.focus({ preventScroll: true });
+    });
+    if (!analysisReduceMotion) {
+      ambiguityChart?.classList.add("is-switching");
+      window.setTimeout(() => ambiguityChart?.classList.remove("is-switching"), 240);
+    }
+    renderAmbiguityChart();
+  }
+
+  ambiguityDatasetTabs.forEach((button, index) => {
+    button.addEventListener("click", () => setAmbiguityDataset(button.dataset.ambiguityDataset));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + ambiguityDatasetTabs.length) % ambiguityDatasetTabs.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % ambiguityDatasetTabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = ambiguityDatasetTabs.length - 1;
+      setAmbiguityDataset(ambiguityDatasetTabs[nextIndex].dataset.ambiguityDataset, { focusButton: true });
+    });
+  });
+
+  ambiguityModelButtons.forEach((button, index) => {
+    const modelKey = button.dataset.ambiguityModel;
+    const model = ambiguityModels[modelKey];
+    if (model) button.style.setProperty("--model-color", model.color);
+    button.setAttribute("aria-pressed", "false");
+    button.addEventListener("pointerenter", () => applyAmbiguityModelFocus(modelKey));
+    button.addEventListener("pointerleave", () => applyAmbiguityModelFocus(pinnedAmbiguityModel));
+    button.addEventListener("focus", () => applyAmbiguityModelFocus(modelKey));
+    button.addEventListener("blur", () => applyAmbiguityModelFocus(pinnedAmbiguityModel));
+    button.addEventListener("click", () => {
+      pinnedAmbiguityModel = pinnedAmbiguityModel === modelKey ? null : modelKey;
+      ambiguityModelButtons.forEach((item) => item.setAttribute("aria-pressed", String(item.dataset.ambiguityModel === pinnedAmbiguityModel)));
+      applyAmbiguityModelFocus(pinnedAmbiguityModel);
+    });
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      ambiguityModelButtons[(index + delta + ambiguityModelButtons.length) % ambiguityModelButtons.length].focus();
+    });
+  });
+
+  if (ambiguityChart) renderAmbiguityChart();
+
+  const shiftData = {
+    cuhk: {
+      label: "CUHK-PEDES", total: 61.8,
+      ideal: { good: 21.9, bad: 10.2 },
+      negative: { good: 34.4, bad: 4.0 },
+      positive: { good: 5.5, bad: 24.0 },
+      title: "Hard-negative suppression leads on CUHK-PEDES.",
+      copy: "Negative suppressed more is the largest favorable pattern at 34.4%, while its hard-negative-amplifying reverse remains only 4.0%."
+    },
+    icfg: {
+      label: "ICFG-PEDES", total: 60.9,
+      ideal: { good: 17.6, bad: 7.6 },
+      negative: { good: 41.0, bad: 1.5 },
+      positive: { good: 2.3, bad: 30.0 },
+      title: "Hard-negative suppression is strongest on ICFG-PEDES.",
+      copy: "Negative suppressed more reaches 41.0%, while the reverse hard-negative amplification pattern remains rare at 1.5%."
+    },
+    rstp: {
+      label: "RSTPReid", total: 64.9,
+      ideal: { good: 29.5, bad: 12.0 },
+      negative: { good: 23.3, bad: 7.0 },
+      positive: { good: 12.0, bad: 16.1 },
+      title: "RSTPReid shifts toward direct two-sided separation.",
+      copy: "Positive ↑, Negative ↓ becomes the largest favorable pattern at 29.5%, with a larger contribution from positive amplification than on the other datasets."
+    }
+  };
+
+  const shiftLab = document.querySelector("[data-shift-lab]");
+  const shiftTabs = shiftLab ? [...shiftLab.querySelectorAll("[data-shift-dataset]")] : [];
+  const shiftCards = shiftLab ? [...shiftLab.querySelectorAll("[data-shift-family]")] : [];
+  const shiftTotal = shiftLab?.querySelector("[data-shift-total]");
+  const shiftTitle = shiftLab?.querySelector("[data-shift-title]");
+  const shiftCopy = shiftLab?.querySelector("[data-shift-copy]");
+  let activeShiftDataset = "cuhk";
+
+  function setShiftDataset(datasetKey, { focusButton = false } = {}) {
+    const data = shiftData[datasetKey];
+    if (!data || !shiftLab) return;
+    activeShiftDataset = datasetKey;
+    shiftLab.dataset.shiftDataset = datasetKey;
+
+    shiftTabs.forEach((button) => {
+      const active = button.dataset.shiftDataset === datasetKey;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      if (active && focusButton) button.focus({ preventScroll: true });
+    });
+
+    if (shiftTotal) shiftTotal.textContent = `${data.total.toFixed(1)}%`;
+    if (shiftTitle) shiftTitle.textContent = data.title;
+    if (shiftCopy) shiftCopy.textContent = data.copy;
+
+    const dominantFamily = ["ideal", "negative", "positive"].sort((a, b) => data[b].good - data[a].good)[0];
+    const scaleMax = 55;
+    shiftCards.forEach((card) => {
+      const family = card.dataset.shiftFamily;
+      const familyData = data[family];
+      if (!familyData) return;
+      card.classList.toggle("is-dominant", family === dominantFamily);
+      ["good", "bad"].forEach((kind) => {
+        const bar = card.querySelector(`[data-shift-bar="${kind}"]`);
+        const value = card.querySelector(`[data-shift-value="${kind}"]`);
+        if (bar) bar.style.setProperty("--shift-bar", `${Math.min(100, (familyData[kind] / scaleMax) * 100).toFixed(2)}%`);
+        if (value) value.textContent = `${familyData[kind].toFixed(1)}%`;
+      });
+    });
+
+    if (!analysisReduceMotion) {
+      shiftLab.classList.remove("is-updating");
+      void shiftLab.offsetWidth;
+      shiftLab.classList.add("is-updating");
+      window.setTimeout(() => shiftLab?.classList.remove("is-updating"), 420);
+    }
+  }
+
+  shiftTabs.forEach((button, index) => {
+    button.addEventListener("click", () => setShiftDataset(button.dataset.shiftDataset));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + shiftTabs.length) % shiftTabs.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % shiftTabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = shiftTabs.length - 1;
+      setShiftDataset(shiftTabs[nextIndex].dataset.shiftDataset, { focusButton: true });
+    });
+  });
+
+  if (shiftLab) setShiftDataset(activeShiftDataset);
+
+
   const qualitativeSourceFiles = {
     clip: {
       cuhk: "assets/qualitative/[re]clip-cuhk.png",
