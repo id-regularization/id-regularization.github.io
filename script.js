@@ -830,72 +830,455 @@
     }
   }
 
-  const ablationData = {
-    cuhk: {
-      label: "CUHK-PEDES",
-      rows: [
-        ["RDE", 71.09, 64.45, "base retriever"],
-        ["+ PM", 70.99, 64.51, "memory alone"],
-        ["+ PM + IRA", 71.10, 64.64, "identity restriction"],
-        ["+ PM + SSTT", 71.22, 64.72, "same-space translation"],
-        ["Full IAPR", 71.86, 65.41, "PM + IRA + SSTT"]
-      ]
+  // Results: turn the main table into an interactive paired-comparison explorer.
+  const resultData = {
+    clip: {
+      label: "CLIP",
+      cuhk: { r1: { base: 71.56, iapr: 72.09 }, map: { base: 64.36, iapr: 64.54 } },
+      icfg: { r1: { base: 61.60, iapr: 62.99 }, map: { base: 38.00, iapr: 39.31 } },
+      rstp: { r1: { base: 62.60, iapr: 63.25 }, map: { base: 49.78, iapr: 49.90 } }
     },
-    icfg: {
-      label: "ICFG-PEDES",
-      rows: [
-        ["RDE", 63.66, 40.57, "base retriever"],
-        ["+ PM", 63.68, 40.74, "memory alone"],
-        ["+ PM + IRA", 63.76, 40.81, "identity restriction"],
-        ["+ PM + SSTT", 63.90, 40.81, "same-space translation"],
-        ["Full IAPR", 64.25, 42.02, "PM + IRA + SSTT"]
-      ]
+    irra: {
+      label: "IRRA",
+      cuhk: { r1: { base: 68.53, iapr: 68.91 }, map: { base: 62.60, iapr: 63.07 } },
+      icfg: { r1: { base: 57.90, iapr: 58.74 }, map: { base: 36.72, iapr: 37.83 } },
+      rstp: { r1: { base: 59.25, iapr: 60.70 }, map: { base: 48.79, iapr: 48.91 } }
     },
-    rstp: {
-      label: "RSTPReid",
-      rows: [
-        ["RDE", 57.75, 46.53, "base retriever"],
-        ["+ PM", 56.50, 44.97, "memory alone"],
-        ["+ PM + IRA", 58.30, 45.98, "identity restriction"],
-        ["+ PM + SSTT", 60.60, 48.04, "same-space translation"],
-        ["Full IAPR", 61.10, 48.43, "PM + IRA + SSTT"]
-      ]
+    rde: {
+      label: "RDE",
+      cuhk: { r1: { base: 71.09, iapr: 71.86 }, map: { base: 64.45, iapr: 65.41 } },
+      icfg: { r1: { base: 63.66, iapr: 64.25 }, map: { base: 40.57, iapr: 42.02 } },
+      rstp: { r1: { base: 57.75, iapr: 61.10 }, map: { base: 46.53, iapr: 48.43 } }
+    },
+    "dm-adapter": {
+      label: "DM-Adapter",
+      cuhk: { r1: { base: 68.23, iapr: 69.38 }, map: { base: 63.21, iapr: 63.83 } },
+      icfg: { r1: { base: 58.42, iapr: 59.57 }, map: { base: 37.51, iapr: 38.59 } },
+      rstp: { r1: { base: 58.45, iapr: 59.65 }, map: { base: 47.33, iapr: 47.85 } }
+    },
+    itself: {
+      label: "ITSELF",
+      cuhk: { r1: { base: 74.55, iapr: 75.13 }, map: { base: 67.31, iapr: 67.56 } },
+      icfg: { r1: { base: 67.23, iapr: 67.88 }, map: { base: 42.43, iapr: 43.60 } },
+      rstp: { r1: { base: 66.60, iapr: 68.20 }, map: { base: 53.60, iapr: 54.06 } }
     }
   };
 
-  const ablationChart = document.querySelector("[data-ablation-chart]");
-  const ablationTabs = [...document.querySelectorAll("[data-ablation-dataset]")];
+  const resultDatasets = {
+    cuhk: "CUHK-PEDES",
+    icfg: "ICFG-PEDES",
+    rstp: "RSTPReid"
+  };
+  const resultModelOrder = ["clip", "irra", "rde", "dm-adapter", "itself"];
+  const resultDatasetOrder = ["cuhk", "icfg", "rstp"];
+  const resultMetricLabels = { r1: "R@1", map: "mAP" };
+  const resultExplorer = document.querySelector("[data-result-explorer]");
+  const resultMatrix = resultExplorer?.querySelector("[data-result-matrix]");
+  const resultMetricButtons = resultExplorer ? [...resultExplorer.querySelectorAll("[data-result-metric]")] : [];
+  const resultDetail = resultExplorer?.querySelector("[data-result-detail]");
+  const resultDetailTitle = resultDetail?.querySelector("[data-result-detail-title]");
+  const resultDetailActiveGain = resultDetail?.querySelector("[data-result-detail-active-gain]");
+  const resultDetailCopy = resultDetail?.querySelector("[data-result-detail-copy]");
+  const resultsReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let activeResultMetric = "r1";
+  let selectedResult = { model: "rde", dataset: "rstp" };
 
-  function renderAblation(datasetKey) {
-    const data = ablationData[datasetKey];
-    if (!data || !ablationChart) return;
-    ablationChart.innerHTML = `
-      <div class="ablation-chart-head"><strong>${data.label}</strong><span>R@1</span><span>mAP</span></div>
-      ${data.rows.map((row, index) => `
-        <div class="ablation-row ${index === data.rows.length - 1 ? "is-full" : ""}">
-          <div class="ablation-name"><b>${row[0]}</b><small>${row[3]}</small></div>
-          <div class="ablation-metric"><span>${row[1].toFixed(2)}</span><i style="--bar:${row[1]}%"></i></div>
-          <div class="ablation-metric"><span>${row[2].toFixed(2)}</span><i style="--bar:${row[2]}%"></i></div>
-        </div>`).join("")}
-    `;
+  function resultGain(modelKey, datasetKey, metric) {
+    const entry = resultData[modelKey]?.[datasetKey]?.[metric];
+    return entry ? entry.iapr - entry.base : 0;
   }
 
-  ablationTabs.forEach((tab, index) => {
-    tab.addEventListener("click", () => {
-      ablationTabs.forEach((item) => item.setAttribute("aria-selected", String(item === tab)));
-      renderAblation(tab.dataset.ablationDataset);
+  function formatSigned(value) {
+    if (Math.abs(value) < .005) return "0.00";
+    return `${value > 0 ? "+" : ""}${value.toFixed(2)}`;
+  }
+
+  function maxGainForMetric(metric) {
+    return Math.max(...resultModelOrder.flatMap((modelKey) => resultDatasetOrder.map((datasetKey) => resultGain(modelKey, datasetKey, metric))));
+  }
+
+  function applyResultContext(modelKey, datasetKey) {
+    if (!resultMatrix) return;
+    resultMatrix.querySelectorAll("[data-result-row]").forEach((node) => {
+      node.classList.toggle("is-context", node.dataset.resultRow === modelKey);
     });
-    tab.addEventListener("keydown", (event) => {
-      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    resultMatrix.querySelectorAll("[data-result-col]").forEach((node) => {
+      node.classList.toggle("is-context", node.dataset.resultCol === datasetKey);
+    });
+    resultMatrix.querySelectorAll("[data-result-cell]").forEach((node) => {
+      const sameRow = node.dataset.resultModel === modelKey;
+      const sameCol = node.dataset.resultDataset === datasetKey;
+      const selected = node.dataset.resultModel === selectedResult.model && node.dataset.resultDataset === selectedResult.dataset;
+      node.classList.toggle("is-context", sameRow || sameCol);
+      node.classList.toggle("is-selected", selected);
+      node.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function updateResultDetail(modelKey, datasetKey) {
+    if (!resultDetail || !resultData[modelKey]?.[datasetKey]) return;
+    const model = resultData[modelKey];
+    const datasetLabel = resultDatasets[datasetKey];
+    const setting = model[datasetKey];
+    const activeGain = resultGain(modelKey, datasetKey, activeResultMetric);
+
+    if (resultDetailTitle) resultDetailTitle.textContent = `${model.label} × ${datasetLabel}`;
+    if (resultDetailActiveGain) resultDetailActiveGain.textContent = `${formatSigned(activeGain)} ${resultMetricLabels[activeResultMetric]}`;
+    if (resultDetailCopy) resultDetailCopy.textContent = `Paired ${model.label} comparison on ${datasetLabel}; switch metrics or inspect another cell without leaving the full gallery of results.`;
+
+    ["r1", "map"].forEach((metric) => {
+      const entry = setting[metric];
+      const delta = entry.iapr - entry.base;
+      const deltaNode = resultDetail.querySelector(`[data-result-detail-delta="${metric}"]`);
+      const baseValue = resultDetail.querySelector(`[data-result-detail-value="${metric}-base"]`);
+      const iaprValue = resultDetail.querySelector(`[data-result-detail-value="${metric}-iapr"]`);
+      const baseBar = resultDetail.querySelector(`[data-result-detail-bar="${metric}-base"]`);
+      const iaprBar = resultDetail.querySelector(`[data-result-detail-bar="${metric}-iapr"]`);
+      const metricCard = resultDetail.querySelector(`[data-result-detail-metric="${metric}"]`);
+
+      if (deltaNode) {
+        deltaNode.textContent = formatSigned(delta);
+        deltaNode.classList.toggle("is-negative", delta < 0);
+      }
+      if (baseValue) baseValue.textContent = entry.base.toFixed(2);
+      if (iaprValue) iaprValue.textContent = entry.iapr.toFixed(2);
+      if (baseBar) baseBar.style.width = `${Math.max(0, Math.min(100, entry.base))}%`;
+      if (iaprBar) iaprBar.style.width = `${Math.max(0, Math.min(100, entry.iapr))}%`;
+      metricCard?.classList.toggle("is-primary", metric === activeResultMetric);
+    });
+  }
+
+  function bindResultCells() {
+    if (!resultMatrix) return;
+    const cells = [...resultMatrix.querySelectorAll("[data-result-cell]")];
+    cells.forEach((cell) => {
+      const modelKey = cell.dataset.resultModel;
+      const datasetKey = cell.dataset.resultDataset;
+      const preview = () => {
+        applyResultContext(modelKey, datasetKey);
+        updateResultDetail(modelKey, datasetKey);
+      };
+      const restore = () => {
+        applyResultContext(selectedResult.model, selectedResult.dataset);
+        updateResultDetail(selectedResult.model, selectedResult.dataset);
+      };
+
+      cell.addEventListener("pointerenter", preview);
+      cell.addEventListener("pointerleave", restore);
+      cell.addEventListener("focus", preview);
+      cell.addEventListener("blur", restore);
+      cell.addEventListener("click", () => {
+        selectedResult = { model: modelKey, dataset: datasetKey };
+        applyResultContext(modelKey, datasetKey);
+        updateResultDetail(modelKey, datasetKey);
+      });
+      cell.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+        event.preventDefault();
+        const row = Number(cell.dataset.resultRowIndex);
+        const col = Number(cell.dataset.resultColIndex);
+        const nextRow = Math.max(0, Math.min(resultModelOrder.length - 1, row + (event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0)));
+        const nextCol = Math.max(0, Math.min(resultDatasetOrder.length - 1, col + (event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0)));
+        resultMatrix.querySelector(`[data-result-row-index="${nextRow}"][data-result-col-index="${nextCol}"]`)?.focus();
+      });
+    });
+  }
+
+  function renderResultMatrix() {
+    if (!resultMatrix) return;
+    const metricLabel = resultMetricLabels[activeResultMetric];
+    const maxGain = maxGainForMetric(activeResultMetric) || 1;
+    const parts = [
+      `<div class="result-matrix-corner" role="presentation"><span>Δ over base</span><small>${metricLabel}</small></div>`,
+      ...resultDatasetOrder.map((datasetKey) => `<div class="result-matrix-col" data-result-col="${datasetKey}" role="columnheader">${resultDatasets[datasetKey]}</div>`)
+    ];
+
+    resultModelOrder.forEach((modelKey, rowIndex) => {
+      const model = resultData[modelKey];
+      parts.push(`<div class="result-matrix-row" data-result-row="${modelKey}" role="rowheader">${model.label}</div>`);
+      resultDatasetOrder.forEach((datasetKey, colIndex) => {
+        const gain = resultGain(modelKey, datasetKey, activeResultMetric);
+        const heat = Math.max(0, Math.min(1, gain / maxGain));
+        const opacity = (.045 + heat * .16).toFixed(3);
+        const borderOpacity = (.20 + heat * .36).toFixed(3);
+        parts.push(`
+          <button class="result-gain-cell" type="button" role="gridcell" aria-pressed="false"
+            data-result-cell data-result-model="${modelKey}" data-result-dataset="${datasetKey}"
+            data-result-row-index="${rowIndex}" data-result-col-index="${colIndex}"
+            style="--heat-opacity:${opacity};--heat-border:${borderOpacity}"
+            aria-label="${model.label} on ${resultDatasets[datasetKey]}: ${formatSigned(gain)} ${metricLabel}">
+            <strong>${formatSigned(gain)}</strong><small>${metricLabel}</small>
+          </button>`);
+      });
+    });
+
+    resultMatrix.innerHTML = parts.join("");
+    bindResultCells();
+    applyResultContext(selectedResult.model, selectedResult.dataset);
+  }
+
+  function setResultMetric(metric, { focusButton = false } = {}) {
+    if (!resultExplorer || !["r1", "map"].includes(metric)) return;
+    activeResultMetric = metric;
+    resultExplorer.dataset.metric = metric;
+    resultMetricButtons.forEach((button) => {
+      const active = button.dataset.resultMetric === metric;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      if (active && focusButton) button.focus({ preventScroll: true });
+    });
+    renderResultMatrix();
+    updateResultDetail(selectedResult.model, selectedResult.dataset);
+  }
+
+  resultMetricButtons.forEach((button, index) => {
+    button.addEventListener("click", () => setResultMetric(button.dataset.resultMetric));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
-      const delta = event.key === "ArrowRight" ? 1 : -1;
-      const next = ablationTabs[(index + delta + ablationTabs.length) % ablationTabs.length];
-      next.focus();
-      next.click();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + resultMetricButtons.length) % resultMetricButtons.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % resultMetricButtons.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = resultMetricButtons.length - 1;
+      setResultMetric(resultMetricButtons[nextIndex].dataset.resultMetric, { focusButton: true });
     });
   });
 
-  renderAblation("cuhk");
+  if (resultExplorer) {
+    setResultMetric("r1");
+    // Let the first painted frame establish zero-width bars before the comparison animates in.
+    if (!resultsReduceMotion) window.requestAnimationFrame(() => updateResultDetail(selectedResult.model, selectedResult.dataset));
+  }
+
+  // Count the three headline claims once when the Results section enters view.
+  const resultsHeadline = document.querySelector("[data-results-headline]");
+  const resultCountNodes = resultsHeadline ? [...resultsHeadline.querySelectorAll("[data-result-count]")] : [];
+  let resultCountsPlayed = false;
+
+  function finishResultCounts() {
+    resultCountNodes.forEach((node) => {
+      const target = Number(node.dataset.target || 0);
+      node.textContent = node.dataset.resultCount === "pairs" ? `${Math.round(target)} / ${Math.round(target)}` : `+${target.toFixed(2)}`;
+    });
+  }
+
+  function runResultCounts() {
+    if (resultCountsPlayed || !resultCountNodes.length) return;
+    resultCountsPlayed = true;
+    if (resultsReduceMotion) {
+      finishResultCounts();
+      return;
+    }
+
+    const duration = 760;
+    const started = performance.now();
+    resultCountNodes.forEach((node) => {
+      node.textContent = node.dataset.resultCount === "pairs" ? "0 / 15" : "+0.00";
+    });
+
+    function frame(now) {
+      const raw = Math.min(1, (now - started) / duration);
+      const eased = 1 - Math.pow(1 - raw, 3);
+      resultCountNodes.forEach((node) => {
+        const target = Number(node.dataset.target || 0);
+        if (node.dataset.resultCount === "pairs") {
+          node.textContent = `${Math.round(target * eased)} / ${Math.round(target)}`;
+        } else {
+          node.textContent = `+${(target * eased).toFixed(2)}`;
+        }
+      });
+      if (raw < 1) window.requestAnimationFrame(frame);
+      else finishResultCounts();
+    }
+    window.requestAnimationFrame(frame);
+  }
+
+  if (resultsHeadline && "IntersectionObserver" in window && !resultsReduceMotion) {
+    const resultCountObserver = new IntersectionObserver((entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      runResultCounts();
+      observer.disconnect();
+    }, { threshold: .38 });
+    resultCountObserver.observe(resultsHeadline);
+  } else {
+    runResultCounts();
+  }
+
+  // Ablation lab: only expose configurations actually reported in the RDE ablation.
+  const ablationData = {
+    cuhk: {
+      label: "CUHK-PEDES",
+      configs: {
+        base: { label: "Base", r1: 71.09, map: 64.45 },
+        pm: { label: "PM", r1: 70.99, map: 64.51 },
+        "pm-ira": { label: "PM + IRA", r1: 71.10, map: 64.64 },
+        "pm-sstt": { label: "PM + SSTT", r1: 71.22, map: 64.72 },
+        full: { label: "Full IAPR", r1: 71.86, map: 65.41 }
+      }
+    },
+    icfg: {
+      label: "ICFG-PEDES",
+      configs: {
+        base: { label: "Base", r1: 63.66, map: 40.57 },
+        pm: { label: "PM", r1: 63.68, map: 40.74 },
+        "pm-ira": { label: "PM + IRA", r1: 63.76, map: 40.81 },
+        "pm-sstt": { label: "PM + SSTT", r1: 63.90, map: 40.81 },
+        full: { label: "Full IAPR", r1: 64.25, map: 42.02 }
+      }
+    },
+    rstp: {
+      label: "RSTPReid",
+      configs: {
+        base: { label: "Base", r1: 57.75, map: 46.53 },
+        pm: { label: "PM", r1: 56.50, map: 44.97 },
+        "pm-ira": { label: "PM + IRA", r1: 58.30, map: 45.98 },
+        "pm-sstt": { label: "PM + SSTT", r1: 60.60, map: 48.04 },
+        full: { label: "Full IAPR", r1: 61.10, map: 48.43 }
+      }
+    }
+  };
+
+  const ablationConfigMeta = {
+    base: {
+      components: [],
+      title: "Start from the base retriever.",
+      copy: "This is the RDE reference point before prototype regularization is added."
+    },
+    pm: {
+      components: ["pm"],
+      title: "Memory alone is not sufficient.",
+      copy: "Persistent prototypes can help one metric while hurting another; structure around the memory matters."
+    },
+    "pm-ira": {
+      components: ["pm", "ira"],
+      title: "Identity restriction gives the memory explicit ownership.",
+      copy: "Assignments are confined to prototypes owned by the ground-truth identity, changing how identity-level references are organized."
+    },
+    "pm-sstt": {
+      components: ["pm", "sstt"],
+      title: "Same-space transfer makes cross-modal supervision modality-compatible.",
+      copy: "Assignment structure crosses modalities while each supervisory target remains in the feature space being regularized."
+    },
+    full: {
+      components: ["pm", "ira", "sstt"],
+      title: "The components are complementary.",
+      copy: "Full IAPR combines persistence, identity ownership, and same-space cross-modal transfer; it gives the highest R@1 and mAP in the reported RDE ablation."
+    }
+  };
+
+  const ablationLab = document.querySelector("[data-ablation-lab]");
+  const ablationChart = ablationLab?.querySelector("[data-ablation-chart]");
+  const ablationTabs = ablationLab ? [...ablationLab.querySelectorAll("[data-ablation-dataset]")] : [];
+  const ablationConfigButtons = ablationLab ? [...ablationLab.querySelectorAll("[data-ablation-config]")] : [];
+  const ablationComponentNodes = ablationLab ? [...ablationLab.querySelectorAll("[data-ablation-component]")] : [];
+  const ablationInsight = ablationLab?.querySelector("[data-ablation-insight]");
+  let activeAblationDataset = "cuhk";
+  let activeAblationConfig = "pm";
+
+  function updateAblationComponents(configKey) {
+    const enabled = new Set(ablationConfigMeta[configKey]?.components || []);
+    ablationComponentNodes.forEach((node) => {
+      const on = enabled.has(node.dataset.ablationComponent);
+      node.classList.toggle("is-on", on);
+      node.setAttribute("aria-label", `${node.querySelector("b")?.textContent || "Component"}: ${on ? "enabled" : "not enabled"}`);
+    });
+  }
+
+  function updateAblationInsight(configKey) {
+    if (!ablationInsight) return;
+    const meta = ablationConfigMeta[configKey];
+    if (!meta) return;
+    const title = ablationInsight.querySelector("strong");
+    const copy = ablationInsight.querySelector("span");
+    if (title) title.textContent = meta.title;
+    if (copy) copy.textContent = meta.copy;
+  }
+
+  function ablationDeltaClass(delta) {
+    if (delta > .005) return "is-positive";
+    if (delta < -.005) return "is-negative";
+    return "is-neutral";
+  }
+
+  function renderAblation() {
+    const dataset = ablationData[activeAblationDataset];
+    const base = dataset?.configs.base;
+    const selected = dataset?.configs[activeAblationConfig];
+    if (!dataset || !base || !selected || !ablationChart) return;
+
+    const metrics = [
+      { key: "r1", label: "R@1", base: base.r1, selected: selected.r1 },
+      { key: "map", label: "mAP", base: base.map, selected: selected.map }
+    ];
+
+    ablationChart.innerHTML = `
+      <header class="ablation-chart-head">
+        <div><span>RDE · ${dataset.label}</span><strong>${selected.label}</strong></div>
+        <small>paired against the same base</small>
+      </header>
+      <div class="ablation-metric-grid">
+        ${metrics.map((metric) => {
+          const delta = metric.selected - metric.base;
+          return `
+            <article class="ablation-compare-card ${ablationDeltaClass(delta)}">
+              <div class="ablation-compare-head"><strong>${metric.label}</strong><span>${formatSigned(delta)}</span></div>
+              <div class="ablation-compare-row"><span>Base</span><b>${metric.base.toFixed(2)}</b><i><em style="--bar:${metric.base}%"></em></i></div>
+              <div class="ablation-compare-row is-selected"><span>${selected.label}</span><b>${metric.selected.toFixed(2)}</b><i><em style="--bar:${metric.selected}%"></em></i></div>
+            </article>`;
+        }).join("")}
+      </div>`;
+
+    updateAblationComponents(activeAblationConfig);
+    updateAblationInsight(activeAblationConfig);
+  }
+
+  function setAblationDataset(datasetKey, { focusButton = false } = {}) {
+    if (!ablationData[datasetKey]) return;
+    activeAblationDataset = datasetKey;
+    ablationTabs.forEach((button) => {
+      const active = button.dataset.ablationDataset === datasetKey;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      if (active && focusButton) button.focus({ preventScroll: true });
+    });
+    renderAblation();
+  }
+
+  function setAblationConfig(configKey, { focusButton = false } = {}) {
+    if (!ablationConfigMeta[configKey]) return;
+    activeAblationConfig = configKey;
+    ablationConfigButtons.forEach((button) => {
+      const active = button.dataset.ablationConfig === configKey;
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+      if (active && focusButton) button.focus({ preventScroll: true });
+    });
+    renderAblation();
+  }
+
+  function bindLinearTabKeys(buttons, dataKey, setter) {
+    buttons.forEach((button, index) => {
+      button.addEventListener("click", () => setter(button.dataset[dataKey]));
+      button.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === "ArrowLeft") nextIndex = (index - 1 + buttons.length) % buttons.length;
+        if (event.key === "ArrowRight") nextIndex = (index + 1) % buttons.length;
+        if (event.key === "Home") nextIndex = 0;
+        if (event.key === "End") nextIndex = buttons.length - 1;
+        setter(buttons[nextIndex].dataset[dataKey], { focusButton: true });
+      });
+    });
+  }
+
+  bindLinearTabKeys(ablationTabs, "ablationDataset", setAblationDataset);
+  bindLinearTabKeys(ablationConfigButtons, "ablationConfig", setAblationConfig);
+  if (ablationLab) {
+    setAblationDataset(activeAblationDataset);
+    setAblationConfig(activeAblationConfig);
+  }
 
   const qualitativeSourceFiles = {
     clip: {
