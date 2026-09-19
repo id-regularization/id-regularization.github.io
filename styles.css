@@ -7392,3 +7392,304 @@ body { overflow-x: clip; }
     margin-top: 0;
   }
 }
+
+
+/* =========================================================
+   Typography audit — semantic readability pass (2026-09-19)
+   Role scale:
+   - diagram annotation: 11px
+   - micro label: 12px
+   - label / dense data: 13px
+   - UI / caption: 14px
+   - supporting body: 15px
+   - primary body: 16px+
+   ========================================================= */
+
+/* Site chrome: interactive text should not fall below UI size. */
+.nav-links a,
+.paper-links a { font-size: var(--type-ui); }
+.site-footer { font-size: var(--type-ui); }
+
+/* Motivation — preserve hierarchy, remove 9–11px functional copy. */
+#motivation small { font-size: var(--type-micro); }
+#motivation :is(
+  .motivation-deck-tabs-v6 button > span,
+  .motivation-slide-head-v6 > div > span,
+  .motivation-query-v6-label span,
+  .motivation-match-rule-v6 b,
+  .motivation-person-id-v6,
+  .motivation-reference-kicker-v8,
+  .motivation-takeaway-label-v8,
+  .motivation-detail-shared-v7 > span,
+  .motivation-detail-difference-v7 > span
+) { font-size: var(--type-label); }
+#motivation :is(
+  .motivation-deck-tabs-v6 b,
+  .motivation-gallery-footer-v6 strong,
+  .motivation-detail-head-v6 strong,
+  .motivation-detail-person-v6 figcaption strong,
+  .motivation-detail-difference-v7 strong,
+  .motivation-reference-card-v8 p,
+  .motivation-takeaway-foot-v8 > span
+) { font-size: var(--type-caption); }
+#motivation :is(
+  .motivation-slide-head-v6 p,
+  .motivation-query-v6 p,
+  .motivation-slide-punchline-v6,
+  .motivation-choice-feedback-v7 p
+) { font-size: var(--type-body-sm); }
+#motivation :is(
+  .motivation-deck-tabs-v6 button,
+  .motivation-slide-v6--challenge .motivation-query-tags-v6 button,
+  .motivation-reveal-button-v6,
+  .motivation-reset-button-v7,
+  .motivation-deck-footer-v6 button,
+  .motivation-takeaway-replay-v8,
+  .motivation-takeaway-foot-v8 a
+) { font-size: var(--type-ui); }
+#motivation .motivation-cue-status-v7 { font-size: var(--type-label); }
+#motivation .motivation-person-result-v6 b { font-size: var(--type-label); }
+#motivation .motivation-person-result-v6 small { font-size: var(--type-micro); }
+#motivation .motivation-cue-shared-v7 { font-size: var(--type-micro); }
+#motivation .motivation-person-v6.is-selected::after { font-size: var(--type-micro); }
+
+/* Method — main prose/UI uses normal text sizes; compact diagrams use a separate 11px floor. */
+#method small { font-size: var(--type-micro); }
+#method :is(
+  .method-mini-label-v9,
+  .architecture-eyebrow,
+  .system-label-v9 span,
+  .flow-step-v9 > span,
+  .method-slide-kicker-v10,
+  .method-explorer-mode-note-v11,
+  .lifecycle-row-label-v11 span,
+  .lifecycle-active-band-v11 span,
+  .lifecycle-loop-head-v11 span,
+  .lifecycle-deploy-card-v11 span
+) { font-size: var(--type-label); }
+#method :is(
+  .lane-encoder-v9 strong,
+  .lane-embedding-v9 strong,
+  .flow-step-v9 > strong,
+  .lifecycle-row-label-v11 strong,
+  .lifecycle-phase-v11 b,
+  .lifecycle-activation-v11 b,
+  .lifecycle-loop-step-v11 b,
+  .lifecycle-deploy-card-v11 strong,
+  .training-lifecycle-facts-v11 b
+) { font-size: var(--type-data); }
+#method :is(
+  .architecture-head-v9 p,
+  .training-lifecycle-head-v11 p,
+  .training-lifecycle-foot-v11 > p
+) { font-size: var(--type-body-sm); }
+#method :is(
+  .architecture-toggle button,
+  .method-slider-tabs-v10 button > b,
+  .method-slider-controls-v10 button,
+  .method-explore-toggle-v11,
+  .training-replay-v11
+) { font-size: var(--type-ui); }
+#method .method-slider-tabs-v10 button > small { font-size: var(--type-diagram); }
+#method :is(
+  .project-mini-row-v10 > b,
+  .project-mini-row-v10 > em,
+  .memory-mini-row-v10 > b,
+  .memory-mini-lock-v10,
+  .translate-plane-v10 small,
+  .translate-bridge-v10 small,
+  .regulate-query-v10,
+  .regulate-pull-v10,
+  .regulate-push-v10,
+  .regulate-mini-v10 > b,
+  .score-embedding-v10 small,
+  .scoring-core-v10 small,
+  .score-output-v10 small,
+  .inference-score-kicker-v10
+) { font-size: var(--type-diagram); }
+#method .project-mini-row-v10 > span { font-size: var(--type-micro); }
+#method .inference-disconnect-v10 small { font-size: var(--type-micro); }
+#method .inference-disconnect-v10 strong { font-size: var(--type-label); }
+#method .score-embedding-v10 strong,
+#method .scoring-core-v10 strong { font-size: var(--type-label); }
+#method .score-output-v10 small { line-height: 1.25; }
+
+/* Results — dense evidence can stay compact, but data and controls remain readable. */
+#results :is(.results-big span, .results-stat span) { font-size: var(--type-caption); }
+#results .result-explorer-kicker { font-size: var(--type-label); }
+#results .result-explorer-head p { font-size: var(--type-body-sm); }
+#results .result-metric-toggle button { font-size: var(--type-ui); }
+#results .result-matrix-meta { font-size: var(--type-micro); }
+#results .result-matrix-corner span,
+#results .result-matrix-col,
+#results .result-matrix-row { font-size: var(--type-data); }
+#results .result-matrix-corner small,
+#results .result-gain-cell small { font-size: var(--type-micro); }
+#results .result-detail-head > div > span,
+#results .ablation-config-bar > span,
+#results .ablation-chart-head span { font-size: var(--type-micro); }
+#results .result-detail-head > b,
+#results .result-detail-metric-head strong,
+#results .result-detail-metric-head span,
+#results .ablation-components b,
+#results .ablation-chart-head strong,
+#results .ablation-compare-head strong,
+#results .ablation-compare-head span { font-size: var(--type-data); }
+#results .result-detail-copy,
+#results .ablation-copy > p:not(.section-kicker),
+#results .ablation-insight span { font-size: var(--type-caption); }
+#results .result-detail-bars span,
+#results .result-detail-bars b,
+#results .ablation-components small,
+#results .ablation-chart-head small,
+#results .ablation-compare-row > span,
+#results .ablation-compare-row > b { font-size: var(--type-micro); }
+#results .ablation-tabs button,
+#results .ablation-configs button { font-size: var(--type-ui); }
+#results .ablation-insight strong { font-size: var(--type-caption); }
+#results .overhead-strip span { font-size: var(--type-caption); }
+
+/* Analysis — explanatory copy is body text; legends and controls are labels, not microprint. */
+#analysis :is(
+  .analysis-step-index,
+  .analysis-margin-card-head span,
+  .analysis-reading-note > span,
+  .analysis-chart-head > div:first-child span,
+  .analysis-shift-control > span,
+  .analysis-mechanism-insight > span,
+  .analysis-mechanism-card header span,
+  .analysis-to-qualitative > span
+) { font-size: var(--type-label); }
+#analysis :is(
+  .analysis-hero-stat small,
+  .analysis-margin-card-head small,
+  .analysis-margin-track > b,
+  .analysis-margin-track > small,
+  .analysis-story-bridge b,
+  .analysis-mechanism-total small,
+  .analysis-mechanism-row > span,
+  .analysis-mechanism-row > b
+) { font-size: var(--type-micro); }
+#analysis :is(
+  .analysis-margin-card > p,
+  .analysis-reading-note p,
+  .analysis-extended summary,
+  .analysis-extended p,
+  .analysis-mechanism-insight > p,
+  .analysis-mechanism-card > p,
+  .analysis-mechanism-footer p
+) { font-size: var(--type-caption); }
+#analysis :is(
+  .analysis-dataset-tabs button,
+  .ambiguity-model-legend button,
+  .analysis-paper-link.figure-button
+) { font-size: var(--type-ui); }
+#analysis .ambiguity-symbol-legend { font-size: var(--type-label); }
+#analysis .analysis-mechanism-total span { font-size: var(--type-caption); }
+#analysis .analysis-mechanism-card.is-dominant::after { font-size: var(--type-diagram); }
+#analysis .analysis-to-qualitative > strong { font-size: var(--type-caption); }
+
+/* Qualitative explorer — labels 13px, controls/captions 14px. */
+#qualitative :is(
+  .qual-control-label,
+  .qual-stage-kicker,
+  .qual-ranking-eyebrow,
+  .qual-case-picker > span,
+  .qual-ranking-state,
+  .same-pipeline-badge
+) { font-size: var(--type-label); }
+#qualitative :is(
+  .qual-tabs button,
+  .qual-case-picker button,
+  .qual-original-button
+) { font-size: var(--type-ui); }
+#qualitative :is(
+  .qual-overview-hint,
+  .qual-stage-footer p,
+  .qual-legend,
+  .qual-interaction-hint p
+) { font-size: var(--type-caption); }
+#qualitative .qual-panel-label small { font-size: var(--type-micro); }
+#qualitative .qual-panel-label > span,
+#qualitative .qual-ranking-head strong { font-size: var(--type-caption); }
+#qualitative .qual-row-focus b { font-size: var(--type-micro); }
+
+/* Mobile keeps the same readability floor instead of shrinking role text again. */
+@media (max-width: 760px) {
+  .nav-links a,
+  .paper-links a { font-size: var(--type-ui); }
+  #motivation .motivation-person-v6.is-selected::after,
+  #motivation .motivation-cue-shared-v7 { font-size: var(--type-micro); }
+}
+
+/* Typography audit follow-up: remaining role-specific microcopy. */
+#motivation .motivation-takeaway-time-v8,
+#motivation .motivation-deck-footer-v6 > span,
+#motivation .motivation-gallery-footer-v6 span { font-size: var(--type-micro); }
+#motivation .motivation-deck-footer-v6 > span b,
+#motivation .motivation-takeaway-observations-v8 article > strong { font-size: var(--type-label); }
+
+#method :is(
+  .compatibility-copy-v9 > span,
+  .lifecycle-loop-step-v11 > span,
+  .lifecycle-dormant-v11,
+  .prologue-runway-v9 > span,
+  .lifecycle-axis-v11 > span,
+  .retriever-row-v9 > span,
+  .gradient-return-v9 > span,
+  .mode-status-v9 > span,
+  .prologue-memory-title-v9 > span,
+  .lane-input-v9 > span,
+  .attachment-socket-v9 > span
+) { font-size: var(--type-micro); }
+#method .retriever-port-v9 > strong,
+#method .compatibility-copy-v9 > strong { font-size: var(--type-label); }
+#method .flow-loss-symbol-v10 { font-size: var(--type-micro); }
+
+#results .result-matrix-meta small { font-size: var(--type-micro); }
+
+#qualitative :is(.same-pipeline-note, .qual-training-bridge small) { font-size: var(--type-micro); }
+#qualitative .qual-training-bridge strong { font-size: var(--type-label); }
+
+/* Typography audit follow-up: prevent larger role text from clipping. */
+#method .lifecycle-axis-v11 > b { font-size: var(--type-micro); }
+#method .regulate-mini-v10 > b {
+  width: min(100%, 11rem);
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.15;
+}
+#method .retriever-row-v9 > span {
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.15;
+}
+
+@media (max-width: 700px) {
+  #motivation .motivation-deck-tabs-v6 button { flex-basis: 240px; }
+  #motivation .motivation-deck-tabs-v6 small {
+    white-space: normal;
+    line-height: 1.2;
+  }
+}
+
+/* Method SVG annotations use the diagram-text role instead of 9–10px microprint. */
+#method :is(
+  .diagram-note-v10,
+  .diagram-callout-v10,
+  .diagram-axis-blue-v10,
+  .diagram-axis-red-v10,
+  .diagram-mini-purple-v10,
+  .diagram-mini-green-v10,
+  .diagram-mini-red-v10,
+  .translate-claim-v10,
+  .project-claim-v11
+) { font-size: var(--type-diagram); }
+
+#method .retriever-row-v9 > span { white-space: normal; }
+
+/* Method explorer takeaway/progress are semantic labels, not diagram microcopy. */
+#method .method-slide-takeaway-v10 b { font-size: var(--type-label); }
+#method .method-slide-takeaway-v10 span { font-size: var(--type-caption); }
+#method .method-slider-progress-v10 { font-size: var(--type-micro); }
+#method .method-slider-tabs-v10 button > span { font-size: var(--type-micro); }

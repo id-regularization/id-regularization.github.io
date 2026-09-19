@@ -70,4 +70,14 @@
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
   --text-3xl: clamp(2.6rem, 5vw, 4.65rem);
+
+  /* Semantic typography roles */
+  --type-diagram: 0.6875rem; /* 11px — dense in-diagram annotation only */
+  --type-micro: 0.75rem;    /* 12px — secondary micro-label */
+  --type-label: 0.8125rem;  /* 13px — eyebrow / compact label */
+  --type-data: 0.8125rem;   /* 13px — dense table / metric label */
+  --type-caption: 0.875rem; /* 14px — caption / supporting note */
+  --type-ui: 0.875rem;      /* 14px — buttons / tabs / controls */
+  --type-body-sm: 0.9375rem;/* 15px — secondary body copy */
+  --type-body: 1rem;        /* 16px — primary body copy */
 }
