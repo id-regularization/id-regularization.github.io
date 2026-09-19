@@ -7,54 +7,73 @@
       negative: "medium backpack · thick padded straps · front pocket",
       image: "assets/examples/hn_1.png",
       focus: "backpack",
+      difference: "Backpack construction differs despite the same coarse black-backpack cue.",
       negativeLabel: "CANDIDATE B · WRONG ID"
     },
     hn2: {
       label: "Candidate C · jacket",
-      title: "One construction detail changes the jacket cue.",
+      title: "The color and category match. One construction detail changes the jacket cue.",
       target: "front zipper · subtle side pockets",
       negative: "pullover · kangaroo pocket · no front zipper",
       image: "assets/examples/hn_2.png",
       focus: "jacket",
+      difference: "Jacket construction differs even though both candidates satisfy the coarse green-jacket description.",
       negativeLabel: "CANDIDATE C · WRONG ID"
     },
     hn3: {
       label: "Candidate D · shoes",
-      title: "The color matches, but the shoe construction changes.",
+      title: "The shoe color matches, but the local construction changes.",
       target: "plain white low-top sneakers",
       negative: "white high-top sneakers · dark sole",
       image: "assets/examples/hn_3.png",
       focus: "shoes",
+      difference: "Low-top versus high-top construction resolves an identity-wrong semantic match.",
       negativeLabel: "CANDIDATE D · WRONG ID"
     },
     hn4: {
       label: "Candidate E · hair + tote side",
-      title: "Two small relational cues break the identity match.",
+      title: "The dominant cues still agree, but two smaller relational cues do not.",
       target: "straight shoulder-length hair · tote in left hand",
       negative: "loose low ponytail · tote in right hand",
       image: "assets/examples/hn_4.png",
       focus: "hair-tote",
+      difference: "Hair structure and tote-side relation differ while the dominant semantic description remains plausible.",
       negativeLabel: "CANDIDATE E · WRONG ID"
     }
   };
 
+  const motivationSharedCueText = "dark hair · green jacket · black pants · white shoes · black backpack · beige tote";
   const motivationStory = document.querySelector("[data-motivation-story]");
   const motivationBeats = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-beat]")] : [];
   const motivationScenes = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-scene]")] : [];
-  const motivationCandidates = motivationStory ? [...motivationStory.querySelectorAll("[data-motivation-candidate]")] : [];
-  const motivationRevealButton = motivationStory?.querySelector("[data-motivation-reveal]");
-  const motivationDetail = motivationStory?.querySelector("[data-motivation-detail]");
-  const motivationDetailClose = motivationStory?.querySelector("[data-motivation-detail-close]");
-  const motivationDetailKicker = motivationStory?.querySelector("[data-motivation-detail-kicker]");
-  const motivationDetailTitle = motivationStory?.querySelector("[data-motivation-detail-title]");
-  const motivationDetailTarget = motivationStory?.querySelector("[data-motivation-detail-target]");
-  const motivationDetailNegative = motivationStory?.querySelector("[data-motivation-detail-negative]");
-  const motivationDetailNegativeLabel = motivationStory?.querySelector("[data-motivation-detail-negative-label]");
-  const motivationDetailImage = motivationStory?.querySelector("[data-motivation-detail-image]");
-  const motivationDetailFigures = motivationStory ? [...motivationStory.querySelectorAll("[data-detail-focus]")] : [];
+  const motivationChallenge = motivationStory?.querySelector("[data-motivation-challenge]");
+  const motivationCandidates = motivationChallenge ? [...motivationChallenge.querySelectorAll("[data-motivation-candidate]")] : [];
+  const motivationCueButtons = motivationChallenge ? [...motivationChallenge.querySelectorAll("[data-motivation-cue]")] : [];
+  const motivationRevealButton = motivationChallenge?.querySelector("[data-motivation-reveal]");
+  const motivationResetButton = motivationChallenge?.querySelector("[data-motivation-reset]");
+  const motivationChoiceFeedback = motivationChallenge?.querySelector("[data-motivation-choice-feedback]");
+  const motivationCueStatus = motivationChallenge?.querySelector("[data-motivation-cue-status]");
+  const motivationStageLabel = motivationChallenge?.querySelector("[data-motivation-stage-label]");
+  const motivationFooterTitle = motivationChallenge?.querySelector("[data-motivation-footer-title]");
+  const motivationFooterCopy = motivationChallenge?.querySelector("[data-motivation-footer-copy]");
+  const motivationPunchline = motivationStory?.querySelector("[data-motivation-punchline]");
+  const motivationDetail = motivationChallenge?.querySelector("[data-motivation-detail]");
+  const motivationDetailClose = motivationChallenge?.querySelector("[data-motivation-detail-close]");
+  const motivationDetailKicker = motivationChallenge?.querySelector("[data-motivation-detail-kicker]");
+  const motivationDetailTitle = motivationChallenge?.querySelector("[data-motivation-detail-title]");
+  const motivationDetailTarget = motivationChallenge?.querySelector("[data-motivation-detail-target]");
+  const motivationDetailNegative = motivationChallenge?.querySelector("[data-motivation-detail-negative]");
+  const motivationDetailNegativeLabel = motivationChallenge?.querySelector("[data-motivation-detail-negative-label]");
+  const motivationDetailImage = motivationChallenge?.querySelector("[data-motivation-detail-image]");
+  const motivationDetailShared = motivationChallenge?.querySelector("[data-motivation-detail-shared]");
+  const motivationDetailDiff = motivationChallenge?.querySelector("[data-motivation-detail-diff]");
+  const motivationDetailFigures = motivationChallenge ? [...motivationChallenge.querySelectorAll("[data-detail-focus]")] : [];
+
   let motivationBeat = 1;
   let motivationIdentityRevealed = false;
+  let motivationInspectMode = false;
   let selectedMotivationCandidate = null;
+  let pinnedMotivationCue = null;
 
   function setMotivationBeat(nextBeat, { focus = false } = {}) {
     const parsed = Number.parseInt(nextBeat, 10);
@@ -71,49 +90,96 @@
     motivationScenes.forEach((scene) => scene.classList.toggle("is-active", Number.parseInt(scene.dataset.motivationScene, 10) === parsed));
   }
 
-  function setMotivationReveal(revealed) {
-    if (!motivationStory) return;
-    motivationIdentityRevealed = !!revealed;
-    motivationStory.classList.toggle("identities-revealed", motivationIdentityRevealed);
-    if (motivationRevealButton) {
-      motivationRevealButton.textContent = motivationIdentityRevealed ? "Hide identities" : "Reveal identities";
-      motivationRevealButton.setAttribute("aria-pressed", String(motivationIdentityRevealed));
+  function candidateLabel(key) {
+    return motivationCandidates.find((candidate) => candidate.dataset.motivationCandidate === key)?.dataset.candidateLabel || "";
+  }
+
+  function setChallengeCopy(state) {
+    if (!motivationChallenge) return;
+    motivationChallenge.dataset.state = state;
+
+    if (state === "scan") {
+      if (motivationStageLabel) motivationStageLabel.textContent = "Which person would you retrieve?";
+      if (motivationFooterTitle) motivationFooterTitle.textContent = "All five match the dominant description.";
+      if (motivationFooterCopy) motivationFooterCopy.textContent = "Semantic agreement alone does not tell you which identity is correct.";
+      if (motivationPunchline) motivationPunchline.innerHTML = "<strong>Semantic agreement leaves multiple plausible candidates.</strong> Choose one, then reveal which retrieval is identity-correct.";
+      return;
     }
-    if (!motivationIdentityRevealed) {
-      selectedMotivationCandidate = null;
-      motivationCandidates.forEach((item) => {
-        item.classList.remove("is-active", "is-preview");
-        item.setAttribute("aria-pressed", "false");
-      });
-      if (motivationDetail) motivationDetail.hidden = true;
+
+    if (state === "chosen") {
+      const label = candidateLabel(selectedMotivationCandidate);
+      if (motivationStageLabel) motivationStageLabel.textContent = "Selection made from semantic cues";
+      if (motivationFooterTitle) motivationFooterTitle.textContent = `Candidate ${label} is a plausible retrieval.`;
+      if (motivationFooterCopy) motivationFooterCopy.textContent = "But semantic plausibility cannot verify identity.";
+      if (motivationPunchline) motivationPunchline.innerHTML = "<strong>A plausible semantic match can still be the wrong identity.</strong> Reveal the labels to test the retrieval.";
+      return;
+    }
+
+    if (state === "revealed") {
+      if (motivationStageLabel) motivationStageLabel.textContent = "Identity labels revealed";
+      if (motivationFooterTitle) motivationFooterTitle.textContent = "Five semantic matches. One identity-correct retrieval.";
+      if (motivationFooterCopy) motivationFooterCopy.textContent = "The dominant cues stay the same; the identity outcome changes.";
+      if (motivationPunchline) motivationPunchline.innerHTML = "<strong>Semantic match ≠ identity match.</strong> Fine-grained evidence must separate the target from identity-wrong look-alikes.";
+      return;
+    }
+
+    if (state === "inspect") {
+      if (motivationStageLabel) motivationStageLabel.textContent = "Inspect the subtle evidence";
+      if (motivationFooterTitle) motivationFooterTitle.textContent = "Dominant cues explain plausibility. Smaller cues resolve identity.";
+      if (motivationFooterCopy) motivationFooterCopy.textContent = "Hover or click a candidate to inspect the local evidence that changes the identity decision.";
+      if (motivationPunchline) motivationPunchline.innerHTML = "<strong>Shared attributes get candidates into the ranking.</strong> Identity-level detail decides which candidate should stay at the top.";
+    }
+  }
+
+  function setCandidateSelection(key) {
+    selectedMotivationCandidate = key;
+    motivationCandidates.forEach((candidate) => {
+      const selected = candidate.dataset.motivationCandidate === key;
+      candidate.classList.toggle("is-selected", selected);
+      candidate.classList.toggle("is-active", selected);
+      candidate.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function updateMotivationCue(cue) {
+    motivationCueButtons.forEach((button) => {
+      const active = !!cue && button.dataset.motivationCue === cue;
+      button.classList.toggle("is-cue-active", active);
+      button.setAttribute("aria-pressed", String(pinnedMotivationCue === button.dataset.motivationCue));
+    });
+
+    motivationCandidates.forEach((candidate) => {
+      candidate.classList.toggle("is-cue-shared", !!cue);
+      const badge = candidate.querySelector("[data-motivation-cue-badge]");
+      if (badge) badge.textContent = cue ? `${cue} · shared` : "";
+    });
+
+    if (motivationCueStatus) {
+      motivationCueStatus.textContent = cue
+        ? `“${cue}” is shared by all five candidates — useful for semantic matching, not enough to resolve identity.`
+        : "Hover a cue to see whether it separates the gallery.";
     }
   }
 
   function renderMotivationCandidate(key, { preview = false } = {}) {
-    if (!motivationStory) return;
+    if (!motivationChallenge || !motivationIdentityRevealed) return;
     const isTarget = key === "target";
     const data = motivationHardNegatives[key];
     if (!isTarget && !data) return;
 
-    motivationCandidates.forEach((candidate) => {
-      const active = candidate.dataset.motivationCandidate === key;
-      candidate.classList.toggle("is-active", active);
-      candidate.classList.toggle("is-preview", active && preview);
-      candidate.setAttribute("aria-pressed", String(active && !preview));
-    });
-
-    if (preview) return;
-    selectedMotivationCandidate = key;
-    setMotivationReveal(true);
+    if (!preview) setCandidateSelection(key);
     if (!motivationDetail) return;
     motivationDetail.hidden = false;
 
+    if (motivationDetailShared) motivationDetailShared.textContent = motivationSharedCueText;
+
     if (isTarget) {
       if (motivationDetailKicker) motivationDetailKicker.textContent = "Candidate A · same identity";
-      if (motivationDetailTitle) motivationDetailTitle.textContent = "This candidate is the identity-correct target.";
+      if (motivationDetailTitle) motivationDetailTitle.textContent = "This candidate preserves the identity-consistent local evidence.";
       if (motivationDetailTarget) motivationDetailTarget.textContent = "query cues + identity-consistent local details";
       if (motivationDetailNegative) motivationDetailNegative.textContent = "same image shown for reference";
       if (motivationDetailNegativeLabel) motivationDetailNegativeLabel.textContent = "CANDIDATE A · SAME ID";
+      if (motivationDetailDiff) motivationDetailDiff.textContent = "No identity mismatch is exposed here; Candidate A is the same-identity target.";
       if (motivationDetailImage) {
         motivationDetailImage.src = "assets/examples/target.png";
         motivationDetailImage.alt = "True target detail";
@@ -127,12 +193,144 @@
     if (motivationDetailTarget) motivationDetailTarget.textContent = data.target;
     if (motivationDetailNegative) motivationDetailNegative.textContent = data.negative;
     if (motivationDetailNegativeLabel) motivationDetailNegativeLabel.textContent = data.negativeLabel;
+    if (motivationDetailDiff) motivationDetailDiff.textContent = data.difference;
     if (motivationDetailImage) {
       motivationDetailImage.src = data.image;
       motivationDetailImage.alt = `${data.label} detail`;
     }
     motivationDetailFigures.forEach((figure) => figure.dataset.focusCue = data.focus);
   }
+
+  function setMotivationInspectMode(enabled, { candidate = null } = {}) {
+    if (!motivationChallenge || !motivationIdentityRevealed) return;
+    motivationInspectMode = !!enabled;
+    motivationChallenge.classList.toggle("is-inspecting", motivationInspectMode);
+
+    if (motivationInspectMode) {
+      const fallback = candidate || selectedMotivationCandidate || "hn1";
+      if (motivationRevealButton) motivationRevealButton.textContent = "Hide cue inspection";
+      setChallengeCopy("inspect");
+      renderMotivationCandidate(fallback, { preview: !selectedMotivationCandidate && !candidate });
+    } else {
+      if (motivationRevealButton) motivationRevealButton.textContent = "Inspect subtle cues →";
+      if (motivationDetail) motivationDetail.hidden = true;
+      setChallengeCopy("revealed");
+    }
+  }
+
+  function setMotivationReveal(revealed) {
+    if (!motivationStory || !motivationChallenge) return;
+    motivationIdentityRevealed = !!revealed;
+    motivationStory.classList.toggle("identities-revealed", motivationIdentityRevealed);
+    motivationChallenge.classList.toggle("identities-revealed", motivationIdentityRevealed);
+
+    if (motivationRevealButton) {
+      motivationRevealButton.textContent = motivationIdentityRevealed ? "Inspect subtle cues →" : "Reveal identities";
+      motivationRevealButton.setAttribute("aria-pressed", String(motivationIdentityRevealed));
+    }
+    if (motivationResetButton) motivationResetButton.hidden = !motivationIdentityRevealed && !selectedMotivationCandidate;
+
+    if (motivationIdentityRevealed) {
+      motivationInspectMode = false;
+      motivationChallenge.classList.remove("is-inspecting");
+      if (motivationChoiceFeedback) {
+        motivationChoiceFeedback.innerHTML = selectedMotivationCandidate
+          ? `<span class="motivation-choice-dot-v7" aria-hidden="true"></span><p><strong>Candidate ${candidateLabel(selectedMotivationCandidate)} checked.</strong> The gallery reveals one same-ID target and four identity-wrong look-alikes.</p>`
+          : '<span class="motivation-choice-dot-v7" aria-hidden="true"></span><p><strong>Identity labels revealed.</strong> Candidate A is the same identity; B–E remain semantically plausible but are identity-wrong.</p>';
+      }
+      setChallengeCopy("revealed");
+      return;
+    }
+
+    motivationInspectMode = false;
+    motivationChallenge.classList.remove("is-inspecting");
+    if (motivationDetail) motivationDetail.hidden = true;
+    setChallengeCopy(selectedMotivationCandidate ? "chosen" : "scan");
+  }
+
+  function resetMotivationChallenge() {
+    motivationIdentityRevealed = false;
+    motivationInspectMode = false;
+    selectedMotivationCandidate = null;
+    pinnedMotivationCue = null;
+    motivationStory?.classList.remove("identities-revealed");
+    motivationChallenge?.classList.remove("identities-revealed", "is-inspecting");
+    motivationCandidates.forEach((candidate) => {
+      candidate.classList.remove("is-selected", "is-active", "is-preview", "is-cue-shared");
+      candidate.setAttribute("aria-pressed", "false");
+      const badge = candidate.querySelector("[data-motivation-cue-badge]");
+      if (badge) badge.textContent = "";
+    });
+    motivationCueButtons.forEach((button) => {
+      button.classList.remove("is-cue-active");
+      button.setAttribute("aria-pressed", "false");
+    });
+    if (motivationCueStatus) motivationCueStatus.textContent = "Hover a cue to see whether it separates the gallery.";
+    if (motivationDetail) motivationDetail.hidden = true;
+    if (motivationRevealButton) {
+      motivationRevealButton.textContent = "Reveal identities";
+      motivationRevealButton.setAttribute("aria-pressed", "false");
+    }
+    if (motivationResetButton) motivationResetButton.hidden = true;
+    if (motivationChoiceFeedback) motivationChoiceFeedback.innerHTML = '<span class="motivation-choice-dot-v7" aria-hidden="true"></span><p><strong>Try the retrieval yourself.</strong> Pick the person you think the text describes best, or reveal the identities directly.</p>';
+    setChallengeCopy("scan");
+  }
+
+  motivationCueButtons.forEach((button) => {
+    const cue = button.dataset.motivationCue;
+    button.addEventListener("pointerenter", () => updateMotivationCue(cue));
+    button.addEventListener("pointerleave", () => updateMotivationCue(pinnedMotivationCue));
+    button.addEventListener("focus", () => updateMotivationCue(cue));
+    button.addEventListener("blur", () => updateMotivationCue(pinnedMotivationCue));
+    button.addEventListener("click", () => {
+      pinnedMotivationCue = pinnedMotivationCue === cue ? null : cue;
+      updateMotivationCue(pinnedMotivationCue);
+    });
+  });
+
+  motivationCandidates.forEach((candidate, index) => {
+    const key = candidate.dataset.motivationCandidate;
+    candidate.addEventListener("click", () => {
+      if (!motivationIdentityRevealed) {
+        setCandidateSelection(key);
+        if (motivationResetButton) motivationResetButton.hidden = false;
+        if (motivationChoiceFeedback) motivationChoiceFeedback.innerHTML = `<span class="motivation-choice-dot-v7" aria-hidden="true"></span><p><strong>Candidate ${candidateLabel(key)} selected.</strong> At the dominant-cue level, this is a defensible match. Reveal identities to check it.</p>`;
+        setChallengeCopy("chosen");
+        return;
+      }
+
+      if (!motivationInspectMode) setMotivationInspectMode(true, { candidate: key });
+      else renderMotivationCandidate(key);
+    });
+
+    candidate.addEventListener("pointerenter", () => {
+      if (motivationIdentityRevealed && motivationInspectMode) renderMotivationCandidate(key, { preview: true });
+    });
+    candidate.addEventListener("pointerleave", () => {
+      if (!motivationIdentityRevealed || !motivationInspectMode) return;
+      renderMotivationCandidate(selectedMotivationCandidate || "hn1", { preview: true });
+    });
+    candidate.addEventListener("focus", () => {
+      if (motivationIdentityRevealed && motivationInspectMode) renderMotivationCandidate(key, { preview: true });
+    });
+    candidate.addEventListener("blur", () => {
+      if (!motivationIdentityRevealed || !motivationInspectMode) return;
+      renderMotivationCandidate(selectedMotivationCandidate || "hn1", { preview: true });
+    });
+    candidate.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      event.preventDefault();
+      const delta = event.key === "ArrowRight" ? 1 : -1;
+      motivationCandidates[(index + delta + motivationCandidates.length) % motivationCandidates.length].focus();
+    });
+  });
+
+  motivationRevealButton?.addEventListener("click", () => {
+    if (!motivationIdentityRevealed) setMotivationReveal(true);
+    else setMotivationInspectMode(!motivationInspectMode);
+  });
+  motivationResetButton?.addEventListener("click", resetMotivationChallenge);
+  motivationDetailClose?.addEventListener("click", () => setMotivationInspectMode(false));
 
   const motivationDesktop = window.matchMedia("(min-width: 981px)");
   const motivationReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -154,8 +352,6 @@
 
     motivationBeats.forEach((beat) => {
       const rect = beat.getBoundingClientRect();
-      // Prefer the beat intersected by the reading anchor. Otherwise choose
-      // the nearest beat center. This avoids IntersectionObserver threshold gaps.
       const distance = rect.top <= anchor && rect.bottom >= anchor
         ? 0
         : Math.abs((rect.top + rect.bottom) / 2 - anchor);
@@ -198,43 +394,7 @@
     });
   });
 
-  motivationCandidates.forEach((candidate, index) => {
-    const key = candidate.dataset.motivationCandidate;
-    candidate.addEventListener("pointerenter", () => {
-      if (selectedMotivationCandidate === key) return;
-      renderMotivationCandidate(key, { preview: true });
-    });
-    candidate.addEventListener("pointerleave", () => {
-      motivationCandidates.forEach((item) => item.classList.toggle("is-active", item.dataset.motivationCandidate === selectedMotivationCandidate));
-      motivationCandidates.forEach((item) => item.classList.remove("is-preview"));
-    });
-    candidate.addEventListener("focus", () => {
-      if (selectedMotivationCandidate !== key) renderMotivationCandidate(key, { preview: true });
-    });
-    candidate.addEventListener("blur", () => {
-      motivationCandidates.forEach((item) => item.classList.toggle("is-active", item.dataset.motivationCandidate === selectedMotivationCandidate));
-      motivationCandidates.forEach((item) => item.classList.remove("is-preview"));
-    });
-    candidate.addEventListener("click", () => renderMotivationCandidate(key));
-    candidate.addEventListener("keydown", (event) => {
-      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
-      event.preventDefault();
-      const delta = event.key === "ArrowRight" ? 1 : -1;
-      motivationCandidates[(index + delta + motivationCandidates.length) % motivationCandidates.length].focus();
-    });
-  });
-
-  motivationRevealButton?.addEventListener("click", () => setMotivationReveal(!motivationIdentityRevealed));
-  motivationDetailClose?.addEventListener("click", () => {
-    selectedMotivationCandidate = null;
-    motivationCandidates.forEach((item) => {
-      item.classList.remove("is-active", "is-preview");
-      item.setAttribute("aria-pressed", "false");
-    });
-    if (motivationDetail) motivationDetail.hidden = true;
-  });
-
-  // Compact three-slide motivation deck. Vertical page scrolling remains untouched;
+  // Compact two-slide motivation deck. Vertical page scrolling remains untouched;
   // users move through the story with the tabs or previous/next controls.
   const motivationDeck = document.querySelector("[data-motivation-deck]");
   const motivationSlides = motivationDeck ? [...motivationDeck.querySelectorAll("[data-motivation-slide]")] : [];
@@ -268,12 +428,11 @@
     if (motivationCurrent) motivationCurrent.textContent = String(nextIndex + 1).padStart(2, "0");
     if (motivationPrev) motivationPrev.disabled = nextIndex === 0;
     if (motivationNext) motivationNext.disabled = nextIndex === motivationSlides.length - 1;
+    if (nextIndex === 1) scheduleSupervisionDemo();
 
-    // Keep the retrieval-detail interaction local to slide 01.
-    if (nextIndex !== 0 && motivationDetail && !motivationDetail.hidden) {
-      motivationDetail.hidden = true;
-      selectedMotivationCandidate = null;
-      motivationCandidates.forEach((item) => item.classList.remove("is-active", "is-preview"));
+    // Keep cue inspection local to slide 01 while preserving the user's retrieval choice.
+    if (nextIndex !== 0 && motivationInspectMode) {
+      setMotivationInspectMode(false);
     }
   }
 
@@ -293,7 +452,214 @@
 
   motivationPrev?.addEventListener("click", () => setMotivationSlide(activeMotivationSlide - 1));
   motivationNext?.addEventListener("click", () => setMotivationSlide(activeMotivationSlide + 1));
+
+  // Slide 02: make the supervision gap visible instead of only describing it.
+  const supervisionDemo = motivationDeck?.querySelector("[data-supervision-demo]");
+  const supervisionReplay = supervisionDemo?.querySelector("[data-supervision-replay]");
+  const supervisionSteps = supervisionDemo ? [...supervisionDemo.querySelectorAll("[data-supervision-step]")] : [];
+  const supervisionMemorySlots = supervisionDemo ? [...supervisionDemo.querySelectorAll("[data-supervision-memory-slot]")] : [];
+  const supervisionDemoStatus = supervisionDemo?.querySelector("[data-supervision-demo-status]");
+  const supervisionFeatureCards = motivationDeck ? [...motivationDeck.querySelectorAll("[data-supervision-feature]")] : [];
+  const supervisionFeatureCopy = motivationDeck?.querySelector("[data-supervision-feature-copy]");
+  const supervisionDefaultFeatureCopy = "Useful supervision is not missing. Hover or select a card to inspect what the identity label already provides.";
+  let supervisionTimers = [];
+  let supervisionHasPlayed = false;
+  let pinnedSupervisionFeature = null;
+
+  function clearSupervisionTimers() {
+    supervisionTimers.forEach((timer) => window.clearTimeout(timer));
+    supervisionTimers = [];
+  }
+
+  function resetSupervisionMemorySlots() {
+    supervisionMemorySlots.forEach((slot) => {
+      slot.classList.remove("is-sampling", "is-cleared");
+      const marker = slot.querySelector("i");
+      const label = slot.querySelector("small");
+      if (marker) marker.textContent = "·";
+      if (label) label.textContent = "empty";
+    });
+  }
+
+  function setSupervisionDemoStep(index) {
+    if (!supervisionDemo) return;
+    supervisionDemo.dataset.phase = `step-${index + 1}`;
+    supervisionSteps.forEach((step, stepIndex) => {
+      step.classList.toggle("is-current", stepIndex === index);
+      step.classList.toggle("is-past", stepIndex < index);
+    });
+
+    supervisionMemorySlots.forEach((slot, slotIndex) => {
+      slot.classList.remove("is-sampling", "is-cleared");
+      const marker = slot.querySelector("i");
+      const label = slot.querySelector("small");
+      if (slotIndex === index) {
+        slot.classList.add("is-sampling");
+        if (marker) marker.textContent = supervisionSteps[index]?.dataset.evidence || "evidence";
+        if (label) label.textContent = "observed now";
+      } else {
+        if (marker) marker.textContent = "·";
+        if (label) label.textContent = "empty";
+      }
+    });
+
+    if (supervisionDemoStatus) {
+      supervisionDemoStatus.textContent = `t${index + 1}: ID 17 remains explicit; the current observation contributes ${supervisionSteps[index]?.dataset.evidence || "new evidence"} to this update.`;
+    }
+  }
+
+  function completeSupervisionDemo() {
+    if (!supervisionDemo) return;
+    supervisionDemo.dataset.phase = "complete";
+    supervisionSteps.forEach((step) => {
+      step.classList.remove("is-current");
+      step.classList.add("is-past");
+    });
+    supervisionMemorySlots.forEach((slot, index) => {
+      slot.classList.remove("is-sampling");
+      slot.classList.add("is-cleared");
+      const marker = slot.querySelector("i");
+      const label = slot.querySelector("small");
+      if (marker) marker.textContent = "·";
+      if (label) label.textContent = "empty";
+      supervisionTimers.push(window.setTimeout(() => slot.classList.remove("is-cleared"), 460 + index * 40));
+    });
+    if (supervisionDemoStatus) supervisionDemoStatus.innerHTML = "<strong>The label survived all three updates.</strong> No observation-derived identity reference was explicitly carried forward.";
+    if (supervisionReplay) {
+      supervisionReplay.disabled = false;
+      supervisionReplay.innerHTML = '<span aria-hidden="true">↻</span> Replay training';
+    }
+    supervisionHasPlayed = true;
+  }
+
+  function runSupervisionDemo() {
+    if (!supervisionDemo || !supervisionSteps.length) return;
+    clearSupervisionTimers();
+    supervisionDemo.dataset.phase = "idle";
+    supervisionSteps.forEach((step) => step.classList.remove("is-current", "is-past"));
+    resetSupervisionMemorySlots();
+    if (supervisionReplay) {
+      supervisionReplay.disabled = true;
+      supervisionReplay.innerHTML = '<span aria-hidden="true">●</span> Training…';
+    }
+    if (supervisionDemoStatus) supervisionDemoStatus.textContent = "Follow ID 17 as heterogeneous observations arrive over time.";
+
+    if (motivationReduceMotion) {
+      completeSupervisionDemo();
+      return;
+    }
+
+    const delays = [260, 1240, 2220];
+    delays.forEach((delay, index) => {
+      supervisionTimers.push(window.setTimeout(() => setSupervisionDemoStep(index), delay));
+    });
+    supervisionTimers.push(window.setTimeout(completeSupervisionDemo, 3280));
+  }
+
+  function scheduleSupervisionDemo() {
+    if (!supervisionDemo || supervisionHasPlayed) return;
+    clearSupervisionTimers();
+    supervisionTimers.push(window.setTimeout(runSupervisionDemo, motivationReduceMotion ? 0 : 340));
+  }
+
+  function setSupervisionFeature(card, pinned = false) {
+    if (!supervisionFeatureCopy) return;
+    supervisionFeatureCards.forEach((item) => item.setAttribute("aria-pressed", String(pinned && item === card)));
+    supervisionFeatureCopy.textContent = card?.dataset.description || supervisionDefaultFeatureCopy;
+  }
+
+  supervisionFeatureCards.forEach((card) => {
+    card.addEventListener("pointerenter", () => setSupervisionFeature(card, false));
+    card.addEventListener("pointerleave", () => setSupervisionFeature(pinnedSupervisionFeature, !!pinnedSupervisionFeature));
+    card.addEventListener("focus", () => setSupervisionFeature(card, false));
+    card.addEventListener("blur", () => setSupervisionFeature(pinnedSupervisionFeature, !!pinnedSupervisionFeature));
+    card.addEventListener("click", () => {
+      pinnedSupervisionFeature = pinnedSupervisionFeature === card ? null : card;
+      setSupervisionFeature(pinnedSupervisionFeature, !!pinnedSupervisionFeature);
+    });
+  });
+
+  supervisionReplay?.addEventListener("click", runSupervisionDemo);
   if (motivationDeck && motivationSlides.length) setMotivationSlide(0);
+
+  // Motivation takeaway: turn the missing persistent reference into a short temporal story.
+  const motivationTakeaway = document.querySelector("[data-motivation-takeaway]");
+  const motivationTakeawaySteps = motivationTakeaway ? [...motivationTakeaway.querySelectorAll("[data-motivation-takeaway-step]")] : [];
+  const motivationTakeawayReplay = motivationTakeaway?.querySelector("[data-motivation-takeaway-replay]");
+  const motivationTakeawayStatus = motivationTakeaway?.querySelector("[data-motivation-takeaway-status]");
+  let motivationTakeawayTimers = [];
+  let motivationTakeawayHasPlayed = false;
+
+  function clearMotivationTakeawayTimers() {
+    motivationTakeawayTimers.forEach((timer) => window.clearTimeout(timer));
+    motivationTakeawayTimers = [];
+  }
+
+  function setMotivationTakeawayStep(index) {
+    if (!motivationTakeaway) return;
+    motivationTakeaway.dataset.state = `step-${index + 1}`;
+    motivationTakeawaySteps.forEach((step, stepIndex) => {
+      step.classList.toggle("is-current", stepIndex === index);
+      step.classList.toggle("is-past", stepIndex < index);
+    });
+    if (motivationTakeawayStatus) {
+      motivationTakeawayStatus.textContent = `t${index + 1}: new evidence from ID 17 is carried into the same persistent reference.`;
+    }
+  }
+
+  function completeMotivationTakeaway() {
+    if (!motivationTakeaway) return;
+    motivationTakeaway.dataset.state = "complete";
+    motivationTakeawaySteps.forEach((step) => {
+      step.classList.remove("is-current");
+      step.classList.add("is-past");
+    });
+    if (motivationTakeawayStatus) {
+      motivationTakeawayStatus.innerHTML = "<strong>Requirement established:</strong> keep an explicit observation-derived identity reference available across mini-batches.";
+    }
+    if (motivationTakeawayReplay) {
+      motivationTakeawayReplay.disabled = false;
+      motivationTakeawayReplay.innerHTML = '<span aria-hidden="true">↻</span> Replay accumulation';
+    }
+    motivationTakeawayHasPlayed = true;
+  }
+
+  function runMotivationTakeaway() {
+    if (!motivationTakeaway || !motivationTakeawaySteps.length) return;
+    clearMotivationTakeawayTimers();
+    motivationTakeaway.dataset.state = "idle";
+    motivationTakeawaySteps.forEach((step) => step.classList.remove("is-current", "is-past"));
+    if (motivationTakeawayReplay) {
+      motivationTakeawayReplay.disabled = true;
+      motivationTakeawayReplay.innerHTML = '<span aria-hidden="true">●</span> Accumulating…';
+    }
+    if (motivationTakeawayStatus) motivationTakeawayStatus.textContent = "Watch three observations of ID 17 arrive across mini-batches.";
+
+    if (motivationReduceMotion) {
+      completeMotivationTakeaway();
+      return;
+    }
+
+    [260, 1030, 1800].forEach((delay, index) => {
+      motivationTakeawayTimers.push(window.setTimeout(() => setMotivationTakeawayStep(index), delay));
+    });
+    motivationTakeawayTimers.push(window.setTimeout(completeMotivationTakeaway, 2700));
+  }
+
+  motivationTakeawayReplay?.addEventListener("click", runMotivationTakeaway);
+
+  if (motivationTakeaway && "IntersectionObserver" in window) {
+    const motivationTakeawayObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || motivationTakeawayHasPlayed) return;
+        observer.unobserve(entry.target);
+        motivationTakeawayTimers.push(window.setTimeout(runMotivationTakeaway, motivationReduceMotion ? 0 : 220));
+      });
+    }, { threshold: .42 });
+    motivationTakeawayObserver.observe(motivationTakeaway);
+  } else if (motivationTakeaway) {
+    runMotivationTakeaway();
+  }
 
   if (motivationStory && motivationBeats.length) {
     setMotivationBeat(1);

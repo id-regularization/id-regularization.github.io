@@ -1744,7 +1744,7 @@ body { overflow-x: clip; }
 .motivation-deck-v6 { --motivation-slide-offset: 0; display: grid; gap: .72rem; }
 .motivation-deck-tabs-v6 {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0,1fr));
   gap: .4rem;
   padding: .32rem;
   border: 1px solid var(--line);
@@ -1929,45 +1929,6 @@ body { overflow-x: clip; }
 .motivation-empty-rail-v6 small { color: var(--text-3); font-size: .57rem; font-weight: 840; letter-spacing: .07em; }
 .motivation-empty-rail-v6 strong { font-size: .78rem; }
 
-/* Slide 3 — before/after treatment of the same observations. */
-.motivation-before-after-v6 { display: grid; grid-template-columns: minmax(0,1fr) 42px minmax(0,1fr); gap: .65rem; align-items: stretch; }
-.motivation-before-v6,.motivation-after-v6 { min-width:0; display:grid; align-content:start; gap:.72rem; padding:1rem; border:1px solid #e2dbd2; border-radius:18px; background:rgba(255,255,255,.72); }
-.motivation-after-v6 { border-color:#e7b1b1; background:linear-gradient(180deg,#fffafa,#fff); }
-.motivation-before-v6 header,.motivation-after-v6 header { display:grid; gap:.1rem; }
-.motivation-before-v6 header small,.motivation-after-v6 header small { color:var(--text-3); font-size:.58rem; font-weight:860; letter-spacing:.07em; }
-.motivation-after-v6 header small { color:var(--accent-strong); }
-.motivation-before-v6 header strong,.motivation-after-v6 header strong { font-size:.78rem; line-height:1.35; }
-.motivation-before-after-arrow-v6 { display:grid; place-items:center; color:#b7ada3; font-size:1.55rem; font-weight:900; }
-.motivation-mini-observations-v6,.motivation-memory-sources-v6 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; }
-.motivation-mini-observations-v6 span,.motivation-memory-sources-v6 span { display:grid; justify-items:center; gap:.2rem; }
-.motivation-mini-observations-v6 b,.motivation-memory-sources-v6 b { color:var(--text-3); font-size:.58rem; }
-.motivation-mini-observations-v6 i { width:42px; height:28px; display:grid; place-items:center; border:1px solid #d8d2ca; border-radius:8px; background:#fff; color:#77726d; font-size:.58rem; font-style:normal; }
-.motivation-memory-sources-v6 i { width:32px; height:32px; border:1px solid #d8d2ca; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 8px #f3f1ed; }
-.motivation-fade-path-v6,.motivation-memory-converge-v6 { display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; height:36px; }
-.motivation-fade-path-v6 span { position:relative; }
-.motivation-fade-path-v6 span::after { position:absolute; left:50%; top:0; height:31px; border-left:1px dashed #c9c1b8; content:""; }
-.motivation-nothing-v6 { display:flex; align-items:center; justify-content:center; gap:.5rem; color:var(--text-3); }
-.motivation-nothing-v6 i { width:27px; height:27px; display:grid; place-items:center; border:1px dashed #aaa096; border-radius:50%; font-style:normal; font-size:.64rem; font-weight:850; }
-.motivation-nothing-v6 strong { font-size:.71rem; }
-.motivation-memory-converge-v6 span { position:relative; }
-.motivation-memory-converge-v6 span::before { position:absolute; left:50%; top:0; width:1px; height:22px; background:#d8b8b3; content:""; }
-.motivation-memory-converge-v6 span::after { position:absolute; left:50%; top:21px; width:50%; height:15px; border-bottom:1px solid #d8b8b3; content:""; }
-.motivation-memory-converge-v6 span:first-child::after { border-right:1px solid #d8b8b3; border-radius:0 0 10px 0; }
-.motivation-memory-converge-v6 span:nth-child(2)::after { width:1px; border:0; background:#d8b8b3; }
-.motivation-memory-converge-v6 span:last-child::after { left:auto; right:50%; border-left:1px solid #d8b8b3; border-radius:0 0 0 10px; }
-.motivation-memory-core-v6 { display:grid; grid-template-columns:140px 1fr; gap:.38rem .8rem; align-items:center; padding:.72rem .8rem; border-top:2px solid rgba(198,40,40,.45); border-bottom:1px solid #ded7ce; }
-.motivation-memory-core-v6 > div:first-child { grid-row:1 / span 2; display:grid; gap:.03rem; padding-right:.8rem; border-right:1px solid #e4ddd4; }
-.motivation-memory-core-v6 small { color:var(--accent-strong); font-size:.54rem; font-weight:860; letter-spacing:.065em; }
-.motivation-memory-core-v6 strong { font-size:.9rem; }
-.motivation-prototype-line-v6 { display:grid; grid-template-columns:48px repeat(3,22px); gap:.35rem; align-items:center; }
-.motivation-prototype-line-v6 b { color:var(--text-3); font-size:.57rem; text-transform:uppercase; }
-.motivation-prototype-line-v6 i { position:relative; width:21px; height:21px; border:1px solid #9cbdeb; border-radius:50%; background:#fff; }
-.motivation-prototype-line-v6 i::after { position:absolute; inset:6px; border-radius:50%; background:var(--visual); content:""; }
-.motivation-prototype-line-v6--text i { border-color:#e6bb89; border-radius:5px; transform:rotate(45deg) scale(.86); }
-.motivation-prototype-line-v6--text i::after { border-radius:2px; background:var(--textual); }
-.motivation-principles-inline-v6 { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.45rem 1rem; padding:.56rem .7rem; border-top:1px solid #e4ddd4; border-bottom:1px solid #e4ddd4; color:var(--text-3); font-size:.63rem; }
-.motivation-principles-inline-v6 b { color:var(--text); }
-
 .motivation-slide-punchline-v6 { margin:auto 0 0; padding-top:.72rem; border-top:1px solid #e4ddd4; color:var(--text-2); font-size:.78rem; text-align:center; }
 .motivation-slide-punchline-v6 strong { color:var(--text); }
 
@@ -1979,33 +1940,10 @@ body { overflow-x: clip; }
 .motivation-deck-footer-v6 > span { color:var(--text-3); font-size:.66rem; letter-spacing:.08em; }
 .motivation-deck-footer-v6 > span b { color:var(--accent-strong); }
 
-.motivation-takeaway-v6 {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0,1fr);
-  gap: 1rem 1.2rem;
-  align-items: start;
-  margin-top: 1rem;
-  padding: clamp(1.15rem,2.5vw,1.55rem);
-  overflow: hidden;
-  border: 1px solid #f1b0b0;
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 94% 0%, rgba(198,40,40,.10), transparent 20rem),
-    linear-gradient(135deg,#fffafa,#fff0f0);
-  box-shadow: 0 12px 32px rgba(153,27,27,.06);
-}
-.motivation-takeaway-v6::before { position:absolute; inset:0 auto 0 0; width:5px; background:var(--accent); content:""; }
-.motivation-takeaway-label-v6 { display:inline-flex; align-items:center; justify-content:center; min-height:32px; padding:.35rem .6rem; border-radius:999px; background:var(--accent-strong); color:#fff; font-size:.72rem; font-weight:850; letter-spacing:.08em; }
-.motivation-takeaway-v6 > div { display:grid; gap:.22rem; }
-.motivation-takeaway-v6 strong { color:var(--text); font-size:clamp(1.05rem,2vw,1.32rem); line-height:1.25; letter-spacing:-.02em; }
-.motivation-takeaway-v6 p { margin:0; max-width:900px; color:var(--accent-strong); font-size:.88rem; line-height:1.5; font-weight:680; }
-
 @media (max-width: 900px) {
   .motivation-slide-v6 { min-height: 650px; }
   .motivation-slide-head-v6 { grid-template-columns:1fr; gap:.45rem; align-items:start; }
   .motivation-supervision-compact-v6 { grid-template-columns:180px minmax(0,1fr); }
-  .motivation-before-after-v6 { grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); }
 }
 
 @media (max-width: 700px) {
@@ -2037,12 +1975,6 @@ body { overflow-x: clip; }
   .motivation-photo-glyph-v6 { width:37px; height:47px; }
   .motivation-caption-glyph-v6 { width:44px; }
   .motivation-observation-node-v6 > small { display:none; }
-  .motivation-before-after-v6 { grid-template-columns:1fr; }
-  .motivation-before-after-arrow-v6 { transform:rotate(90deg); min-height:20px; }
-  .motivation-before-v6,.motivation-after-v6 { padding:.8rem; }
-  .motivation-principles-inline-v6 { justify-content:flex-start; }
-  .motivation-takeaway-v6 { grid-template-columns:1fr; gap:.65rem; }
-  .motivation-takeaway-label-v6 { justify-self:start; }
 }
 
 @media (max-width: 480px) {
@@ -2739,4 +2671,875 @@ body { overflow-x: clip; }
   .competition-force--pull { left: 20%; top: 52%; }
   .competition-force--push { right: 19%; bottom: 37%; }
   .deployment-facts span { display: grid; }
+}
+
+
+/* =========================================================
+   Motivation Slide 01 v7 — interactive retrieval challenge
+   Added as overrides so Slides 02–03 keep the existing v6 layout.
+   ========================================================= */
+.motivation-slide-v6--challenge .motivation-query-v6 {
+  grid-template-columns: auto minmax(0,1fr);
+  row-gap: .32rem;
+}
+.motivation-slide-v6--challenge .motivation-query-v6-label { grid-row: 1 / span 3; }
+.motivation-slide-v6--challenge .motivation-query-tags-v6 {
+  display: flex;
+  align-items: center;
+  gap: .28rem;
+}
+.motivation-slide-v6--challenge .motivation-query-tags-v6 button {
+  appearance: none;
+  padding: .2rem .38rem;
+  border: 1px solid #e7dfd6;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text-3);
+  cursor: pointer;
+  font-size: .57rem;
+  font-weight: 720;
+  line-height: 1.2;
+  transition: color .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.motivation-slide-v6--challenge .motivation-query-tags-v6 button:hover,
+.motivation-slide-v6--challenge .motivation-query-tags-v6 button:focus-visible,
+.motivation-slide-v6--challenge .motivation-query-tags-v6 button.is-cue-active {
+  border-color: #d99b9b;
+  background: #fff4f4;
+  color: var(--accent-strong);
+  box-shadow: 0 3px 9px rgba(153,27,27,.06);
+  transform: translateY(-1px);
+}
+.motivation-slide-v6--challenge .motivation-query-tags-v6 button[aria-pressed="true"] {
+  border-color: #cf8888;
+  background: #feecec;
+  color: var(--accent-strong);
+}
+.motivation-cue-status-v7 {
+  min-height: 1.05rem;
+  color: var(--text-3);
+  font-size: .57rem;
+  line-height: 1.35;
+}
+.motivation-slide-v6--challenge .motivation-match-rule-v6 b {
+  color: var(--text-2);
+  font-size: .61rem;
+  letter-spacing: .065em;
+}
+
+.motivation-person-v6 {
+  isolation: isolate;
+  overflow: hidden;
+}
+.motivation-v6:not(.identities-revealed) .motivation-person-result-v6 {
+  opacity: 0 !important;
+  visibility: hidden;
+  transform: translateY(3px) !important;
+}
+.motivation-person-v6.is-selected {
+  border-color: #a94343;
+  box-shadow: 0 0 0 2px rgba(153,27,27,.10), 0 10px 24px rgba(67,43,43,.08);
+  transform: translateY(-2px);
+}
+.motivation-person-v6.is-selected::after {
+  position: absolute;
+  top: .52rem;
+  right: .48rem;
+  z-index: 4;
+  padding: .18rem .33rem;
+  border-radius: 999px;
+  background: rgba(153,27,27,.90);
+  color: #fff;
+  content: "YOUR PICK";
+  font-size: .47rem;
+  font-weight: 880;
+  letter-spacing: .045em;
+  box-shadow: 0 2px 8px rgba(55,20,20,.18);
+}
+.identities-revealed .motivation-person-result-v6 {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+.identities-revealed .motivation-person-v6[data-motivation-candidate="target"] {
+  border-color: rgba(22,154,99,.58);
+  background: linear-gradient(180deg,rgba(255,255,255,.96),rgba(238,249,243,.78));
+  box-shadow: inset 0 0 0 1px rgba(22,154,99,.08);
+}
+.identities-revealed .motivation-person-v6:not([data-motivation-candidate="target"]) {
+  border-color: rgba(217,87,100,.38);
+  background: linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,240,241,.62));
+}
+.identities-revealed .motivation-person-v6.is-selected[data-motivation-candidate="target"] {
+  border-color: var(--positive);
+  box-shadow: 0 0 0 2px rgba(22,154,99,.14), 0 10px 24px rgba(22,154,99,.08);
+}
+.identities-revealed .motivation-person-v6.is-selected:not([data-motivation-candidate="target"]) {
+  border-color: var(--negative);
+  box-shadow: 0 0 0 2px rgba(217,87,100,.13), 0 10px 24px rgba(217,87,100,.08);
+}
+.identities-revealed .motivation-person-v6.is-selected[data-motivation-candidate="target"]::after { background: var(--positive-strong); }
+.identities-revealed .motivation-person-v6.is-selected:not([data-motivation-candidate="target"])::after { background: var(--negative-strong); }
+
+.motivation-cue-shared-v7 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  max-width: calc(100% - 1rem);
+  padding: .22rem .38rem;
+  border: 1px solid rgba(255,255,255,.52);
+  border-radius: 999px;
+  background: rgba(31,28,28,.80);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%,-44%) scale(.96);
+  transition: opacity .14s ease, transform .14s ease;
+  backdrop-filter: blur(6px);
+  font-size: .48rem;
+  font-weight: 820;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}
+.motivation-person-v6.is-cue-shared .motivation-cue-shared-v7 {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
+}
+.motivation-person-v6.is-cue-shared img { filter: saturate(.84) brightness(.94); }
+.motivation-person-v6.is-cue-shared {
+  border-color: #d3aaa7;
+  box-shadow: 0 0 0 2px rgba(153,27,27,.055);
+}
+
+.motivation-choice-feedback-v7 {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 34px;
+  padding: .44rem .58rem;
+  border: 1px solid #ebe3da;
+  border-radius: 11px;
+  background: rgba(250,248,245,.78);
+}
+.motivation-choice-feedback-v7 p { margin: 0; color: var(--text-2); font-size: .64rem; line-height: 1.35; }
+.motivation-choice-feedback-v7 strong { color: var(--text); }
+.motivation-choice-dot-v7 {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(198,40,40,.08);
+}
+.identities-revealed .motivation-choice-dot-v7 { background: var(--positive); box-shadow: 0 0 0 4px rgba(22,154,99,.08); }
+
+.motivation-gallery-actions-v7 { display: flex; align-items: center; gap: .4rem; }
+.motivation-reset-button-v7 {
+  appearance: none;
+  padding: .42rem .55rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  color: var(--text-3);
+  cursor: pointer;
+  font-size: .62rem;
+  font-weight: 780;
+}
+.motivation-reset-button-v7:hover,
+.motivation-reset-button-v7:focus-visible { border-color: #cfc2b7; color: var(--text); background: #fff; }
+.motivation-reveal-button-v6 {
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.motivation-reveal-button-v6:hover,
+.motivation-reveal-button-v6:focus-visible {
+  transform: translateY(-1px);
+  border-color: #cf8f8b;
+  background: #fff1f1;
+  box-shadow: 0 5px 14px rgba(153,27,27,.08);
+}
+.identities-revealed .motivation-reveal-button-v6 { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+
+.motivation-detail-v6 {
+  padding: .78rem .82rem;
+  border-color: #e5d9d0;
+  background: linear-gradient(180deg,rgba(255,255,255,.96),rgba(252,248,245,.94));
+  box-shadow: 0 9px 24px rgba(42,31,31,.045);
+}
+.motivation-detail-shared-v7 {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr);
+  gap: .55rem;
+  align-items: center;
+  margin-bottom: .58rem;
+  padding: .44rem .52rem;
+  border-radius: 10px;
+  background: #f8f5f1;
+}
+.motivation-detail-shared-v7 > span,
+.motivation-detail-difference-v7 > span {
+  color: var(--text-3);
+  font-size: .5rem;
+  font-weight: 860;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.motivation-detail-shared-v7 > div { color: var(--text-2); font-size: .6rem; line-height: 1.35; }
+.motivation-detail-difference-v7 {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr);
+  gap: .55rem;
+  align-items: center;
+  margin-top: .58rem;
+  padding-top: .55rem;
+  border-top: 1px solid #e7dfd6;
+}
+.motivation-detail-difference-v7 strong { color: var(--accent-strong); font-size: .64rem; line-height: 1.35; }
+.motivation-gallery-v6.is-inspecting .motivation-query-tags-v6 button:not(.is-cue-active) { opacity: .62; }
+
+@media (max-width: 700px) {
+  .motivation-slide-v6--challenge .motivation-query-v6 { grid-template-columns: 1fr; }
+  .motivation-slide-v6--challenge .motivation-query-v6-label { grid-row: auto; }
+  .motivation-slide-v6--challenge .motivation-query-tags-v6 {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: .2rem;
+    scrollbar-width: none;
+  }
+  .motivation-slide-v6--challenge .motivation-query-tags-v6::-webkit-scrollbar { display: none; }
+  .motivation-slide-v6--challenge .motivation-query-tags-v6 button { flex: 0 0 auto; }
+  .motivation-cue-status-v7 { display: block; }
+  .motivation-gallery-actions-v7 { width: 100%; justify-content: flex-end; }
+  .motivation-detail-shared-v7,
+  .motivation-detail-difference-v7 { grid-template-columns: 1fr; gap: .18rem; }
+}
+
+@media (max-width: 480px) {
+  .motivation-choice-feedback-v7 { align-items: flex-start; }
+  .motivation-person-v6.is-selected::after { top: .45rem; right: .4rem; font-size: .43rem; }
+  .motivation-cue-shared-v7 { font-size: .44rem; }
+  .motivation-gallery-actions-v7 { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motivation-slide-v6--challenge .motivation-query-tags-v6 button,
+  .motivation-cue-shared-v7,
+  .motivation-reveal-button-v6 { transition: none !important; }
+}
+
+/* =========================================================
+   Motivation Slide 2 v7 — supervision survives, evidence does not
+   ========================================================= */
+.motivation-slide-v7--supervision {
+  --s2-red: var(--accent-strong);
+  --s2-blue: var(--visual);
+  --s2-orange: var(--textual);
+  --s2-memory: var(--memory);
+  --s2-violet: var(--violet);
+  background:
+    radial-gradient(circle at 11% 12%, rgba(79,134,232,.055), transparent 17rem),
+    radial-gradient(circle at 88% 30%, rgba(232,148,69,.05), transparent 20rem);
+}
+.motivation-slide2-head-v7 p { max-width: 540px; }
+.motivation-slide2-head-v7 p strong { color: var(--accent-strong); }
+.motivation-slide2-head-v7 p span { color: var(--text-2); }
+
+.motivation-supervision-card-v7 {
+  display: grid;
+  gap: .72rem;
+  padding: .9rem 1rem;
+  border: 1px solid #e7ddd4;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(198,40,40,.075), transparent 17rem),
+    linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,247,245,.9));
+  box-shadow: 0 8px 24px rgba(52,36,31,.035);
+}
+.motivation-supervision-card-head-v7 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.motivation-supervision-card-head-v7 > div { display: grid; gap: .08rem; }
+.motivation-supervision-card-head-v7 > div > span,
+.motivation-survival-head-v7 > div > span,
+.motivation-label-rail-v7 > div:first-child span,
+.motivation-memory-rail-copy-v7 span {
+  color: var(--accent-strong);
+  font-size: .58rem;
+  font-weight: 880;
+  letter-spacing: .085em;
+  text-transform: uppercase;
+}
+.motivation-supervision-card-head-v7 > div > strong { font-size: .8rem; letter-spacing: -.01em; }
+.motivation-supervision-badge-v7 {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .6rem;
+  border: 1px solid #e5aeae;
+  border-radius: 999px;
+  background: #fff7f7;
+  color: var(--accent-strong);
+  font-size: .68rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.motivation-supervision-badge-v7 i,
+.motivation-survival-id-v7 i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(198,40,40,.09); }
+
+.motivation-supervision-grid-v7 { display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem; }
+.motivation-supervision-grid-v7 button {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 28px 38px minmax(0,1fr);
+  grid-template-rows: auto auto;
+  gap: .03rem .55rem;
+  align-items: center;
+  padding: .68rem .72rem;
+  appearance: none;
+  border: 1px solid #e4ddd5;
+  border-radius: 13px;
+  background: rgba(255,255,255,.86);
+  cursor: pointer;
+  text-align: left;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.motivation-supervision-grid-v7 button:hover,
+.motivation-supervision-grid-v7 button:focus-visible,
+.motivation-supervision-grid-v7 button[aria-pressed="true"] { transform: translateY(-2px); box-shadow: 0 9px 22px rgba(42,31,31,.06); }
+.motivation-supervision-grid-v7 button:nth-child(1):hover,
+.motivation-supervision-grid-v7 button:nth-child(1):focus-visible,
+.motivation-supervision-grid-v7 button:nth-child(1)[aria-pressed="true"] { border-color: #e0a2a2; background: #fff7f7; }
+.motivation-supervision-grid-v7 button:nth-child(2):hover,
+.motivation-supervision-grid-v7 button:nth-child(2):focus-visible,
+.motivation-supervision-grid-v7 button:nth-child(2)[aria-pressed="true"] { border-color: #c9b7ed; background: var(--violet-soft); }
+.motivation-supervision-grid-v7 button:nth-child(3):hover,
+.motivation-supervision-grid-v7 button:nth-child(3):focus-visible,
+.motivation-supervision-grid-v7 button:nth-child(3)[aria-pressed="true"] { border-color: #efc18f; background: var(--textual-soft); }
+.motivation-supervision-index-v7 {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ddd4ca;
+  border-radius: 50%;
+  color: var(--text-3);
+  font-size: .54rem;
+  font-weight: 850;
+}
+.motivation-supervision-grid-v7 button > strong { align-self: end; font-size: .74rem; }
+.motivation-supervision-grid-v7 button > small { align-self: start; color: var(--text-3); font-size: .58rem; }
+.motivation-supervision-icon-v7 { grid-row: 1 / span 2; position: relative; width: 36px; height: 32px; display: block; }
+.motivation-supervision-icon-v7--classify { border: 1px solid #efbbbb; border-radius: 9px; background: #fff5f5; }
+.motivation-supervision-icon-v7--classify i { position:absolute; left:7px; top:7px; width:8px; height:8px; border-radius:50%; background:var(--accent); }
+.motivation-supervision-icon-v7--classify b { position:absolute; right:5px; bottom:5px; color:var(--accent-strong); font-size:.54rem; }
+.motivation-supervision-icon-v7--group i { position:absolute; width:15px; height:15px; border-radius:50%; border:2px solid white; box-shadow:0 0 0 1px rgba(121,87,200,.22); background:#b9a6e5; }
+.motivation-supervision-icon-v7--group i:nth-child(1) { left:2px; top:8px; }
+.motivation-supervision-icon-v7--group i:nth-child(2) { left:11px; top:2px; background:var(--violet); }
+.motivation-supervision-icon-v7--group i:nth-child(3) { left:19px; top:10px; }
+.motivation-supervision-icon-v7--separate i { position:absolute; top:8px; width:14px; height:18px; border-radius:6px; }
+.motivation-supervision-icon-v7--separate i:first-child { left:0; background:#f0a45e; }
+.motivation-supervision-icon-v7--separate i:nth-child(2) { right:0; background:#d27437; }
+.motivation-supervision-icon-v7--separate b { position:absolute; left:50%; top:7px; color:#a9642c; font-size:.65rem; transform:translateX(-50%); }
+.motivation-supervision-feature-copy-v7 {
+  min-height: 1.25rem;
+  margin: 0;
+  padding-top: .52rem;
+  border-top: 1px solid #ece5dd;
+  color: var(--text-3);
+  font-size: .64rem;
+  line-height: 1.42;
+  transition: color .18s ease;
+}
+.motivation-supervision-feature-copy-v7 strong { color: var(--text); }
+
+.motivation-survival-demo-v7 {
+  display: grid;
+  gap: .68rem;
+  padding: .85rem .9rem .9rem;
+  border: 1px solid #e4ddd5;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 18% 5%, rgba(79,134,232,.07), transparent 18rem),
+    radial-gradient(circle at 82% 8%, rgba(232,148,69,.065), transparent 18rem),
+    rgba(255,255,255,.76);
+}
+.motivation-survival-head-v7 { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.motivation-survival-head-v7 > div { display: grid; gap: .04rem; }
+.motivation-survival-head-v7 > div > strong { font-size: .78rem; }
+.motivation-survival-replay-v7 {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  flex: 0 0 auto;
+  padding: .42rem .62rem;
+  appearance: none;
+  border: 1px solid #dca8a8;
+  border-radius: 999px;
+  background: #fff6f6;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: .62rem;
+  font-weight: 840;
+  transition: transform .17s ease, box-shadow .17s ease, background .17s ease;
+}
+.motivation-survival-replay-v7:hover,
+.motivation-survival-replay-v7:focus-visible { transform: translateY(-1px); background:white; box-shadow:0 7px 18px rgba(153,27,27,.08); }
+.motivation-survival-replay-v7:disabled { cursor: default; opacity: .68; transform: none; }
+
+.motivation-survival-timeline-v7 { position: relative; display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem; }
+.motivation-survival-timeline-v7::before { position:absolute; left:15%; right:15%; top:50%; height:1px; background:linear-gradient(90deg,rgba(79,134,232,.24),rgba(121,87,200,.24),rgba(232,148,69,.24)); content:""; transform:translateY(-50%); }
+.motivation-survival-step-v7 {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: .28rem;
+  padding: .6rem .58rem;
+  border: 1px solid #e5dfd7;
+  border-radius: 14px;
+  background: rgba(255,255,255,.94);
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(36,31,27,.025);
+  transition: transform .24s ease, opacity .24s ease, border-color .24s ease, box-shadow .24s ease, background .24s ease;
+}
+.motivation-survival-step-head-v7 { width:100%; display:flex; align-items:center; justify-content:space-between; gap:.4rem; }
+.motivation-survival-step-head-v7 span { color:var(--accent-strong); font-size:.58rem; font-weight:880; }
+.motivation-survival-step-head-v7 small { color:var(--text-3); font-size:.5rem; }
+.motivation-survival-step-v7 .motivation-observation-glyph-v6 { transform: scale(.85); margin: -.1rem 0; }
+.motivation-survival-id-v7 { display:inline-flex; align-items:center; gap:.34rem; color:var(--text); font-size:.65rem; font-weight:850; }
+.motivation-survival-evidence-v7 { min-height: 21px; display:flex; justify-content:center; flex-wrap:wrap; gap:.2rem; }
+.motivation-survival-evidence-v7 span { padding:.16rem .3rem; border-radius:999px; font-size:.5rem; font-weight:760; transition:opacity .24s ease, transform .24s ease, filter .24s ease; }
+.motivation-survival-evidence-v7 .is-visual { color:#386fb8; background:var(--visual-soft); border:1px solid #c8daf6; }
+.motivation-survival-evidence-v7 .is-textual { color:#9c5b1f; background:var(--textual-soft); border:1px solid #f0d1ad; }
+.motivation-survival-step-v7.is-current { transform:translateY(-3px); border-color:#ddb0aa; background:#fffdfc; box-shadow:0 10px 24px rgba(58,39,35,.07); }
+.motivation-survival-step-v7.is-current .motivation-survival-id-v7 i { animation:s2LabelPulse .8s ease infinite alternate; }
+.motivation-survival-step-v7.is-past { opacity:.7; }
+.motivation-survival-step-v7.is-past .motivation-survival-evidence-v7 span { opacity:.18; transform:translateY(5px) scale(.94); filter:grayscale(.55); }
+.motivation-survival-demo-v7[data-phase="complete"] .motivation-survival-step-v7 { opacity:.74; }
+.motivation-survival-demo-v7[data-phase="complete"] .motivation-survival-id-v7 { color:var(--accent-strong); }
+.motivation-survival-demo-v7[data-phase="complete"] .motivation-survival-evidence-v7 span { opacity:.12; transform:translateY(5px) scale(.94); filter:grayscale(.7); }
+@keyframes s2LabelPulse { from { box-shadow:0 0 0 3px rgba(198,40,40,.08); } to { box-shadow:0 0 0 7px rgba(198,40,40,.16); } }
+
+.motivation-survival-compare-v7 { display:grid; grid-template-columns:minmax(0,.42fr) minmax(0,.58fr); gap:.65rem; }
+.motivation-label-rail-v7,
+.motivation-memory-rail-v7 { min-width:0; padding:.68rem .75rem; border-radius:13px; }
+.motivation-label-rail-v7 { display:grid; align-content:center; gap:.5rem; border:1px solid #efc2c2; background:linear-gradient(135deg,#fff9f9,#fff); }
+.motivation-label-rail-v7 > div:first-child { display:grid; gap:.02rem; }
+.motivation-label-rail-v7 > div:first-child strong { font-size:.67rem; }
+.motivation-label-track-v7 { display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto; align-items:center; gap:.2rem; }
+.motivation-label-track-v7 i { height:2px; border-radius:999px; background:linear-gradient(90deg,rgba(198,40,40,.16),rgba(198,40,40,.58)); }
+.motivation-label-track-v7 b { padding:.2rem .34rem; border-radius:999px; background:#fff0f0; color:var(--accent-strong); font-size:.52rem; font-weight:850; }
+
+.motivation-memory-rail-v7 { display:grid; grid-template-columns:minmax(160px,.72fr) minmax(190px,1fr); gap:.48rem .7rem; align-items:center; border:1px dashed #a9d9d3; background:linear-gradient(135deg,rgba(232,248,245,.6),rgba(255,255,255,.9)); }
+.motivation-memory-rail-copy-v7 { display:grid; gap:.04rem; }
+.motivation-memory-rail-copy-v7 span { color:var(--memory-strong); }
+.motivation-memory-rail-copy-v7 strong { font-size:.67rem; line-height:1.3; }
+.motivation-memory-slots-v7 { display:grid; grid-template-columns:repeat(3,1fr); gap:.35rem; }
+.motivation-memory-slots-v7 > span { position:relative; min-height:42px; display:grid; place-items:center; align-content:center; gap:.04rem; overflow:hidden; border:1px dashed #afd5d0; border-radius:10px; background:rgba(255,255,255,.75); color:#7a9793; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+.motivation-memory-slots-v7 i { font-style:normal; font-size:.8rem; line-height:1; }
+.motivation-memory-slots-v7 small { font-size:.48rem; }
+.motivation-memory-slots-v7 > span.is-sampling { border-style:solid; border-color:#65b9af; background:#effbf9; box-shadow:0 0 0 3px rgba(22,143,134,.08); }
+.motivation-memory-slots-v7 > span.is-sampling i { color:var(--memory-strong); font-size:.52rem; font-weight:820; animation:s2EvidenceArrive .65s ease both; }
+.motivation-memory-slots-v7 > span.is-sampling small { color:var(--memory-strong); }
+.motivation-memory-slots-v7 > span.is-cleared { animation:s2EvidenceClear .45s ease both; }
+@keyframes s2EvidenceArrive { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+@keyframes s2EvidenceClear { 0% { background:#effbf9; } 100% { background:rgba(255,255,255,.75); } }
+.motivation-memory-rail-v7 > p { grid-column:1 / -1; margin:0; padding-top:.38rem; border-top:1px solid rgba(15,111,105,.12); color:var(--text-3); font-size:.57rem; line-height:1.38; }
+.motivation-memory-rail-v7 > p strong { color:var(--memory-strong); }
+.motivation-survival-demo-v7[data-phase="complete"] .motivation-memory-rail-v7 { border-color:#7fcac1; background:linear-gradient(135deg,rgba(232,248,245,.8),rgba(255,255,255,.96)); }
+.motivation-survival-demo-v7[data-phase="complete"] .motivation-memory-slots-v7 > span { color:#9aa7a5; }
+
+.motivation-slide2-punchline-v7 { padding:.65rem .8rem 0; }
+.motivation-slide2-punchline-v7 strong { color:var(--accent-strong); }
+
+@media (max-width: 900px) {
+  .motivation-supervision-grid-v7 button { grid-template-columns:26px 34px minmax(0,1fr); padding:.62rem; }
+  .motivation-survival-compare-v7 { grid-template-columns:1fr; }
+  .motivation-memory-rail-v7 { grid-template-columns:minmax(150px,.65fr) minmax(190px,1fr); }
+}
+@media (max-width: 700px) {
+  .motivation-supervision-card-head-v7,
+  .motivation-survival-head-v7 { align-items:flex-start; }
+  .motivation-supervision-grid-v7 { grid-template-columns:1fr; }
+  .motivation-supervision-grid-v7 button { grid-template-columns:28px 38px minmax(0,1fr); }
+  .motivation-survival-timeline-v7 { grid-template-columns:1fr; gap:.45rem; }
+  .motivation-survival-timeline-v7::before { left:26px; right:auto; top:12%; bottom:12%; width:1px; height:auto; transform:none; background:linear-gradient(180deg,rgba(79,134,232,.24),rgba(121,87,200,.24),rgba(232,148,69,.24)); }
+  .motivation-survival-step-v7 { grid-template-columns:46px 92px minmax(0,1fr); grid-template-rows:auto auto; justify-items:start; align-items:center; text-align:left; padding:.5rem .6rem; }
+  .motivation-survival-step-head-v7 { grid-column:1; grid-row:1 / span 2; display:grid; justify-items:center; }
+  .motivation-survival-step-head-v7 small { display:none; }
+  .motivation-survival-step-v7 .motivation-observation-glyph-v6 { grid-column:2; grid-row:1 / span 2; }
+  .motivation-survival-id-v7 { grid-column:3; grid-row:1; }
+  .motivation-survival-evidence-v7 { grid-column:3; grid-row:2; justify-content:flex-start; }
+  .motivation-memory-rail-v7 { grid-template-columns:1fr; }
+  .motivation-memory-rail-v7 > p { grid-column:auto; }
+}
+@media (max-width: 480px) {
+  .motivation-supervision-badge-v7 { display:none; }
+  .motivation-survival-head-v7 { display:grid; }
+  .motivation-survival-replay-v7 { justify-self:start; }
+  .motivation-label-track-v7 { grid-template-columns:1fr auto 1fr auto 1fr auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motivation-survival-step-v7.is-current .motivation-survival-id-v7 i,
+  .motivation-memory-slots-v7 > span.is-sampling i,
+  .motivation-memory-slots-v7 > span.is-cleared { animation:none !important; }
+}
+
+
+/* =========================================================
+   Motivation v8 — two-slide story + persistent-reference handoff
+   ========================================================= */
+.motivation-deck-tabs-v6 {
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+
+.motivation-slide-v7--supervision {
+  background:
+    radial-gradient(circle at 9% 12%, rgba(79,134,232,.06), transparent 18rem),
+    radial-gradient(circle at 88% 24%, rgba(232,148,69,.055), transparent 20rem),
+    linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,250,248,.34));
+}
+
+.motivation-takeaway-v8 {
+  position: relative;
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 1.15rem;
+  padding: clamp(1.2rem, 2.8vw, 1.8rem);
+  overflow: hidden;
+  border: 1px solid #eba8a8;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(79,134,232,.08), transparent 22rem),
+    radial-gradient(circle at 86% 0%, rgba(232,148,69,.075), transparent 23rem),
+    radial-gradient(circle at 52% 115%, rgba(198,40,40,.15), transparent 28rem),
+    linear-gradient(135deg, #fffdfd 0%, #fff7f6 58%, #fff2f2 100%);
+  box-shadow: 0 18px 46px rgba(96,48,48,.075);
+  isolation: isolate;
+}
+.motivation-takeaway-v8::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--visual), var(--accent), var(--textual));
+  content: "";
+}
+.motivation-takeaway-v8::after {
+  position: absolute;
+  z-index: -1;
+  right: -70px;
+  bottom: -110px;
+  width: 260px;
+  height: 260px;
+  border: 1px solid rgba(198,40,40,.08);
+  border-radius: 50%;
+  box-shadow: 0 0 0 34px rgba(198,40,40,.025), 0 0 0 72px rgba(198,40,40,.018);
+  content: "";
+}
+.motivation-takeaway-head-v8 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.motivation-takeaway-head-v8 > div { display: grid; gap: .34rem; max-width: 840px; }
+.motivation-takeaway-label-v8 {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  min-height: 29px;
+  padding: .32rem .58rem;
+  border: 1px solid #e4a5a5;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  color: var(--accent-strong);
+  font-size: .67rem;
+  font-weight: 880;
+  letter-spacing: .09em;
+}
+.motivation-takeaway-head-v8 h3 {
+  margin: 0;
+  max-width: 820px;
+  font-size: clamp(1.55rem, 3.2vw, 2.35rem);
+  line-height: 1.05;
+  letter-spacing: -.042em;
+}
+.motivation-takeaway-head-v8 p {
+  margin: 0;
+  max-width: 790px;
+  color: var(--text-2);
+  font-size: .92rem;
+  line-height: 1.5;
+}
+.motivation-takeaway-replay-v8 {
+  display: inline-flex;
+  align-items: center;
+  gap: .42rem;
+  flex: 0 0 auto;
+  padding: .47rem .68rem;
+  appearance: none;
+  border: 1px solid #dda1a1;
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: .68rem;
+  font-weight: 840;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+}
+.motivation-takeaway-replay-v8:hover,
+.motivation-takeaway-replay-v8:focus-visible { transform: translateY(-1px); background: #fff; box-shadow: 0 8px 20px rgba(153,27,27,.08); }
+.motivation-takeaway-replay-v8:disabled { opacity: .62; cursor: default; transform: none; }
+
+.motivation-takeaway-flow-v8 {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 90px minmax(260px,.52fr);
+  gap: .8rem;
+  align-items: center;
+  min-height: 166px;
+}
+.motivation-takeaway-observations-v8 { display: grid; grid-template-columns: repeat(3,1fr); gap: .58rem; }
+.motivation-takeaway-observations-v8 article {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  gap: .05rem .55rem;
+  padding: .75rem .76rem;
+  border: 1px solid #e3ddd4;
+  border-radius: 16px;
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 5px 16px rgba(39,31,29,.028);
+  opacity: .46;
+  transform: translateY(3px);
+  transition: opacity .28s ease, transform .28s ease, border-color .28s ease, box-shadow .28s ease, background .28s ease;
+}
+.motivation-takeaway-observations-v8 article .motivation-observation-glyph-v6 {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  transform: scale(.74);
+  transform-origin: center;
+  margin: -.25rem -.3rem;
+}
+.motivation-takeaway-time-v8 { color: var(--accent-strong); font-size: .59rem; font-weight: 880; }
+.motivation-takeaway-observations-v8 article strong { align-self: end; font-size: .73rem; }
+.motivation-takeaway-observations-v8 article small { align-self: start; color: var(--text-3); font-size: .57rem; }
+.motivation-takeaway-observations-v8 article.is-current {
+  opacity: 1;
+  transform: translateY(-3px);
+  border-color: #dca5a5;
+  background: #fff;
+  box-shadow: 0 12px 26px rgba(80,45,42,.07);
+}
+.motivation-takeaway-observations-v8 article.is-past { opacity: .75; transform: none; }
+
+.motivation-takeaway-converge-v8 {
+  position: relative;
+  height: 112px;
+}
+.motivation-takeaway-converge-v8::after {
+  position: absolute;
+  left: 0;
+  right: 3px;
+  top: 50%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(198,40,40,.18), rgba(198,40,40,.8));
+  content: "";
+  transform: scaleX(.22);
+  transform-origin: left center;
+  opacity: .35;
+  transition: transform .35s ease, opacity .35s ease;
+}
+.motivation-takeaway-converge-v8 span {
+  position: absolute;
+  left: 0;
+  width: 54%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(79,134,232,.25), rgba(198,40,40,.65));
+  transform-origin: left center;
+  opacity: .18;
+  transition: opacity .28s ease, transform .28s ease;
+}
+.motivation-takeaway-converge-v8 span:nth-child(1) { top: 18%; transform: rotate(31deg); }
+.motivation-takeaway-converge-v8 span:nth-child(2) { top: 50%; transform: rotate(0); background: linear-gradient(90deg, rgba(121,87,200,.24), rgba(198,40,40,.65)); }
+.motivation-takeaway-converge-v8 span:nth-child(3) { top: 82%; transform: rotate(-31deg); background: linear-gradient(90deg, rgba(232,148,69,.28), rgba(198,40,40,.65)); }
+.motivation-takeaway-v8[data-state="step-1"] .motivation-takeaway-converge-v8 span:nth-child(1),
+.motivation-takeaway-v8[data-state="step-2"] .motivation-takeaway-converge-v8 span:nth-child(-n+2),
+.motivation-takeaway-v8[data-state="step-3"] .motivation-takeaway-converge-v8 span,
+.motivation-takeaway-v8[data-state="complete"] .motivation-takeaway-converge-v8 span { opacity: .9; }
+.motivation-takeaway-v8[data-state="step-1"] .motivation-takeaway-converge-v8::after { transform: scaleX(.38); opacity: .55; }
+.motivation-takeaway-v8[data-state="step-2"] .motivation-takeaway-converge-v8::after { transform: scaleX(.68); opacity: .72; }
+.motivation-takeaway-v8[data-state="step-3"] .motivation-takeaway-converge-v8::after,
+.motivation-takeaway-v8[data-state="complete"] .motivation-takeaway-converge-v8::after { transform: scaleX(1); opacity: 1; }
+
+.motivation-reference-card-v8 {
+  position: relative;
+  display: grid;
+  gap: .55rem;
+  padding: 1rem 1.05rem;
+  overflow: hidden;
+  border: 1px solid #e3b0b0;
+  border-radius: 18px;
+  background: rgba(255,255,255,.87);
+  box-shadow: 0 7px 20px rgba(75,39,39,.045);
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease, background .3s ease;
+}
+.motivation-reference-card-v8::before {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, #e4bcbc 0%, var(--accent) 46%, #ef9b8e 100%);
+  content: "";
+  transform: scaleX(.16);
+  transform-origin: left center;
+  opacity: .45;
+  transition: transform .35s ease, opacity .35s ease;
+}
+.motivation-reference-kicker-v8 { color: var(--accent-strong); font-size: .6rem; font-weight: 880; letter-spacing: .085em; }
+.motivation-reference-main-v8 { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.motivation-reference-id-v8 { display: inline-flex; align-items: center; gap: .48rem; }
+.motivation-reference-id-v8 i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgba(198,40,40,.08); }
+.motivation-reference-id-v8 strong { font-size: 1.15rem; letter-spacing: -.025em; }
+.motivation-reference-trace-v8 { display: flex; align-items: center; gap: .34rem; }
+.motivation-reference-trace-v8 i {
+  width: 25px;
+  height: 8px;
+  border: 1px solid #dfd6cc;
+  border-radius: 999px;
+  background: #f3efe9;
+  transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.motivation-reference-card-v8 p { margin: 0; color: var(--text-3); font-size: .64rem; line-height: 1.35; }
+.motivation-takeaway-v8[data-state="step-1"] .motivation-reference-card-v8::before { transform: scaleX(.38); opacity: .72; }
+.motivation-takeaway-v8[data-state="step-2"] .motivation-reference-card-v8::before { transform: scaleX(.68); opacity: .84; }
+.motivation-takeaway-v8[data-state="step-3"] .motivation-reference-card-v8::before,
+.motivation-takeaway-v8[data-state="complete"] .motivation-reference-card-v8::before { transform: scaleX(1); opacity: 1; }
+.motivation-takeaway-v8[data-state="step-1"] .motivation-reference-trace-v8 i:nth-child(1),
+.motivation-takeaway-v8[data-state="step-2"] .motivation-reference-trace-v8 i:nth-child(-n+2),
+.motivation-takeaway-v8[data-state="step-3"] .motivation-reference-trace-v8 i,
+.motivation-takeaway-v8[data-state="complete"] .motivation-reference-trace-v8 i {
+  border-color: #dd9b9b;
+  background: linear-gradient(90deg, rgba(79,134,232,.75), rgba(198,40,40,.8), rgba(232,148,69,.76));
+  box-shadow: 0 2px 8px rgba(153,27,27,.1);
+}
+.motivation-takeaway-v8[data-state="complete"] .motivation-reference-card-v8 {
+  border-color: #d98787;
+  background: linear-gradient(135deg, #fff, #fff5f4);
+  box-shadow: 0 14px 32px rgba(153,27,27,.11);
+  transform: translateY(-2px);
+}
+
+.motivation-takeaway-foot-v8 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: .8rem;
+  border-top: 1px solid rgba(198,40,40,.13);
+}
+.motivation-takeaway-foot-v8 > span { color: var(--text-2); font-size: .72rem; }
+.motivation-takeaway-foot-v8 > span strong { color: var(--accent-strong); }
+.motivation-takeaway-foot-v8 a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .38rem;
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-size: .72rem;
+  font-weight: 820;
+}
+.motivation-takeaway-foot-v8 a:hover { text-decoration: underline; }
+
+/* Method handoff: requirement -> implementation. */
+.method-requirement-bridge-v8 {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1.18fr);
+  gap: .9rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+  padding: .78rem;
+  border: 1px solid #e2dcd4;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 78% 0%, rgba(198,40,40,.07), transparent 18rem),
+    rgba(255,255,255,.72);
+  box-shadow: 0 8px 24px rgba(42,31,31,.035);
+}
+.method-requirement-side-v8,
+.method-mechanism-side-v8 {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: .1rem;
+  padding: .78rem .9rem;
+  border-radius: 14px;
+}
+.method-requirement-side-v8 { border: 1px dashed #d2cbc2; background: #fbfaf7; }
+.method-mechanism-side-v8 { border: 1px solid #e7b0b0; background: linear-gradient(135deg,#fffafa,#fff1f1); }
+.method-requirement-side-v8 span,
+.method-mechanism-side-v8 span { font-size: .58rem; font-weight: 880; letter-spacing: .08em; text-transform: uppercase; }
+.method-requirement-side-v8 span { color: var(--text-3); }
+.method-mechanism-side-v8 span { color: var(--accent-strong); }
+.method-requirement-side-v8 strong,
+.method-mechanism-side-v8 strong { font-size: .9rem; letter-spacing: -.015em; }
+.method-requirement-side-v8 small,
+.method-mechanism-side-v8 small { color: var(--text-3); font-size: .62rem; line-height: 1.35; }
+.method-requirement-arrow-v8 { display: grid; place-items: center; align-content: center; gap: .02rem; min-width: 72px; color: var(--accent-strong); }
+.method-requirement-arrow-v8 small { color: var(--text-3); font-size: .54rem; font-weight: 760; text-transform: uppercase; letter-spacing: .06em; }
+.method-requirement-arrow-v8 b { font-size: 1.35rem; line-height: 1; }
+
+@media (max-width: 900px) {
+  .motivation-takeaway-flow-v8 { grid-template-columns: 1fr 58px minmax(220px,.54fr); }
+  .motivation-takeaway-observations-v8 article { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .08rem; }
+  .motivation-takeaway-observations-v8 article .motivation-observation-glyph-v6 { grid-column: 1; grid-row: auto; margin: -.2rem 0; }
+  .method-requirement-bridge-v8 { grid-template-columns: 1fr auto 1fr; }
+}
+
+@media (max-width: 700px) {
+  .motivation-takeaway-head-v8 { display: grid; }
+  .motivation-takeaway-replay-v8 { justify-self: start; }
+  .motivation-takeaway-flow-v8 { grid-template-columns: 1fr; gap: .6rem; }
+  .motivation-takeaway-observations-v8 { grid-template-columns: repeat(3,minmax(120px,1fr)); overflow-x: auto; padding-bottom: .18rem; scrollbar-width: none; }
+  .motivation-takeaway-observations-v8::-webkit-scrollbar { display: none; }
+  .motivation-takeaway-observations-v8 article { scroll-snap-align: start; }
+  .motivation-takeaway-converge-v8 { height: 50px; }
+  .motivation-takeaway-converge-v8::after { left: 50%; right: auto; top: 0; bottom: 0; width: 2px; height: auto; transform: scaleY(.22); transform-origin: center top; }
+  .motivation-takeaway-converge-v8 span { display: none; }
+  .motivation-takeaway-v8[data-state="step-1"] .motivation-takeaway-converge-v8::after { transform: scaleY(.38); }
+  .motivation-takeaway-v8[data-state="step-2"] .motivation-takeaway-converge-v8::after { transform: scaleY(.68); }
+  .motivation-takeaway-v8[data-state="step-3"] .motivation-takeaway-converge-v8::after,
+  .motivation-takeaway-v8[data-state="complete"] .motivation-takeaway-converge-v8::after { transform: scaleY(1); }
+  .motivation-takeaway-foot-v8 { align-items: flex-start; flex-direction: column; }
+  .method-requirement-bridge-v8 { grid-template-columns: 1fr; }
+  .method-requirement-arrow-v8 { min-width: 0; min-height: 40px; }
+  .method-requirement-arrow-v8 b { transform: rotate(90deg); }
+}
+
+@media (max-width: 480px) {
+  .motivation-deck-tabs-v6 button { flex-basis: 190px; }
+  .motivation-takeaway-v8 { padding: 1rem; border-radius: 20px; }
+  .motivation-takeaway-head-v8 h3 { font-size: 1.55rem; }
+  .motivation-reference-main-v8 { align-items: flex-start; flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motivation-takeaway-observations-v8 article,
+  .motivation-takeaway-converge-v8::after,
+  .motivation-takeaway-converge-v8 span,
+  .motivation-reference-card-v8,
+  .motivation-reference-card-v8::before,
+  .motivation-reference-trace-v8 i,
+  .motivation-takeaway-replay-v8 { transition: none !important; }
 }

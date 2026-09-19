@@ -105,10 +105,7 @@
           <span>01</span><b>Retrieval challenge</b><small>why identity matters</small>
         </button>
         <button type="button" role="tab" aria-selected="false" data-motivation-slide-tab="1" tabindex="-1">
-          <span>02</span><b>Existing supervision</b><small>what TBPS already has</small>
-        </button>
-        <button type="button" role="tab" aria-selected="false" data-motivation-slide-tab="2" tabindex="-1">
-          <span>03</span><b>Persistent reference</b><small>what IAPR adds</small>
+          <span>02</span><b>Missing reference</b><small>what current supervision does not retain</small>
         </button>
       </div>
 
@@ -120,54 +117,80 @@
               <p>Coarse semantic agreement can make several people look equally plausible. The final decision depends on smaller identity-level evidence.</p>
             </header>
 
-            <div class="motivation-gallery-v6">
+            <div class="motivation-gallery-v6" data-motivation-challenge data-state="scan">
               <div class="motivation-query-v6">
                 <div class="motivation-query-v6-label"><span>TEXT QUERY</span><small>dominant cues</small></div>
                 <p>A young woman with shoulder-length dark hair wears a dark green hooded jacket, black straight-leg pants, and white sneakers. She carries a small black backpack and holds a beige tote bag in her left hand.</p>
-                <div class="motivation-query-tags-v6" aria-hidden="true">
-                  <span>dark hair</span><span>green jacket</span><span>black pants</span><span>white shoes</span><span>black backpack</span><span>beige tote</span>
+                <div class="motivation-query-tags-v6" aria-label="Dominant query cues">
+                  <button type="button" data-motivation-cue="dark hair" aria-pressed="false">dark hair</button>
+                  <button type="button" data-motivation-cue="green jacket" aria-pressed="false">green jacket</button>
+                  <button type="button" data-motivation-cue="black pants" aria-pressed="false">black pants</button>
+                  <button type="button" data-motivation-cue="white shoes" aria-pressed="false">white shoes</button>
+                  <button type="button" data-motivation-cue="black backpack" aria-pressed="false">black backpack</button>
+                  <button type="button" data-motivation-cue="beige tote" aria-pressed="false">beige tote</button>
                 </div>
+                <span class="motivation-cue-status-v7" data-motivation-cue-status aria-live="polite">Hover a cue to see whether it separates the gallery.</span>
               </div>
 
-              <div class="motivation-match-rule-v6" aria-hidden="true"><span></span><b>matches at a glance</b><span></span></div>
+              <div class="motivation-match-rule-v6" aria-hidden="true"><span></span><b data-motivation-stage-label>Which person would you retrieve?</b><span></span></div>
 
-              <div class="motivation-candidates-v6" data-motivation-candidates aria-label="Five visually plausible candidates">
-                <button class="motivation-person-v6" type="button" data-motivation-candidate="target" aria-pressed="false">
+              <div class="motivation-candidates-v6" data-motivation-candidates aria-label="Choose one of five visually plausible candidates">
+                <button class="motivation-person-v6" type="button" data-motivation-candidate="target" data-candidate-label="A" aria-pressed="false" aria-label="Candidate A. Choose this retrieval candidate.">
                   <span class="motivation-person-id-v6">A</span>
+                  <span class="motivation-cue-shared-v7" data-motivation-cue-badge aria-hidden="true"></span>
                   <img src="assets/examples/target.png" alt="Candidate A" />
                   <span class="motivation-person-result-v6"><b>same ID</b><small>true target</small></span>
                 </button>
-                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn1" aria-pressed="false">
+                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn1" data-candidate-label="B" aria-pressed="false" aria-label="Candidate B. Choose this retrieval candidate.">
                   <span class="motivation-person-id-v6">B</span>
+                  <span class="motivation-cue-shared-v7" data-motivation-cue-badge aria-hidden="true"></span>
                   <img src="assets/examples/hn_1.png" alt="Candidate B" />
                   <span class="motivation-person-result-v6"><b>wrong ID</b><small>backpack differs</small></span>
                 </button>
-                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn2" aria-pressed="false">
+                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn2" data-candidate-label="C" aria-pressed="false" aria-label="Candidate C. Choose this retrieval candidate.">
                   <span class="motivation-person-id-v6">C</span>
+                  <span class="motivation-cue-shared-v7" data-motivation-cue-badge aria-hidden="true"></span>
                   <img src="assets/examples/hn_2.png" alt="Candidate C" />
                   <span class="motivation-person-result-v6"><b>wrong ID</b><small>jacket differs</small></span>
                 </button>
-                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn3" aria-pressed="false">
+                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn3" data-candidate-label="D" aria-pressed="false" aria-label="Candidate D. Choose this retrieval candidate.">
                   <span class="motivation-person-id-v6">D</span>
+                  <span class="motivation-cue-shared-v7" data-motivation-cue-badge aria-hidden="true"></span>
                   <img src="assets/examples/hn_3.png" alt="Candidate D" />
                   <span class="motivation-person-result-v6"><b>wrong ID</b><small>shoes differ</small></span>
                 </button>
-                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn4" aria-pressed="false">
+                <button class="motivation-person-v6" type="button" data-motivation-candidate="hn4" data-candidate-label="E" aria-pressed="false" aria-label="Candidate E. Choose this retrieval candidate.">
                   <span class="motivation-person-id-v6">E</span>
+                  <span class="motivation-cue-shared-v7" data-motivation-cue-badge aria-hidden="true"></span>
                   <img src="assets/examples/hn_4.png" alt="Candidate E" />
                   <span class="motivation-person-result-v6"><b>wrong ID</b><small>hair + tote differ</small></span>
                 </button>
               </div>
 
+              <div class="motivation-choice-feedback-v7" data-motivation-choice-feedback aria-live="polite">
+                <span class="motivation-choice-dot-v7" aria-hidden="true"></span>
+                <p><strong>Try the retrieval yourself.</strong> Pick the person you think the text describes best, or reveal the identities directly.</p>
+              </div>
+
               <div class="motivation-gallery-footer-v6">
-                <div><strong>All five match the dominant description.</strong><span>Only one is the correct identity.</span></div>
-                <button class="motivation-reveal-button-v6" type="button" data-motivation-reveal aria-pressed="false">Reveal identities</button>
+                <div>
+                  <strong data-motivation-footer-title>All five match the dominant description.</strong>
+                  <span data-motivation-footer-copy>Semantic agreement alone does not tell you which identity is correct.</span>
+                </div>
+                <div class="motivation-gallery-actions-v7">
+                  <button class="motivation-reset-button-v7" type="button" data-motivation-reset hidden>Reset</button>
+                  <button class="motivation-reveal-button-v6" type="button" data-motivation-reveal aria-pressed="false">Reveal identities</button>
+                </div>
               </div>
 
               <div class="motivation-detail-v6" data-motivation-detail hidden>
                 <div class="motivation-detail-head-v6">
                   <div><span data-motivation-detail-kicker>Identity comparison</span><strong data-motivation-detail-title>Small evidence can decide the identity.</strong></div>
-                  <button type="button" data-motivation-detail-close aria-label="Close identity comparison">×</button>
+                  <button type="button" data-motivation-detail-close aria-label="Close cue inspection">×</button>
+                </div>
+                <div class="motivation-detail-shared-v7">
+                  <span>WHY THIS LOOKS PLAUSIBLE</span>
+                  <div data-motivation-detail-shared>dark hair · green jacket · black pants · white shoes · black backpack · beige tote</div>
                 </div>
                 <div class="motivation-detail-grid-v6">
                   <figure class="motivation-detail-person-v6 motivation-detail-target-v6" data-detail-focus="target">
@@ -180,119 +203,176 @@
                     <figcaption><span data-motivation-detail-negative-label>LOOK-ALIKE</span><strong data-motivation-detail-negative>same dominant appearance</strong></figcaption>
                   </figure>
                 </div>
+                <div class="motivation-detail-difference-v7">
+                  <span>IDENTITY-RESOLVING EVIDENCE</span>
+                  <strong data-motivation-detail-diff>Backpack construction differs despite the same coarse backpack cue.</strong>
+                </div>
               </div>
             </div>
 
-            <p class="motivation-slide-punchline-v6"><strong>Semantic match ≠ identity match.</strong> A visually convincing retrieval can still be the wrong person.</p>
+            <p class="motivation-slide-punchline-v6" data-motivation-punchline><strong>Semantic agreement leaves multiple plausible candidates.</strong> Choose one, then reveal which retrieval is identity-correct.</p>
           </article>
 
-          <article class="motivation-slide-v6 motivation-slide-v6--supervision" data-motivation-slide="1" aria-labelledby="motivationSlide2Title" aria-hidden="true">
-            <header class="motivation-slide-head-v6">
-              <div><span>02 · Existing supervision</span><h3 id="motivationSlide2Title">Identity supervision is already there.</h3></div>
-              <p>The missing ingredient is not another class label or another positive/negative relation.</p>
+          <article class="motivation-slide-v6 motivation-slide-v6--supervision motivation-slide-v7--supervision" data-motivation-slide="1" aria-labelledby="motivationSlide2Title" aria-hidden="true">
+            <header class="motivation-slide-head-v6 motivation-slide2-head-v7">
+              <div><span>02 · Missing reference</span><h3 id="motivationSlide2Title">Identity supervision structures the update—not a persistent reference.</h3></div>
+              <p><strong>Classification, grouping, and separation already use identity.</strong> <span>What is missing is an explicit observation-derived identity reference carried across mini-batches.</span></p>
             </header>
 
-            <div class="motivation-supervision-compact-v6">
-              <div class="motivation-id-statement-v6">
-                <small>IDENTITY LABEL</small>
-                <strong>ID 17</strong>
-                <span>already tells training how to organize observations</span>
-              </div>
-              <div class="motivation-supervision-verbs-v6" aria-label="Common uses of identity labels">
-                <span><i>01</i><b>Classify</b><small>who is this?</small></span>
-                <span><i>02</i><b>Group</b><small>same-ID observations</small></span>
-                <span><i>03</i><b>Separate</b><small>different identities</small></span>
-              </div>
-            </div>
-
-            <div class="motivation-local-story-v6" aria-label="The same identity appears in different mini-batches but no observation-derived representative is retained">
-              <div class="motivation-local-copy-v6">
-                <span>Training keeps moving</span>
-                <strong>The label survives. The observed identity evidence does not explicitly accumulate.</strong>
+            <section class="motivation-supervision-card-v7" aria-labelledby="supervisionCardTitle">
+              <div class="motivation-supervision-card-head-v7">
+                <div>
+                  <span>EXISTING SUPERVISION</span>
+                  <strong id="supervisionCardTitle">Identity labels already structure every update.</strong>
+                </div>
+                <span class="motivation-supervision-badge-v7"><i aria-hidden="true"></i> ID 17</span>
               </div>
 
-              <div class="motivation-local-observations-v6">
-                <article class="motivation-observation-node-v6">
-                  <span>t₁</span>
+              <div class="motivation-supervision-grid-v7" aria-label="Common uses of identity supervision">
+                <button type="button" data-supervision-feature data-description="The identity label tells the objective which class this observation belongs to." aria-pressed="false">
+                  <span class="motivation-supervision-index-v7">01</span>
+                  <span class="motivation-supervision-icon-v7 motivation-supervision-icon-v7--classify" aria-hidden="true"><i></i><b>17</b></span>
+                  <strong>Classify</strong>
+                  <small>who is this?</small>
+                </button>
+                <button type="button" data-supervision-feature data-description="Same-identity observations can be grouped or treated as positives within the current objective." aria-pressed="false">
+                  <span class="motivation-supervision-index-v7">02</span>
+                  <span class="motivation-supervision-icon-v7 motivation-supervision-icon-v7--group" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <strong>Group</strong>
+                  <small>same-ID observations</small>
+                </button>
+                <button type="button" data-supervision-feature data-description="Different identities can be pushed apart or treated as negatives during optimization." aria-pressed="false">
+                  <span class="motivation-supervision-index-v7">03</span>
+                  <span class="motivation-supervision-icon-v7 motivation-supervision-icon-v7--separate" aria-hidden="true"><i></i><i></i><b>↔</b></span>
+                  <strong>Separate</strong>
+                  <small>different identities</small>
+                </button>
+              </div>
+              <p class="motivation-supervision-feature-copy-v7" data-supervision-feature-copy><strong>Useful supervision is not missing.</strong> Hover or select a card to inspect what the identity label already provides.</p>
+            </section>
+
+            <section class="motivation-survival-demo-v7" data-supervision-demo data-phase="idle" aria-label="Interactive demonstration of what persists across training updates">
+              <header class="motivation-survival-head-v7">
+                <div>
+                  <span>WATCH WHAT SURVIVES TRAINING</span>
+                  <strong>Same identity. Different evidence at each update.</strong>
+                </div>
+                <button type="button" class="motivation-survival-replay-v7" data-supervision-replay><span aria-hidden="true">▶</span> Show what survives</button>
+              </header>
+
+              <div class="motivation-survival-timeline-v7">
+                <article class="motivation-survival-step-v7" data-supervision-step data-evidence="red coat · backpack">
+                  <div class="motivation-survival-step-head-v7"><span>t₁</span><small>mini-batch update</small></div>
                   <div class="motivation-observation-glyph-v6" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
-                  <strong>ID 17</strong><small>image + caption</small>
+                  <span class="motivation-survival-id-v7"><i></i>ID 17</span>
+                  <div class="motivation-survival-evidence-v7">
+                    <span class="is-visual">red coat</span><span class="is-textual">backpack</span>
+                  </div>
                 </article>
-                <article class="motivation-observation-node-v6">
-                  <span>t₂</span>
+
+                <article class="motivation-survival-step-v7" data-supervision-step data-evidence="side profile · dark trousers">
+                  <div class="motivation-survival-step-head-v7"><span>t₂</span><small>later update</small></div>
                   <div class="motivation-observation-glyph-v6 motivation-observation-glyph-v6--alt" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
-                  <strong>ID 17</strong><small>different observation</small>
+                  <span class="motivation-survival-id-v7"><i></i>ID 17</span>
+                  <div class="motivation-survival-evidence-v7">
+                    <span class="is-visual">side profile</span><span class="is-textual">dark trousers</span>
+                  </div>
                 </article>
-                <article class="motivation-observation-node-v6">
-                  <span>t₃</span>
+
+                <article class="motivation-survival-step-v7" data-supervision-step data-evidence="hood · shoulder bag">
+                  <div class="motivation-survival-step-head-v7"><span>t₃</span><small>another update</small></div>
                   <div class="motivation-observation-glyph-v6 motivation-observation-glyph-v6--third" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
-                  <strong>ID 17</strong><small>another observation</small>
+                  <span class="motivation-survival-id-v7"><i></i>ID 17</span>
+                  <div class="motivation-survival-evidence-v7">
+                    <span class="is-visual">hood</span><span class="is-textual">shoulder bag</span>
+                  </div>
                 </article>
               </div>
 
-              <div class="motivation-empty-rail-v6">
-                <span></span><i>?</i><span></span>
-                <div><small>PERSISTENT IDENTITY REFERENCE</small><strong>Nothing observation-derived is explicitly carried forward.</strong></div>
+              <div class="motivation-survival-compare-v7">
+                <div class="motivation-label-rail-v7">
+                  <div><span>IDENTITY LABEL</span><strong>persists across updates</strong></div>
+                  <div class="motivation-label-track-v7" aria-hidden="true"><i></i><b>ID 17</b><i></i><b>ID 17</b><i></i><b>ID 17</b></div>
+                </div>
+
+                <div class="motivation-memory-rail-v7">
+                  <div class="motivation-memory-rail-copy-v7">
+                    <span>PERSISTENT IDENTITY REFERENCE</span>
+                    <strong>Where does observation-derived evidence accumulate?</strong>
+                  </div>
+                  <div class="motivation-memory-slots-v7" aria-live="polite">
+                    <span data-supervision-memory-slot><i>·</i><small>empty</small></span>
+                    <span data-supervision-memory-slot><i>·</i><small>empty</small></span>
+                    <span data-supervision-memory-slot><i>·</i><small>empty</small></span>
+                  </div>
+                  <p data-supervision-demo-status>Press “Show what survives” to follow ID 17 through three updates.</p>
+                </div>
               </div>
-            </div>
+            </section>
 
-            <p class="motivation-slide-punchline-v6"><strong>Identity supervision tells each update what to do.</strong> It does not itself retain what previous observations revealed about the identity.</p>
-          </article>
-
-          <article class="motivation-slide-v6 motivation-slide-v6--persistence" data-motivation-slide="2" aria-labelledby="motivationSlide3Title" aria-hidden="true">
-            <header class="motivation-slide-head-v6">
-              <div><span>03 · Persistent reference</span><h3 id="motivationSlide3Title">Let identity evidence accumulate across mini-batches.</h3></div>
-              <p>IAPR turns the missing reference into an identity-owned memory built from observations over time.</p>
-            </header>
-
-            <div class="motivation-before-after-v6">
-              <section class="motivation-before-v6" aria-label="Without a persistent observation-derived identity reference">
-                <header><small>WITHOUT PERSISTENT REFERENCE</small><strong>Each batch supervises its own observation.</strong></header>
-                <div class="motivation-mini-observations-v6">
-                  <span><b>t₁</b><i>obs</i></span><span><b>t₂</b><i>obs</i></span><span><b>t₃</b><i>obs</i></span>
-                </div>
-                <div class="motivation-fade-path-v6" aria-hidden="true"><span></span><span></span><span></span></div>
-                <div class="motivation-nothing-v6"><i>?</i><strong>nothing accumulates</strong></div>
-              </section>
-
-              <div class="motivation-before-after-arrow-v6" aria-hidden="true">→</div>
-
-              <section class="motivation-after-v6" aria-label="With IAPR observations update one persistent identity-owned reference">
-                <header><small>WITH IAPR</small><strong>Observations update one identity-owned reference.</strong></header>
-                <div class="motivation-memory-sources-v6">
-                  <span><b>t₁</b><i></i></span><span><b>t₂</b><i></i></span><span><b>t₃</b><i></i></span>
-                </div>
-                <div class="motivation-memory-converge-v6" aria-hidden="true"><span></span><span></span><span></span></div>
-                <div class="motivation-memory-core-v6">
-                  <div><small>IDENTITY-OWNED REFERENCE</small><strong>ID 17</strong></div>
-                  <div class="motivation-prototype-line-v6"><b>Visual</b><i></i><i></i><i></i></div>
-                  <div class="motivation-prototype-line-v6 motivation-prototype-line-v6--text"><b>Text</b><i></i><i></i><i></i></div>
-                </div>
-              </section>
-            </div>
-
-            <div class="motivation-principles-inline-v6" aria-label="Properties of the identity reference">
-              <span><b>Persistent</b> survives mini-batches</span>
-              <span><b>Identity-owned</b> updates stay with ID 17</span>
-              <span><b>Multi-slot</b> retains heterogeneous modes</span>
-            </div>
-
-            <p class="motivation-slide-punchline-v6"><strong>Same observations, different treatment of identity evidence.</strong> IAPR keeps an explicit observation-derived reference available to future updates.</p>
+            <p class="motivation-slide-punchline-v6 motivation-slide2-punchline-v7"><strong>Identity supervision already structures each update.</strong> What is missing is an explicit observation-derived identity reference that persists across mini-batches.</p>
           </article>
         </div>
       </div>
 
       <div class="motivation-deck-footer-v6">
         <button type="button" data-motivation-prev disabled aria-label="Previous motivation slide">← Previous</button>
-        <span><b data-motivation-current>01</b> / 03</span>
+        <span><b data-motivation-current>01</b> / 02</span>
         <button type="button" data-motivation-next aria-label="Next motivation slide">Next →</button>
       </div>
     </div>
 
-    <aside class="motivation-takeaway-v6 reveal" aria-label="Motivation takeaway">
-      <span class="motivation-takeaway-label-v6">TAKEAWAY</span>
-      <div>
-        <strong>A convincing semantic match can still be the wrong identity.</strong>
-        <p>The missing ingredient is not another identity label, but a persistent observation-derived reference that carries identity evidence across training.</p>
+    <aside class="motivation-takeaway-v8 reveal" data-motivation-takeaway data-state="idle" aria-labelledby="motivationTakeawayTitle">
+      <div class="motivation-takeaway-head-v8">
+        <div>
+          <span class="motivation-takeaway-label-v8">MOTIVATION TAKEAWAY</span>
+          <h3 id="motivationTakeawayTitle">Identity supervision needs a reference that survives the mini-batch.</h3>
+          <p>A persistent, observation-derived identity reference can carry evidence forward as new observations of the same person arrive during training.</p>
+        </div>
+        <button type="button" class="motivation-takeaway-replay-v8" data-motivation-takeaway-replay>
+          <span aria-hidden="true">▶</span> Replay accumulation
+        </button>
+      </div>
+
+      <div class="motivation-takeaway-flow-v8" aria-label="Three observations of ID 17 accumulate into one persistent identity reference">
+        <div class="motivation-takeaway-observations-v8">
+          <article data-motivation-takeaway-step>
+            <span class="motivation-takeaway-time-v8">t₁</span>
+            <div class="motivation-observation-glyph-v6" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
+            <strong>ID 17</strong>
+            <small>observation A</small>
+          </article>
+          <article data-motivation-takeaway-step>
+            <span class="motivation-takeaway-time-v8">t₂</span>
+            <div class="motivation-observation-glyph-v6 motivation-observation-glyph-v6--alt" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
+            <strong>ID 17</strong>
+            <small>observation B</small>
+          </article>
+          <article data-motivation-takeaway-step>
+            <span class="motivation-takeaway-time-v8">t₃</span>
+            <div class="motivation-observation-glyph-v6 motivation-observation-glyph-v6--third" aria-hidden="true"><span class="motivation-photo-glyph-v6"><i></i><b></b></span><span class="motivation-caption-glyph-v6"><i></i><i></i><i></i></span></div>
+            <strong>ID 17</strong>
+            <small>observation C</small>
+          </article>
+        </div>
+
+        <div class="motivation-takeaway-converge-v8" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="motivation-reference-card-v8" data-motivation-reference>
+          <span class="motivation-reference-kicker-v8">PERSISTENT IDENTITY REFERENCE</span>
+          <div class="motivation-reference-main-v8">
+            <span class="motivation-reference-id-v8"><i></i><strong>ID 17</strong></span>
+            <div class="motivation-reference-trace-v8" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+          <p>observation-derived · available to future updates</p>
+        </div>
+      </div>
+
+      <div class="motivation-takeaway-foot-v8">
+        <span data-motivation-takeaway-status aria-live="polite">The requirement is persistence—not a new inference path.</span>
+        <a href="#method">Next: how IAPR realizes it <span aria-hidden="true">↓</span></a>
       </div>
     </aside>
   </section>
@@ -301,9 +381,23 @@
   <section id="method" class="section method-section method-v3">
     <header class="section-header method-v3-header reveal">
       <p class="section-kicker">Identity-Aware Prototype Regularization</p>
-      <h2 class="section-title">Identity-aware regularization without changing the retriever.</h2>
-      <p class="section-lead">Attach IAPR to the final image and text embeddings during training. Let it organize identity-level references. Then discard the entire branch and deploy the original TBPS retrieval pipeline.</p>
+      <h2 class="section-title">Turn the missing reference into an identity-owned prototype memory.</h2>
+      <p class="section-lead">IAPR instantiates the persistent-reference requirement with identity-owned visual and textual prototype memories, then uses them only as a training-time regularizer. The deployed retriever remains unchanged.</p>
     </header>
+
+    <div class="method-requirement-bridge-v8 reveal" aria-label="From motivation requirement to IAPR mechanism">
+      <div class="method-requirement-side-v8">
+        <span>MOTIVATION REQUIREMENT</span>
+        <strong>Persistent identity reference</strong>
+        <small>carry observation-derived evidence across mini-batches</small>
+      </div>
+      <div class="method-requirement-arrow-v8" aria-hidden="true"><small>instantiate</small><b>→</b></div>
+      <div class="method-mechanism-side-v8">
+        <span>IAPR MECHANISM</span>
+        <strong>Identity-Owned Prototype Memory</strong>
+        <small>identity-owned · multi-slot · updated from observations</small>
+      </div>
+    </div>
 
     <div class="iapr-architecture-card reveal" data-iapr-architecture data-mode="training">
       <div class="iapr-architecture-head">
