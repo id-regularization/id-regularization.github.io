@@ -477,7 +477,8 @@
             <div class="system-label-v9 system-label-v9--iapr"><i></i><span>Training-only IAPR</span></div>
 
             <div class="iapr-flow-v9" aria-label="Project base embeddings, remember identity-owned prototypes, translate cross-modal structure, and regularize local identity competition">
-              <div class="flow-step-v9 flow-step-v9--project">
+              <div class="flow-step-v9 flow-step-v9--project" data-method-pipeline-step="project">
+                <button class="flow-step-hit-v11" type="button" data-method-open="project" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore prototype projection details"></button>
                 <span>Project</span>
                 <strong>Prototype projection</strong>
                 <div class="project-mini-v10" aria-hidden="true">
@@ -486,7 +487,8 @@
                 </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
-              <div class="flow-step-v9 flow-step-v9--memory">
+              <div class="flow-step-v9 flow-step-v9--memory" data-method-pipeline-step="remember">
+                <button class="flow-step-hit-v11" type="button" data-method-open="remember" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-owned memory details"></button>
                 <span>Remember</span>
                 <strong>IOPM + IRA</strong>
                 <div class="memory-mini-v10" aria-hidden="true">
@@ -496,7 +498,8 @@
                 </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
-              <div class="flow-step-v9 flow-step-v9--translate">
+              <div class="flow-step-v9 flow-step-v9--translate" data-method-pipeline-step="translate">
+                <button class="flow-step-hit-v11" type="button" data-method-open="translate" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore same-space translated target details"></button>
                 <span>Translate</span>
                 <strong>Same-space targets</strong>
                 <div class="translate-mini-v10" aria-hidden="true">
@@ -506,7 +509,8 @@
                 </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
-              <div class="flow-step-v9 flow-step-v9--loss">
+              <div class="flow-step-v9 flow-step-v9--loss" data-method-pipeline-step="regularize">
+                <button class="flow-step-hit-v11" type="button" data-method-open="regularize" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-prototype regularization details"></button>
                 <span>Regularize</span>
                 <strong>Identity-prototype loss</strong>
                 <div class="regulate-mini-v10" aria-hidden="true">
@@ -577,29 +581,99 @@
         </div>
       </section>
 
-      <section class="method-scene-v9 mechanism-scene-v9 mechanism-slider-v10" data-method-slider aria-labelledby="mechanismTitleV9">
+      <div class="method-explore-dock-v11 reveal">
+        <button type="button" class="method-explore-toggle-v11" data-method-explore-toggle aria-expanded="false" aria-controls="iaprMethodExplorer">
+          <span data-method-explore-label>Explore IAPR</span><i aria-hidden="true">↓</i>
+        </button>
+        <small>Open only when you want the component-level mechanics.</small>
+      </div>
+
+      <section id="iaprMethodExplorer" class="method-scene-v9 mechanism-scene-v9 mechanism-slider-v10 method-explorer-v11 is-collapsed" data-method-slider data-method-explorer aria-hidden="true" inert aria-labelledby="mechanismTitleV9">
         <header class="mechanism-head-v9 reveal">
-          <span class="architecture-eyebrow">How IAPR regularizes</span>
-          <h3 id="mechanismTitleV9">Remember → translate → regularize.</h3>
-          <p>Three ideas build the supervision in sequence: remember identity-specific evidence, translate cross-modal grouping into same-space targets, then regularize the local identity competition.</p>
+          <span class="architecture-eyebrow">Method explorer · training only</span>
+          <h3 id="mechanismTitleV9">Project → remember → translate → regularize.</h3>
+          <p>Start from the final base embeddings, then inspect how IAPR stores identity evidence, transfers grouping structure, and regularizes local identity competition. Click a stage here or directly in the pipeline above.</p>
+          <span class="method-explorer-mode-note-v11">Training-only detail · the complete branch is removed at inference.</span>
         </header>
 
         <div class="method-slider-shell-v10 reveal">
           <div class="method-slider-tabs-v10" role="tablist" aria-label="IAPR mechanism stages">
-            <button type="button" role="tab" aria-selected="true" aria-controls="methodSlideRemember" id="methodTabRemember" data-method-slide-tab="0">
-              <span>01</span><b>Remember</b><small>IOPM + IRA</small>
+            <button type="button" role="tab" aria-selected="true" aria-controls="methodSlideProject" id="methodTabProject" data-method-slide-tab="0">
+              <span>01</span><b>Project</b><small>attachment interface</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideTranslate" id="methodTabTranslate" data-method-slide-tab="1" tabindex="-1">
-              <span>02</span><b>Translate</b><small>SSTT</small>
+            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideRemember" id="methodTabRemember" data-method-slide-tab="1" tabindex="-1">
+              <span>02</span><b>Remember</b><small>IOPM + IRA</small>
             </button>
-            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideRegularize" id="methodTabRegularize" data-method-slide-tab="2" tabindex="-1">
-              <span>03</span><b>Regularize</b><small>Identity-prototype loss</small>
+            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideTranslate" id="methodTabTranslate" data-method-slide-tab="2" tabindex="-1">
+              <span>03</span><b>Translate</b><small>SSTT</small>
+            </button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideRegularize" id="methodTabRegularize" data-method-slide-tab="3" tabindex="-1">
+              <span>04</span><b>Regularize</b><small>identity-prototype loss</small>
             </button>
           </div>
 
           <div class="method-slider-window-v10" data-method-slider-window>
             <div class="method-slider-track-v10" data-method-slider-track>
-              <article class="method-slide-v10 method-slide-v10--remember is-active" id="methodSlideRemember" role="tabpanel" aria-labelledby="methodTabRemember" data-method-slide="0">
+              <article class="method-slide-v10 method-slide-v10--project is-active" id="methodSlideProject" role="tabpanel" aria-labelledby="methodTabProject" data-method-slide="0">
+                <div class="method-slide-visual-v10" aria-hidden="true">
+                  <svg class="method-diagram-v10 project-diagram-v11" viewBox="0 0 760 360" role="img" aria-label="Final image and text embeddings pass through lightweight training-only projection heads into normalized prototype space">
+                    <defs>
+                      <marker id="arrowBlueProject" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#3979ca"/></marker>
+                      <marker id="arrowOrangeProject" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#d88437"/></marker>
+                    </defs>
+                    <text x="68" y="44" class="diagram-label-v10">FINAL BASE EMBEDDINGS</text>
+                    <text x="318" y="44" class="diagram-label-v10">TRAINING-ONLY PROJECTION</text>
+                    <text x="584" y="44" class="diagram-label-v10">PROTOTYPE SPACE</text>
+
+                    <g class="project-source-v11 project-source-v11--visual">
+                      <rect x="72" y="94" width="132" height="78" rx="20"/>
+                      <circle cx="101" cy="133" r="10"/>
+                      <text x="127" y="128" class="diagram-note-v10">visual</text>
+                      <text x="127" y="149" class="project-symbol-v11">vᵢ</text>
+                    </g>
+                    <g class="project-source-v11 project-source-v11--textual">
+                      <rect x="72" y="207" width="132" height="78" rx="20"/>
+                      <circle cx="101" cy="246" r="10"/>
+                      <text x="127" y="241" class="diagram-note-v10">text</text>
+                      <text x="127" y="262" class="project-symbol-v11">tᵢ</text>
+                    </g>
+
+                    <g class="project-head-v11 project-head-v11--visual">
+                      <rect x="308" y="99" width="146" height="68" rx="18"/>
+                      <text x="381" y="126" text-anchor="middle" class="diagram-strong-blue-v10">gᵥ</text>
+                      <text x="381" y="148" text-anchor="middle" class="diagram-note-v10">linear + normalize</text>
+                    </g>
+                    <g class="project-head-v11 project-head-v11--textual">
+                      <rect x="308" y="212" width="146" height="68" rx="18"/>
+                      <text x="381" y="239" text-anchor="middle" class="project-head-text-v11">gₜ</text>
+                      <text x="381" y="261" text-anchor="middle" class="diagram-note-v10">linear + normalize</text>
+                    </g>
+
+                    <path d="M211 133 H296" class="project-route-v11 project-route-v11--visual" marker-end="url(#arrowBlueProject)"/>
+                    <path d="M211 246 H296" class="project-route-v11 project-route-v11--textual" marker-end="url(#arrowOrangeProject)"/>
+                    <path d="M462 133 H544" class="project-route-v11 project-route-v11--visual" marker-end="url(#arrowBlueProject)"/>
+                    <path d="M462 246 H544" class="project-route-v11 project-route-v11--textual" marker-end="url(#arrowOrangeProject)"/>
+
+                    <g class="project-target-v11 project-target-v11--visual">
+                      <circle cx="607" cy="133" r="42"/>
+                      <text x="607" y="140" text-anchor="middle" class="project-target-symbol-v11">zᵢᵛ</text>
+                    </g>
+                    <g class="project-target-v11 project-target-v11--textual">
+                      <circle cx="607" cy="246" r="42"/>
+                      <text x="607" y="253" text-anchor="middle" class="project-target-symbol-v11">zᵢᵗ</text>
+                    </g>
+                    <text x="380" y="327" text-anchor="middle" class="project-claim-v11">ONE ATTACHMENT POINT · BASE RETRIEVER REMAINS STRUCTURALLY UNCHANGED</text>
+                  </svg>
+                </div>
+                <div class="method-slide-copy-v10">
+                  <span class="method-slide-kicker-v10">01 · Project</span>
+                  <h4>Attach at the final embeddings.</h4>
+                  <p>IAPR reads only the base retriever’s final image and text embeddings. Lightweight training-time heads map each modality into a normalized prototype space; the internal retriever architecture does not need to change.</p>
+                  <div class="method-slide-takeaway-v10"><b>One interface</b><span>Different retrievers expose the same attachment point: their final visual and textual representations.</span></div>
+                </div>
+              </article>
+
+              <article class="method-slide-v10 method-slide-v10--remember" id="methodSlideRemember" role="tabpanel" aria-labelledby="methodTabRemember" data-method-slide="1" aria-hidden="true" inert>
                 <div class="method-slide-visual-v10" aria-hidden="true">
                   <svg class="method-diagram-v10 remember-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Identity 17 observation updates only its own prototype memory">
                     <defs>
@@ -664,14 +738,14 @@
                   </svg>
                 </div>
                 <div class="method-slide-copy-v10">
-                  <span class="method-slide-kicker-v10">01 · Remember</span>
+                  <span class="method-slide-kicker-v10">02 · Remember</span>
                   <h4>Remember each identity across batches.</h4>
                   <p>Each training identity owns multiple visual and textual prototype slots. Identity-restricted assignment lets an observation select and update only the slots owned by its ground-truth identity.</p>
                   <div class="method-slide-takeaway-v10"><b>Persistent</b><span>Observation-derived references survive the current mini-batch.</span></div>
                 </div>
               </article>
 
-              <article class="method-slide-v10 method-slide-v10--translate" id="methodSlideTranslate" role="tabpanel" aria-labelledby="methodTabTranslate" data-method-slide="1" aria-hidden="true" inert>
+              <article class="method-slide-v10 method-slide-v10--translate" id="methodSlideTranslate" role="tabpanel" aria-labelledby="methodTabTranslate" data-method-slide="2" aria-hidden="true" inert>
                 <div class="method-slide-visual-v10" aria-hidden="true">
                   <svg class="method-diagram-v10 translate-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Text-space assignment structure is translated into a visual-space target without moving feature vectors across modalities">
                     <defs>
@@ -713,14 +787,14 @@
                   </svg>
                 </div>
                 <div class="method-slide-copy-v10">
-                  <span class="method-slide-kicker-v10">02 · Translate</span>
+                  <span class="method-slide-kicker-v10">03 · Translate</span>
                   <h4>Translate the grouping—not the feature vector.</h4>
                   <p>Assignments from one modality define which paired embeddings are aggregated in the other modality. Structural information crosses modalities while the supervisory target stays in the feature space being regularized.</p>
                   <div class="method-slide-takeaway-v10"><b>Same-space translation</b><span>Cross-modal structure moves; modality-specific feature spaces remain local.</span></div>
                 </div>
               </article>
 
-              <article class="method-slide-v10 method-slide-v10--regularize" id="methodSlideRegularize" role="tabpanel" aria-labelledby="methodTabRegularize" data-method-slide="2" aria-hidden="true" inert>
+              <article class="method-slide-v10 method-slide-v10--regularize" id="methodSlideRegularize" role="tabpanel" aria-labelledby="methodTabRegularize" data-method-slide="3" aria-hidden="true" inert>
                 <div class="method-slide-visual-v10" aria-hidden="true">
                   <svg class="method-diagram-v10 regularize-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Same-identity targets are pulled toward the query while Top-K identity-wrong targets are pushed away">
                     <defs>
@@ -775,7 +849,7 @@
                   </svg>
                 </div>
                 <div class="method-slide-copy-v10">
-                  <span class="method-slide-kicker-v10">03 · Regularize</span>
+                  <span class="method-slide-kicker-v10">04 · Regularize</span>
                   <h4>Regularize the local identity competition.</h4>
                   <p>Same-identity translated targets act as positives. IAPR selects the most similar identity-wrong references and concentrates the auxiliary loss on the strongest local competitors.</p>
                   <div class="method-slide-takeaway-v10"><b>Local regularization</b><span>Pull same-identity targets close; push the strongest identity-wrong targets away.</span></div>
@@ -786,48 +860,84 @@
 
           <div class="method-slider-controls-v10">
             <button type="button" data-method-prev disabled aria-label="Previous IAPR mechanism stage">← Previous</button>
-            <div class="method-slider-progress-v10" aria-live="polite"><b data-method-current>01</b><span>/ 03</span></div>
+            <div class="method-slider-progress-v10" aria-live="polite"><b data-method-current>01</b><span>/ 04</span></div>
             <button type="button" class="method-replay-v10" data-method-replay aria-label="Replay animation for current IAPR mechanism stage"><span aria-hidden="true">↻</span> Replay</button>
             <button type="button" data-method-next aria-label="Next IAPR mechanism stage">Next →</button>
           </div>
         </div>
 
-        <div class="training-timeline-v9 reveal" aria-label="IAPR training timeline">
-          <div class="timeline-track-v9" aria-hidden="true"><i></i></div>
-          <div class="timeline-step-v9 timeline-step-v9--warmup"><span>01</span><b>Warm-up</b><small>epochs 1–5 · L<sub>base</sub> only</small></div>
-          <div class="timeline-step-v9 timeline-step-v9--activate"><span>02</span><b>Activate</b><small>epoch 6 · initialize identity-wise memories</small></div>
-          <div class="timeline-step-v9 timeline-step-v9--update"><span>03</span><b>Update</b><small>prototype + translated targets use EMA</small></div>
-          <div class="timeline-step-v9 timeline-step-v9--regularize"><span>04</span><b>Optimize</b><small>hard identity-wrong targets focus L<sub>ip</sub></small></div>
-        </div>
       </section>
 
-      <section class="deployment-scene-v9 reveal" aria-labelledby="deploymentTitleV9">
-        <div class="deployment-copy-v9">
-          <span class="architecture-eyebrow">Training → deployment</span>
-          <h3 id="deploymentTitleV9">Train richer. Deploy unchanged.</h3>
-          <p>The auxiliary branch shapes the learned retrieval space during optimization, then disappears. Deployment keeps the original base retriever and its original image–text scoring function.</p>
-        </div>
+      <section class="training-lifecycle-v11 reveal" data-training-lifecycle data-state="idle" aria-labelledby="trainingLifecycleTitle">
+          <header class="training-lifecycle-head-v11">
+            <div>
+              <span class="architecture-eyebrow">Training lifecycle</span>
+              <h3 id="trainingLifecycleTitle">Warm up once. Regularize every active mini-batch.</h3>
+              <p>The schedule has two phases—not four sequential stages. Epochs 1–5 train the base retriever alone; at epoch 6 IAPR is initialized, then its assign → update → compete → optimize cycle repeats for the rest of training.</p>
+            </div>
+            <button type="button" class="training-replay-v11" data-training-replay><span aria-hidden="true">↻</span> Replay</button>
+          </header>
 
-        <div class="deployment-transition-v9" aria-label="IAPR is attached in training and discarded at inference">
-          <div class="deployment-phase-v9 deployment-phase-v9--training">
-            <span>TRAINING</span>
-            <div><b>Base retriever</b><em>+</em><strong>IAPR</strong></div>
-            <small>identity-aware regularization</small>
-          </div>
-          <div class="deployment-discard-v9" aria-hidden="true"><i></i><span>✂</span><b>discard IAPR</b><i></i></div>
-          <div class="deployment-phase-v9 deployment-phase-v9--inference">
-            <span>INFERENCE</span>
-            <div><b>Base retriever</b></div>
-            <small>original scoring</small>
-          </div>
-        </div>
+          <div class="training-lifecycle-stage-v11">
+            <div class="lifecycle-axis-v11" aria-hidden="true">
+              <span>epoch 1</span><i></i><span>epoch 5</span><b>epoch 6</b><i></i><span>end</span>
+            </div>
 
-        <div class="deployment-facts-v9">
-          <span><b>&lt; 2%</b><small>extra trainable parameters during training</small></span>
-          <span><b>0</b><small>extra inference modules</small></span>
-          <span><b>Same</b><small>retrieval scoring function</small></span>
-        </div>
-      </section>
+            <div class="lifecycle-row-v11 lifecycle-row-v11--base">
+              <div class="lifecycle-row-label-v11"><span>BASE</span><strong>Base retriever</strong></div>
+              <div class="lifecycle-row-track-v11">
+                <div class="lifecycle-base-progress-v11"></div>
+                <div class="lifecycle-phase-v11 lifecycle-phase-v11--warmup"><b>Warm-up</b><small>L<sub>base</sub> only</small></div>
+                <div class="lifecycle-phase-v11 lifecycle-phase-v11--active"><b>Base objective stays active</b><small>L<sub>base</sub> continues throughout</small></div>
+              </div>
+            </div>
+
+            <div class="lifecycle-row-v11 lifecycle-row-v11--iapr">
+              <div class="lifecycle-row-label-v11"><span>IAPR</span><strong>Auxiliary branch</strong></div>
+              <div class="lifecycle-row-track-v11">
+                <div class="lifecycle-dormant-v11"><span>inactive during warm-up</span></div>
+                <div class="lifecycle-activation-v11">
+                  <i></i>
+                  <div><b>Activate</b><small>initialize identity-wise prototype + translated-target memories</small></div>
+                </div>
+                <div class="lifecycle-iapr-progress-v11"></div>
+                <div class="lifecycle-active-band-v11"><span>ACTIVE IAPR</span><small>L<sub>base</sub> + λ<sub>ip</sub>L<sub>ip</sub></small></div>
+              </div>
+            </div>
+
+            <div class="lifecycle-loop-v11" aria-label="Repeated active-stage mini-batch operations">
+              <div class="lifecycle-loop-head-v11"><span>REPEATS EACH ACTIVE MINI-BATCH</span><small>memories update before the prototype loss is evaluated</small></div>
+              <div class="lifecycle-loop-steps-v11">
+                <div class="lifecycle-loop-step-v11" data-loop-step="1"><span>01</span><b>Assign</b><small>ground-truth identity slots only</small></div>
+                <i aria-hidden="true">→</i>
+                <div class="lifecycle-loop-step-v11" data-loop-step="2"><span>02</span><b>EMA update</b><small>prototypes + translated targets</small></div>
+                <i aria-hidden="true">→</i>
+                <div class="lifecycle-loop-step-v11" data-loop-step="3"><span>03</span><b>Compete</b><small>select Top-K identity-wrong targets</small></div>
+                <i aria-hidden="true">→</i>
+                <div class="lifecycle-loop-step-v11" data-loop-step="4"><span>04</span><b>Optimize</b><small>L<sub>base</sub> + λ<sub>ip</sub>L<sub>ip</sub></small></div>
+                <span class="lifecycle-loop-token-v11" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="lifecycle-deploy-v11">
+              <div class="lifecycle-cut-v11" aria-hidden="true"><i></i><span>✂</span><i></i></div>
+              <div class="lifecycle-deploy-card-v11">
+                <span>INFERENCE</span>
+                <strong>Base retriever only</strong>
+                <small>original scoring · no IAPR modules</small>
+              </div>
+            </div>
+          </div>
+
+          <footer class="training-lifecycle-foot-v11">
+            <p data-training-status aria-live="polite">Replay the lifecycle to follow warm-up, activation, the active mini-batch loop, and removal at inference.</p>
+            <div class="training-lifecycle-facts-v11">
+              <span><b>&lt; 2%</b><small>extra trainable parameters during training</small></span>
+              <span><b>0</b><small>extra inference modules</small></span>
+              <span><b>Same</b><small>retrieval scoring function</small></span>
+            </div>
+          </footer>
+        </section>
     </div>
   </section>
 

@@ -679,7 +679,9 @@
   function setIaprMode(mode, focusButton = false) {
     if (!iaprArchitecture || !["training", "inference"].includes(mode)) return;
     iaprArchitecture.dataset.mode = mode;
+    document.querySelector("#method")?.setAttribute("data-method-mode", mode);
     iaprTrainingBranch?.setAttribute("aria-hidden", String(mode === "inference"));
+    iaprTrainingBranch?.toggleAttribute("inert", mode === "inference");
 
     iaprModeButtons.forEach((button) => {
       const selected = button.dataset.iaprMode === mode;
@@ -769,6 +771,62 @@
     });
   }
 
+  const methodExplorer = document.querySelector("[data-method-explorer]");
+  const methodExploreToggle = document.querySelector("[data-method-explore-toggle]");
+  const methodExploreLabel = methodExploreToggle?.querySelector("[data-method-explore-label]");
+  const methodOpenButtons = [...document.querySelectorAll("[data-method-open]")];
+  const methodStageIndex = { project: 0, remember: 1, translate: 2, regularize: 3 };
+  let methodExplorerOpen = false;
+
+  function syncMethodExplorerControls() {
+    methodExploreToggle?.setAttribute("aria-expanded", String(methodExplorerOpen));
+    methodOpenButtons.forEach((button) => button.setAttribute("aria-expanded", String(methodExplorerOpen)));
+    if (methodExploreLabel) methodExploreLabel.textContent = methodExplorerOpen ? "Hide details" : "Explore IAPR";
+    const icon = methodExploreToggle?.querySelector("i");
+    if (icon) icon.textContent = methodExplorerOpen ? "↑" : "↓";
+  }
+
+  function openMethodExplorer(stage = "project", { scroll = false, focusTab = false } = {}) {
+    if (!methodExplorer) return;
+    methodExplorerOpen = true;
+    methodExplorer.classList.remove("is-collapsed");
+    methodExplorer.classList.add("is-open");
+    methodExplorer.setAttribute("aria-hidden", "false");
+    methodExplorer.removeAttribute("inert");
+    syncMethodExplorerControls();
+    const index = methodStageIndex[stage] ?? 0;
+    setMethodSlide(index, { focusTab, replay: true });
+
+    if (scroll) {
+      window.requestAnimationFrame(() => {
+        const navHeight = document.querySelector(".site-nav")?.getBoundingClientRect().height || 0;
+        const top = methodExplorer.getBoundingClientRect().top + window.scrollY - navHeight - 18;
+        window.scrollTo({ top, behavior: methodReduceMotion ? "auto" : "smooth" });
+      });
+    }
+  }
+
+  function closeMethodExplorer() {
+    if (!methodExplorer) return;
+    methodExplorerOpen = false;
+    methodExplorer.classList.remove("is-open");
+    methodExplorer.classList.add("is-collapsed");
+    methodExplorer.setAttribute("aria-hidden", "true");
+    methodExplorer.setAttribute("inert", "");
+    syncMethodExplorerControls();
+  }
+
+  methodExploreToggle?.addEventListener("click", () => {
+    if (methodExplorerOpen) closeMethodExplorer();
+    else openMethodExplorer("project", { scroll: false });
+  });
+
+  methodOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => openMethodExplorer(button.dataset.methodOpen || "project", { scroll: true }));
+  });
+
+  syncMethodExplorerControls();
+
   methodSlideTabs.forEach((tab, index) => {
     tab.addEventListener("click", () => setMethodSlide(index));
     tab.addEventListener("keydown", (event) => {
@@ -828,6 +886,62 @@
     } else {
       methodSlider.classList.add("is-inview");
     }
+  }
+
+  // Training lifecycle: teach the two-phase schedule and repeated active-stage loop.
+  const trainingLifecycle = document.querySelector("[data-training-lifecycle]");
+  const trainingReplay = trainingLifecycle?.querySelector("[data-training-replay]");
+  const trainingStatus = trainingLifecycle?.querySelector("[data-training-status]");
+  let trainingLifecycleTimer = null;
+  let trainingLifecycleHasPlayed = false;
+
+  function finishTrainingLifecycle() {
+    if (!trainingLifecycle) return;
+    trainingLifecycle.classList.remove("is-playing");
+    trainingLifecycle.classList.add("is-complete");
+    trainingLifecycle.dataset.state = "complete";
+    if (trainingStatus) trainingStatus.innerHTML = "<strong>Deployment unchanged:</strong> the IAPR branch is discarded; inference uses the base retriever’s original scoring function.";
+    if (trainingReplay) {
+      trainingReplay.disabled = false;
+      trainingReplay.innerHTML = '<span aria-hidden="true">↻</span> Replay';
+    }
+    trainingLifecycleHasPlayed = true;
+  }
+
+  function runTrainingLifecycle() {
+    if (!trainingLifecycle) return;
+    if (trainingLifecycleTimer) window.clearTimeout(trainingLifecycleTimer);
+    trainingLifecycle.classList.remove("is-playing", "is-complete");
+    trainingLifecycle.dataset.state = "idle";
+    void trainingLifecycle.offsetWidth;
+
+    if (trainingReplay) {
+      trainingReplay.disabled = true;
+      trainingReplay.innerHTML = '<span aria-hidden="true">●</span> Playing';
+    }
+    if (trainingStatus) trainingStatus.textContent = "Warm-up → activate at epoch 6 → repeat the active mini-batch loop → remove IAPR for inference.";
+
+    if (methodReduceMotion) {
+      finishTrainingLifecycle();
+      return;
+    }
+
+    trainingLifecycle.classList.add("is-playing");
+    trainingLifecycle.dataset.state = "playing";
+    trainingLifecycleTimer = window.setTimeout(finishTrainingLifecycle, 5600);
+  }
+
+  trainingReplay?.addEventListener("click", runTrainingLifecycle);
+
+  if (trainingLifecycle && "IntersectionObserver" in window) {
+    const trainingLifecycleObserver = new IntersectionObserver((entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting) || trainingLifecycleHasPlayed) return;
+      observer.disconnect();
+      window.setTimeout(runTrainingLifecycle, methodReduceMotion ? 0 : 220);
+    }, { threshold: .28 });
+    trainingLifecycleObserver.observe(trainingLifecycle);
+  } else if (trainingLifecycle) {
+    runTrainingLifecycle();
   }
 
   // Results: turn the main table into an interactive paired-comparison explorer.
