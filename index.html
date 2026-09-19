@@ -436,20 +436,20 @@
             <div class="system-label-v9 system-label-v9--base"><i></i><span>Base TBPS retriever</span></div>
 
             <div class="base-lanes-v9">
-              <div class="base-lane-v9">
+              <div class="base-lane-v9 base-lane-v9--visual">
                 <div class="lane-input-v9 lane-input-v9--image"><i aria-hidden="true"></i><span>Image</span></div>
                 <span class="lane-arrow-v9" aria-hidden="true">→</span>
-                <div class="lane-encoder-v9"><small>existing module</small><strong>Vision encoder</strong></div>
+                <div class="lane-encoder-v9 lane-encoder-v9--visual"><small>existing module</small><strong>Vision encoder</strong></div>
                 <span class="lane-arrow-v9" aria-hidden="true">→</span>
-                <div class="lane-embedding-v9"><small>final embedding</small><strong>v<sub>i</sub></strong></div>
+                <div class="lane-embedding-v9 lane-embedding-v9--visual"><small>Visual embedding</small><strong>v<sub>i</sub></strong></div>
               </div>
 
-              <div class="base-lane-v9">
+              <div class="base-lane-v9 base-lane-v9--textual">
                 <div class="lane-input-v9 lane-input-v9--text"><i aria-hidden="true"></i><span>Text</span></div>
                 <span class="lane-arrow-v9" aria-hidden="true">→</span>
-                <div class="lane-encoder-v9"><small>existing module</small><strong>Text encoder</strong></div>
+                <div class="lane-encoder-v9 lane-encoder-v9--textual"><small>existing module</small><strong>Text encoder</strong></div>
                 <span class="lane-arrow-v9" aria-hidden="true">→</span>
-                <div class="lane-embedding-v9"><small>final embedding</small><strong>t<sub>i</sub></strong></div>
+                <div class="lane-embedding-v9 lane-embedding-v9--textual"><small>Text embedding</small><strong>t<sub>i</sub></strong></div>
               </div>
             </div>
 
@@ -476,27 +476,48 @@
           <div class="iapr-branch-v9" data-iapr-training-branch>
             <div class="system-label-v9 system-label-v9--iapr"><i></i><span>Training-only IAPR</span></div>
 
-            <div class="iapr-flow-v9" aria-label="Project, remember, translate, and regularize">
+            <div class="iapr-flow-v9" aria-label="Project base embeddings, remember identity-owned prototypes, translate cross-modal structure, and regularize local identity competition">
               <div class="flow-step-v9 flow-step-v9--project">
                 <span>Project</span>
-                <strong>g<sub>v</sub>, g<sub>t</sub></strong>
+                <strong>Prototype projection</strong>
+                <div class="project-mini-v10" aria-hidden="true">
+                  <div class="project-mini-row-v10 project-mini-row-v10--visual"><i></i><b>v<sub>i</sub></b><em>g<sub>v</sub></em><span>→</span><i></i><b>z<sub>i</sub><sup>v</sup></b></div>
+                  <div class="project-mini-row-v10 project-mini-row-v10--textual"><i></i><b>t<sub>i</sub></b><em>g<sub>t</sub></em><span>→</span><i></i><b>z<sub>i</sub><sup>t</sup></b></div>
+                </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
               <div class="flow-step-v9 flow-step-v9--memory">
                 <span>Remember</span>
                 <strong>IOPM + IRA</strong>
-                <div class="flow-memory-v9" aria-hidden="true"><i></i><i class="is-hot"></i><i></i><b>ID 17</b></div>
+                <div class="memory-mini-v10" aria-hidden="true">
+                  <div class="memory-mini-row-v10 is-owned"><b>ID 17</b><span class="is-visual"><i></i><i class="is-active"></i></span><span class="is-textual"><i></i><i></i></span></div>
+                  <div class="memory-mini-row-v10"><b>ID 08</b><span class="is-visual"><i></i><i></i></span><span class="is-textual"><i></i><i></i></span></div>
+                  <div class="memory-mini-lock-v10">● own identity only</div>
+                </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
               <div class="flow-step-v9 flow-step-v9--translate">
                 <span>Translate</span>
-                <strong>SSTT</strong>
-                <div class="flow-translate-v9" aria-hidden="true"><i></i><b>⇢</b><i></i></div>
+                <strong>Same-space targets</strong>
+                <div class="translate-mini-v10" aria-hidden="true">
+                  <div class="translate-plane-v10 translate-plane-v10--text"><i></i><i></i><i></i><small>assign</small></div>
+                  <div class="translate-bridge-v10"><b>⇢</b><small>structure</small></div>
+                  <div class="translate-plane-v10 translate-plane-v10--visual"><i></i><i></i><strong>★</strong><small>target</small></div>
+                </div>
               </div>
               <span class="flow-arrow-v9" aria-hidden="true">→</span>
               <div class="flow-step-v9 flow-step-v9--loss">
                 <span>Regularize</span>
-                <strong>L<sub>ip</sub></strong>
+                <strong>Identity-prototype loss</strong>
+                <div class="regulate-mini-v10" aria-hidden="true">
+                  <i class="regulate-query-v10">z</i>
+                  <i class="regulate-positive-v10"></i>
+                  <i class="regulate-negative-v10"></i>
+                  <span class="regulate-pull-v10">pull</span>
+                  <span class="regulate-push-v10">push</span>
+                  <b>Top-K wrong ID</b>
+                </div>
+                <em class="flow-loss-symbol-v10">L<sub>ip</sub></em>
               </div>
             </div>
 
@@ -507,10 +528,24 @@
             </div>
           </div>
 
-          <div class="inference-ghost-v9" aria-hidden="true">
-            <span class="inference-cut-v9">✂</span>
-            <strong>IAPR disconnected</strong>
-            <small>projection heads · memories · translated targets · hard-negative mining</small>
+          <div class="inference-path-v10" aria-hidden="true">
+            <div class="inference-disconnect-v10">
+              <span class="inference-cut-v9">✂</span>
+              <div><strong>IAPR removed</strong><small>projection heads · memories · translated targets · hard-negative mining</small></div>
+            </div>
+            <div class="inference-score-v10">
+              <span class="inference-score-kicker-v10">Original deployment path</span>
+              <div class="inference-score-flow-v10">
+                <div class="inference-score-inputs-v10">
+                  <div class="score-embedding-v10 score-embedding-v10--visual"><i></i><span><small>Visual embedding</small><strong>v<sub>j</sub></strong></span></div>
+                  <div class="score-embedding-v10 score-embedding-v10--textual"><i></i><span><small>Text embedding</small><strong>t<sub>i</sub></strong></span></div>
+                </div>
+                <div class="score-interaction-v10"><i></i><b>↔</b><i></i></div>
+                <div class="scoring-core-v10"><small>unchanged</small><strong>Original<br />scoring function</strong></div>
+                <span class="score-arrow-v10">→</span>
+                <div class="score-output-v10"><strong>s<sub>ij</sub></strong><small>retrieval score</small></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -523,8 +558,8 @@
             </div>
             <div class="mode-status-v9 mode-status-v9--inference">
               <span>INFERENCE</span>
-              <strong>Base retriever only · original scoring</strong>
-              <small>No IAPR module or additional scoring path remains.</small>
+              <strong>Base retriever → original scoring → retrieval ranking</strong>
+              <small>IAPR is absent; the deployed retriever keeps its original scoring function and inference path.</small>
             </div>
           </div>
 
@@ -542,72 +577,219 @@
         </div>
       </section>
 
-      <section class="method-scene-v9 mechanism-scene-v9" aria-labelledby="mechanismTitleV9">
+      <section class="method-scene-v9 mechanism-scene-v9 mechanism-slider-v10" data-method-slider aria-labelledby="mechanismTitleV9">
         <header class="mechanism-head-v9 reveal">
           <span class="architecture-eyebrow">How IAPR regularizes</span>
-          <h3 id="mechanismTitleV9">Remember → transfer → compete.</h3>
-          <p>Three ideas build the supervision in sequence. The red spine shows what is carried forward from persistent identity memory to the final local identity competition.</p>
+          <h3 id="mechanismTitleV9">Remember → translate → regularize.</h3>
+          <p>Three ideas build the supervision in sequence: remember identity-specific evidence, translate cross-modal grouping into same-space targets, then regularize the local identity competition.</p>
         </header>
 
-        <div class="mechanism-path-v9 reveal">
-          <div class="mechanism-spine-v9" aria-hidden="true"><i></i></div>
+        <div class="method-slider-shell-v10 reveal">
+          <div class="method-slider-tabs-v10" role="tablist" aria-label="IAPR mechanism stages">
+            <button type="button" role="tab" aria-selected="true" aria-controls="methodSlideRemember" id="methodTabRemember" data-method-slide-tab="0">
+              <span>01</span><b>Remember</b><small>IOPM + IRA</small>
+            </button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideTranslate" id="methodTabTranslate" data-method-slide-tab="1" tabindex="-1">
+              <span>02</span><b>Translate</b><small>SSTT</small>
+            </button>
+            <button type="button" role="tab" aria-selected="false" aria-controls="methodSlideRegularize" id="methodTabRegularize" data-method-slide-tab="2" tabindex="-1">
+              <span>03</span><b>Regularize</b><small>Identity-prototype loss</small>
+            </button>
+          </div>
 
-          <article class="mechanism-stage-v9 mechanism-stage-v9--memory">
-            <div class="stage-marker-v9"><span>01</span><b>Remember</b><small>IOPM + IRA</small></div>
-            <div class="stage-visual-v9 memory-stage-visual-v9" aria-hidden="true">
-              <div class="memory-observation-v9"><i></i><strong>ID 17</strong><small>new observation</small></div>
-              <div class="memory-own-route-v9"><span>own identity only</span><b>→</b></div>
-              <div class="memory-bank-v9">
-                <div class="memory-bank-row-v9 is-active"><strong>ID 17</strong><span><b>V</b><i></i><i class="is-selected"></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
-                <div class="memory-bank-row-v9"><strong>ID 08</strong><span><b>V</b><i></i><i></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
-                <div class="memory-bank-row-v9"><strong>ID 31</strong><span><b>V</b><i></i><i></i><i></i></span><span><b>T</b><i></i><i></i><i></i></span></div>
-              </div>
-            </div>
-            <div class="stage-copy-v9">
-              <h4>Remember each identity across batches.</h4>
-              <p>Each training identity owns multiple visual and textual prototype slots. Identity-restricted assignment lets an observation select and update only the slots owned by its ground-truth identity.</p>
-              <span><b>Persistent</b> observation-derived references survive the current mini-batch.</span>
-            </div>
-          </article>
+          <div class="method-slider-window-v10" data-method-slider-window>
+            <div class="method-slider-track-v10" data-method-slider-track>
+              <article class="method-slide-v10 method-slide-v10--remember is-active" id="methodSlideRemember" role="tabpanel" aria-labelledby="methodTabRemember" data-method-slide="0">
+                <div class="method-slide-visual-v10" aria-hidden="true">
+                  <svg class="method-diagram-v10 remember-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Identity 17 observation updates only its own prototype memory">
+                    <defs>
+                      <marker id="arrowRedRemember" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#b51f24"/></marker>
+                      <filter id="softShadowRemember" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#8f171b" flood-opacity=".10"/></filter>
+                    </defs>
 
-          <article class="mechanism-stage-v9 mechanism-stage-v9--transfer">
-            <div class="stage-marker-v9"><span>02</span><b>Transfer</b><small>SSTT</small></div>
-            <div class="stage-visual-v9 transfer-stage-visual-v9" aria-hidden="true">
-              <div class="same-space-v9 same-space-v9--text">
-                <span>TEXT SPACE</span>
-                <div class="space-cluster-v9"><i></i><i></i><i></i><b>same slot</b></div>
-                <small>assignment discovered here</small>
-              </div>
-              <div class="structure-bridge-v9"><small>grouping</small><b>⇢</b><em>not the vector</em></div>
-              <div class="same-space-v9 same-space-v9--visual">
-                <span>VISUAL SPACE</span>
-                <div class="visual-target-v9"><i></i><i></i><i></i><b>→</b><strong>★</strong></div>
-                <small>target constructed here</small>
-              </div>
-            </div>
-            <div class="stage-copy-v9">
-              <h4>Transfer the grouping—not the feature vector.</h4>
-              <p>Assignments from one modality define which paired embeddings are aggregated in the other modality. Structural information crosses modalities while the supervisory target stays in the feature space being regularized.</p>
-              <span><b>Cross-modal structure</b> crosses; feature spaces remain local.</span>
-            </div>
-          </article>
+                    <text x="54" y="43" class="diagram-label-v10">NEW OBSERVATION</text>
+                    <text x="426" y="43" class="diagram-label-v10">IDENTITY-OWNED MEMORY</text>
 
-          <article class="mechanism-stage-v9 mechanism-stage-v9--competition">
-            <div class="stage-marker-v9"><span>03</span><b>Compete</b><small>Identity-prototype loss</small></div>
-            <div class="stage-visual-v9 competition-stage-visual-v9" aria-hidden="true">
-              <div class="competition-core-v9"><strong>z<sub>i</sub></strong><small>ID 17</small></div>
-              <div class="competition-positive-v9"><span>same ID</span><i></i><i></i><i></i></div>
-              <div class="competition-negative-field-v9"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="competition-hard-v9"><span>Top-K hard wrong IDs</span><i></i><i></i><i></i></div>
-              <div class="force-v9 force-v9--pull"><span>pull</span><b>←</b></div>
-              <div class="force-v9 force-v9--push"><b>→</b><span>push</span></div>
+                    <g class="remember-observation-v10">
+                      <rect x="58" y="116" width="112" height="112" rx="28" class="remember-observation-card-v10"/>
+                      <rect x="82" y="136" width="64" height="64" rx="18" class="remember-observation-core-v10"/>
+                      <text x="114" y="253" text-anchor="middle" class="diagram-strong-blue-v10">ID 17</text>
+                      <text x="114" y="274" text-anchor="middle" class="diagram-note-v10">current batch</text>
+                    </g>
+
+                    <g class="remember-gate-v10">
+                      <rect x="224" y="137" width="134" height="68" rx="18"/>
+                      <circle cx="247" cy="171" r="7"/>
+                      <text x="266" y="164" class="diagram-strong-red-v10">identity gate</text>
+                      <text x="266" y="185" class="diagram-note-v10">ID 17 only</text>
+                    </g>
+                    <path d="M174 171 H218" class="diagram-route-v10 remember-route-in-v10" marker-end="url(#arrowRedRemember)"/>
+                    <path d="M360 171 H402" class="diagram-route-v10 remember-route-out-v10" marker-end="url(#arrowRedRemember)"/>
+
+                    <g class="remember-bank-v10" filter="url(#softShadowRemember)">
+                      <rect x="410" y="72" width="292" height="226" rx="22" class="remember-bank-shell-v10"/>
+                      <g class="remember-row-v10 remember-row-v10--active">
+                        <rect x="424" y="86" width="264" height="64" rx="14"/>
+                        <text x="442" y="108" class="diagram-strong-v10">ID 17</text>
+                        <text x="442" y="132" class="diagram-axis-blue-v10">V</text>
+                        <rect x="468" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--probe1"/>
+                        <rect x="532" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--selected"/>
+                        <rect x="596" y="117" width="54" height="18" rx="6" class="remember-slot-v10 remember-slot-v10--probe3"/>
+                        <text x="442" y="148" class="diagram-axis-red-v10">T</text>
+                        <rect x="468" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
+                        <rect x="532" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
+                        <rect x="596" y="137" width="54" height="10" rx="5" class="remember-slot-text-v10"/>
+                      </g>
+
+                      <g class="remember-row-v10 remember-row-v10--muted">
+                        <rect x="424" y="160" width="264" height="52" rx="12"/>
+                        <text x="442" y="181" class="diagram-muted-strong-v10">ID 08</text>
+                        <rect x="468" y="174" width="54" height="14" rx="5"/><rect x="532" y="174" width="54" height="14" rx="5"/><rect x="596" y="174" width="54" height="14" rx="5"/>
+                        <rect x="468" y="191" width="54" height="8" rx="4"/><rect x="532" y="191" width="54" height="8" rx="4"/><rect x="596" y="191" width="54" height="8" rx="4"/>
+                      </g>
+
+                      <g class="remember-row-v10 remember-row-v10--muted">
+                        <rect x="424" y="222" width="264" height="52" rx="12"/>
+                        <text x="442" y="243" class="diagram-muted-strong-v10">ID 31</text>
+                        <rect x="468" y="236" width="54" height="14" rx="5"/><rect x="532" y="236" width="54" height="14" rx="5"/><rect x="596" y="236" width="54" height="14" rx="5"/>
+                        <rect x="468" y="253" width="54" height="8" rx="4"/><rect x="532" y="253" width="54" height="8" rx="4"/><rect x="596" y="253" width="54" height="8" rx="4"/>
+                      </g>
+                    </g>
+
+                    <g class="remember-update-v10">
+                      <circle cx="559" cy="126" r="31"/>
+                      <circle cx="559" cy="126" r="22"/>
+                    </g>
+                    <text x="559" y="326" text-anchor="middle" class="diagram-callout-v10 remember-persist-v10">persists across batches</text>
+                  </svg>
+                </div>
+                <div class="method-slide-copy-v10">
+                  <span class="method-slide-kicker-v10">01 · Remember</span>
+                  <h4>Remember each identity across batches.</h4>
+                  <p>Each training identity owns multiple visual and textual prototype slots. Identity-restricted assignment lets an observation select and update only the slots owned by its ground-truth identity.</p>
+                  <div class="method-slide-takeaway-v10"><b>Persistent</b><span>Observation-derived references survive the current mini-batch.</span></div>
+                </div>
+              </article>
+
+              <article class="method-slide-v10 method-slide-v10--translate" id="methodSlideTranslate" role="tabpanel" aria-labelledby="methodTabTranslate" data-method-slide="1" aria-hidden="true" inert>
+                <div class="method-slide-visual-v10" aria-hidden="true">
+                  <svg class="method-diagram-v10 translate-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Text-space assignment structure is translated into a visual-space target without moving feature vectors across modalities">
+                    <defs>
+                      <marker id="arrowPurpleTranslate" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#7957c8"/></marker>
+                      <marker id="arrowBlueTranslate" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#3979ca"/></marker>
+                    </defs>
+
+                    <text x="58" y="42" class="diagram-label-v10">TEXT SPACE</text>
+                    <text x="548" y="42" class="diagram-label-v10">VISUAL SPACE</text>
+
+                    <g class="translate-space-v10 translate-space-v10--text">
+                      <ellipse cx="178" cy="181" rx="124" ry="126"/>
+                      <rect x="108" y="140" width="20" height="20" rx="6"/><rect x="160" y="111" width="20" height="20" rx="6"/><rect x="184" y="190" width="20" height="20" rx="6"/>
+                      <rect x="217" y="138" width="18" height="18" rx="6" class="translate-dim-v10"/><rect x="128" y="223" width="18" height="18" rx="6" class="translate-dim-v10"/>
+                      <path d="M119 150 C137 139 151 129 170 120 M170 122 C178 143 187 168 194 199" class="translate-group-lines-v10"/>
+                      <rect x="91" y="88" width="126" height="166" rx="22" class="translate-group-bracket-v10"/>
+                      <text x="154" y="278" text-anchor="middle" class="diagram-callout-v10">group discovered here</text>
+                    </g>
+
+                    <g class="translate-bridge-chip-v10">
+                      <rect x="304" y="126" width="152" height="82" rx="18"/>
+                      <text x="380" y="153" text-anchor="middle" class="diagram-strong-purple-v10">slot r</text>
+                      <text x="380" y="176" text-anchor="middle" class="diagram-note-v10">members 2 · 4 · 7</text>
+                      <text x="380" y="197" text-anchor="middle" class="diagram-mini-purple-v10">assignment only</text>
+                    </g>
+                    <path d="M251 167 H296" class="translate-bridge-line-v10" marker-end="url(#arrowPurpleTranslate)"/>
+                    <path d="M464 167 H510" class="translate-bridge-line-v10" marker-end="url(#arrowPurpleTranslate)"/>
+                    <text x="380" y="232" text-anchor="middle" class="diagram-note-v10">not the feature vector</text>
+
+                    <g class="translate-space-v10 translate-space-v10--visual">
+                      <ellipse cx="601" cy="181" rx="112" ry="126"/>
+                      <circle cx="548" cy="137" r="10"/><circle cx="584" cy="205" r="10"/><circle cx="621" cy="164" r="10"/>
+                      <circle cx="663" cy="116" r="9" class="translate-dim-v10"/><circle cx="660" cy="230" r="9" class="translate-dim-v10"/>
+                      <path d="M548 137 L640 181 M584 205 L640 181 M621 164 L640 181" class="translate-target-lines-v10" marker-end="url(#arrowBlueTranslate)"/>
+                      <text x="646" y="190" class="translate-target-star-v10">★</text>
+                      <text x="601" y="278" text-anchor="middle" class="diagram-callout-v10">target constructed here</text>
+                    </g>
+                    <text x="380" y="330" text-anchor="middle" class="translate-claim-v10">STRUCTURE CROSSES. FEATURES STAY LOCAL.</text>
+                  </svg>
+                </div>
+                <div class="method-slide-copy-v10">
+                  <span class="method-slide-kicker-v10">02 · Translate</span>
+                  <h4>Translate the grouping—not the feature vector.</h4>
+                  <p>Assignments from one modality define which paired embeddings are aggregated in the other modality. Structural information crosses modalities while the supervisory target stays in the feature space being regularized.</p>
+                  <div class="method-slide-takeaway-v10"><b>Same-space translation</b><span>Cross-modal structure moves; modality-specific feature spaces remain local.</span></div>
+                </div>
+              </article>
+
+              <article class="method-slide-v10 method-slide-v10--regularize" id="methodSlideRegularize" role="tabpanel" aria-labelledby="methodTabRegularize" data-method-slide="2" aria-hidden="true" inert>
+                <div class="method-slide-visual-v10" aria-hidden="true">
+                  <svg class="method-diagram-v10 regularize-diagram-v10" viewBox="0 0 760 360" role="img" aria-label="Same-identity targets are pulled toward the query while Top-K identity-wrong targets are pushed away">
+                    <defs>
+                      <marker id="arrowGreenReg" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#4f8a6a"/></marker>
+                      <marker id="arrowRedReg" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#b51f24"/></marker>
+                    </defs>
+
+                    <text x="70" y="43" class="diagram-label-v10">SAME ID</text>
+                    <text x="585" y="43" class="diagram-label-v10">IDENTITY-WRONG BANK</text>
+
+                    <g class="regularize-positive-v10">
+                      <rect x="54" y="96" width="156" height="96" rx="22"/>
+                      <circle cx="93" cy="145" r="14"/><circle cx="132" cy="145" r="14"/><circle cx="171" cy="145" r="14"/>
+                      <text x="132" y="219" text-anchor="middle" class="diagram-callout-v10">translated positives</text>
+                    </g>
+
+                    <g class="regularize-query-v10">
+                      <circle cx="372" cy="160" r="58"/>
+                      <text x="372" y="153" text-anchor="middle" class="diagram-query-v10">zᵢ</text>
+                      <text x="372" y="178" text-anchor="middle" class="diagram-note-v10">ID 17</text>
+                    </g>
+
+                    <path d="M220 160 H305" class="regularize-pull-v10" marker-end="url(#arrowGreenReg)"/>
+                    <text x="263" y="145" text-anchor="middle" class="diagram-mini-green-v10">PULL</text>
+
+                    <g class="regularize-bank-v10">
+                      <circle cx="520" cy="103" r="11"/><circle cx="566" cy="126" r="11"/><circle cx="620" cy="99" r="11"/><circle cx="665" cy="139" r="11"/>
+                      <circle cx="531" cy="208" r="11"/><circle cx="584" cy="225" r="11"/><circle cx="647" cy="215" r="11"/>
+                    </g>
+
+                    <g class="regularize-scan-v10">
+                      <path d="M493 77 V246"/>
+                      <path d="M680 77 V246"/>
+                    </g>
+
+                    <g class="regularize-hard-v10">
+                      <rect x="514" y="186" width="160" height="88" rx="20"/>
+                      <text x="594" y="209" text-anchor="middle" class="diagram-strong-red-v10">TOP-K HARD WRONG IDs</text>
+                      <circle cx="548" cy="238" r="14"/><circle cx="594" cy="238" r="14"/><circle cx="640" cy="238" r="14"/>
+                    </g>
+
+                    <path d="M436 211 H503" class="regularize-push-v10" marker-end="url(#arrowRedReg)"/>
+                    <text x="469" y="196" text-anchor="middle" class="diagram-mini-red-v10">PUSH</text>
+
+                    <g class="regularize-margin-v10">
+                      <text x="238" y="318" class="diagram-note-v10">before</text>
+                      <circle cx="302" cy="314" r="7"/><line x1="312" y1="314" x2="352" y2="314"/><circle cx="362" cy="314" r="7"/>
+                      <text x="424" y="318" class="diagram-note-v10">after</text>
+                      <circle cx="480" cy="314" r="7"/><line x1="490" y1="314" x2="578" y2="314"/><circle cx="588" cy="314" r="7"/>
+                      <text x="630" y="318" class="diagram-callout-v10">larger local margin</text>
+                    </g>
+                  </svg>
+                </div>
+                <div class="method-slide-copy-v10">
+                  <span class="method-slide-kicker-v10">03 · Regularize</span>
+                  <h4>Regularize the local identity competition.</h4>
+                  <p>Same-identity translated targets act as positives. IAPR selects the most similar identity-wrong references and concentrates the auxiliary loss on the strongest local competitors.</p>
+                  <div class="method-slide-takeaway-v10"><b>Local regularization</b><span>Pull same-identity targets close; push the strongest identity-wrong targets away.</span></div>
+                </div>
+              </article>
             </div>
-            <div class="stage-copy-v9">
-              <h4>Separate the right identity from the strongest competitors.</h4>
-              <p>Same-identity translated targets act as positives. IAPR selects the most similar identity-wrong references and focuses regularization on the local competition that matters most near the top of the ranking.</p>
-              <span><b>Local competition</b> pulls the same identity close and pushes the hardest wrong references away.</span>
-            </div>
-          </article>
+          </div>
+
+          <div class="method-slider-controls-v10">
+            <button type="button" data-method-prev disabled aria-label="Previous IAPR mechanism stage">← Previous</button>
+            <div class="method-slider-progress-v10" aria-live="polite"><b data-method-current>01</b><span>/ 03</span></div>
+            <button type="button" class="method-replay-v10" data-method-replay aria-label="Replay animation for current IAPR mechanism stage"><span aria-hidden="true">↻</span> Replay</button>
+            <button type="button" data-method-next aria-label="Next IAPR mechanism stage">Next →</button>
+          </div>
         </div>
 
         <div class="training-timeline-v9 reveal" aria-label="IAPR training timeline">
@@ -615,7 +797,7 @@
           <div class="timeline-step-v9 timeline-step-v9--warmup"><span>01</span><b>Warm-up</b><small>epochs 1–5 · L<sub>base</sub> only</small></div>
           <div class="timeline-step-v9 timeline-step-v9--activate"><span>02</span><b>Activate</b><small>epoch 6 · initialize identity-wise memories</small></div>
           <div class="timeline-step-v9 timeline-step-v9--update"><span>03</span><b>Update</b><small>prototype + translated targets use EMA</small></div>
-          <div class="timeline-step-v9 timeline-step-v9--regularize"><span>04</span><b>Regularize</b><small>hard identity-wrong targets focus L<sub>ip</sub></small></div>
+          <div class="timeline-step-v9 timeline-step-v9--regularize"><span>04</span><b>Optimize</b><small>hard identity-wrong targets focus L<sub>ip</sub></small></div>
         </div>
       </section>
 

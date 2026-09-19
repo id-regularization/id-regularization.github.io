@@ -709,6 +709,127 @@
 
   if (iaprArchitecture) setIaprMode("training");
 
+  // Method v10: user-controlled horizontal walkthrough.
+  // Each slide replays a short semantic animation when it becomes active.
+  const methodSlider = document.querySelector("[data-method-slider]");
+  const methodSliderTrack = methodSlider?.querySelector("[data-method-slider-track]");
+  const methodSliderWindow = methodSlider?.querySelector("[data-method-slider-window]");
+  const methodSlides = methodSlider ? [...methodSlider.querySelectorAll("[data-method-slide]")] : [];
+  const methodSlideTabs = methodSlider ? [...methodSlider.querySelectorAll("[data-method-slide-tab]")] : [];
+  const methodPrev = methodSlider?.querySelector("[data-method-prev]");
+  const methodNext = methodSlider?.querySelector("[data-method-next]");
+  const methodCurrent = methodSlider?.querySelector("[data-method-current]");
+  const methodReplay = methodSlider?.querySelector("[data-method-replay]");
+  let activeMethodSlide = 0;
+  let methodPointerStartX = null;
+  let methodPointerStartY = null;
+
+  function replayMethodSlide() {
+    const slide = methodSlides[activeMethodSlide];
+    if (!slide || methodReduceMotion) return;
+    slide.classList.remove("is-active");
+    void slide.offsetWidth;
+    window.requestAnimationFrame(() => slide.classList.add("is-active"));
+  }
+
+  function setMethodSlide(index, { focusTab = false, replay = true } = {}) {
+    if (!methodSlider || !methodSliderTrack || !methodSlides.length) return;
+    const nextIndex = Math.max(0, Math.min(methodSlides.length - 1, Number(index) || 0));
+    activeMethodSlide = nextIndex;
+    methodSlider.dataset.slide = String(nextIndex);
+    methodSliderTrack.style.transform = `translate3d(-${nextIndex * 100}%, 0, 0)`;
+
+    methodSlides.forEach((slide, slideIndex) => {
+      const active = slideIndex === nextIndex;
+      slide.classList.remove("is-active");
+      slide.setAttribute("aria-hidden", String(!active));
+      slide.toggleAttribute("inert", !active);
+    });
+
+    methodSlideTabs.forEach((tab, tabIndex) => {
+      const active = tabIndex === nextIndex;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && focusTab) tab.focus({ preventScroll: true });
+    });
+
+    if (methodCurrent) methodCurrent.textContent = String(nextIndex + 1).padStart(2, "0");
+    if (methodPrev) methodPrev.disabled = nextIndex === 0;
+    if (methodNext) methodNext.disabled = nextIndex === methodSlides.length - 1;
+
+    const activeSlide = methodSlides[nextIndex];
+    window.requestAnimationFrame(() => {
+      activeSlide?.classList.add("is-active");
+      if (replay && methodSlider.classList.contains("is-inview") && !methodReduceMotion) {
+        // Re-adding is-active in the next frame restarts the stage animation.
+        activeSlide?.classList.remove("is-active");
+        void activeSlide?.offsetWidth;
+        window.requestAnimationFrame(() => activeSlide?.classList.add("is-active"));
+      }
+    });
+  }
+
+  methodSlideTabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => setMethodSlide(index));
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + methodSlideTabs.length) % methodSlideTabs.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % methodSlideTabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = methodSlideTabs.length - 1;
+      setMethodSlide(nextIndex, { focusTab: true });
+    });
+  });
+
+  methodPrev?.addEventListener("click", () => setMethodSlide(activeMethodSlide - 1));
+  methodNext?.addEventListener("click", () => setMethodSlide(activeMethodSlide + 1));
+  methodReplay?.addEventListener("click", replayMethodSlide);
+
+  methodSliderWindow?.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    methodPointerStartX = event.clientX;
+    methodPointerStartY = event.clientY;
+    methodSliderWindow.classList.add("is-pointer-down");
+    methodSliderWindow.setPointerCapture?.(event.pointerId);
+  });
+
+  methodSliderWindow?.addEventListener("pointerup", (event) => {
+    if (methodPointerStartX == null || methodPointerStartY == null) return;
+    const dx = event.clientX - methodPointerStartX;
+    const dy = event.clientY - methodPointerStartY;
+    methodPointerStartX = null;
+    methodPointerStartY = null;
+    methodSliderWindow.classList.remove("is-pointer-down");
+    if (Math.abs(dx) < 46 || Math.abs(dx) <= Math.abs(dy) * 1.15) return;
+    if (dx < 0) setMethodSlide(activeMethodSlide + 1);
+    else setMethodSlide(activeMethodSlide - 1);
+  });
+
+  methodSliderWindow?.addEventListener("pointercancel", () => {
+    methodPointerStartX = null;
+    methodPointerStartY = null;
+    methodSliderWindow.classList.remove("is-pointer-down");
+  });
+
+  if (methodSlider) {
+    setMethodSlide(0, { replay: false });
+    if ("IntersectionObserver" in window) {
+      const methodObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          methodSlider.classList.add("is-inview");
+          replayMethodSlide();
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: .32 });
+      methodObserver.observe(methodSlider);
+    } else {
+      methodSlider.classList.add("is-inview");
+    }
+  }
+
   const ablationData = {
     cuhk: {
       label: "CUHK-PEDES",
@@ -716,7 +837,7 @@
         ["RDE", 71.09, 64.45, "base retriever"],
         ["+ PM", 70.99, 64.51, "memory alone"],
         ["+ PM + IRA", 71.10, 64.64, "identity restriction"],
-        ["+ PM + SSTT", 71.22, 64.72, "same-space transfer"],
+        ["+ PM + SSTT", 71.22, 64.72, "same-space translation"],
         ["Full IAPR", 71.86, 65.41, "PM + IRA + SSTT"]
       ]
     },
@@ -726,7 +847,7 @@
         ["RDE", 63.66, 40.57, "base retriever"],
         ["+ PM", 63.68, 40.74, "memory alone"],
         ["+ PM + IRA", 63.76, 40.81, "identity restriction"],
-        ["+ PM + SSTT", 63.90, 40.81, "same-space transfer"],
+        ["+ PM + SSTT", 63.90, 40.81, "same-space translation"],
         ["Full IAPR", 64.25, 42.02, "PM + IRA + SSTT"]
       ]
     },
@@ -736,7 +857,7 @@
         ["RDE", 57.75, 46.53, "base retriever"],
         ["+ PM", 56.50, 44.97, "memory alone"],
         ["+ PM + IRA", 58.30, 45.98, "identity restriction"],
-        ["+ PM + SSTT", 60.60, 48.04, "same-space transfer"],
+        ["+ PM + SSTT", 60.60, 48.04, "same-space translation"],
         ["Full IAPR", 61.10, 48.43, "PM + IRA + SSTT"]
       ]
     }
