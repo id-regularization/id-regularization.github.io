@@ -7693,3 +7693,355 @@ body { overflow-x: clip; }
 #method .method-slide-takeaway-v10 span { font-size: var(--type-caption); }
 #method .method-slider-progress-v10 { font-size: var(--type-micro); }
 #method .method-slider-tabs-v10 button > span { font-size: var(--type-micro); }
+
+
+/* =========================================================
+   P0 + P1 typography/layout stabilization — 2026-09-20
+   Keep the new readable type scale; adapt component geometry
+   instead of shrinking text back into pre-audit boxes.
+   ========================================================= */
+
+/* P0 — font/layout baseline. 850/780-style weights are intentional
+   throughout the design; prevent synthetic italics while allowing the
+   loaded Inter variable face to resolve intermediate weights directly. */
+body {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* P0 — Motivation: the actions container was unintentionally turned into
+   a grid by `.motivation-gallery-footer-v6 > div`, making Reset + primary
+   action stack vertically and changing footer height after a selection. */
+.motivation-gallery-footer-v6 > .motivation-gallery-actions-v7 {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .4rem;
+}
+
+/* Reserve semantic status copy by line count, not fixed pixels.  Dynamic
+   copy can change without pushing the candidate gallery below it. */
+.motivation-cue-status-v7 {
+  min-height: calc(2 * 1.35em);
+}
+.motivation-choice-feedback-v7 {
+  min-height: calc(2 * 1.35em + .88rem);
+}
+.motivation-gallery-footer-v6 > div:first-child {
+  min-width: 0;
+}
+.motivation-gallery-footer-v6 strong,
+.motivation-gallery-footer-v6 span,
+.motivation-slide-punchline-v6 {
+  overflow-wrap: anywhere;
+}
+
+/* P1 — Takeaway observation cards: the glyph is visually scaled but its
+   unscaled flex footprint is still ~100px. Switch to the already-designed
+   single-column card composition before that footprint becomes cramped. */
+@media (max-width: 1080px) {
+  .motivation-takeaway-observations-v8 article {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    justify-items: center;
+    text-align: center;
+    gap: .08rem;
+  }
+  .motivation-takeaway-observations-v8 article .motivation-observation-glyph-v6 {
+    grid-column: 1;
+    grid-row: auto;
+    margin: -.2rem 0;
+  }
+}
+
+/* P1 — Prologue t1/t2/t3 chips must not shrink below their intrinsic text
+   width when the new font metrics are wider. */
+.ephemeral-observations-v9 span {
+  flex: 0 0 auto;
+}
+
+/* P0 — Method explorer: `width:100%` + timeline margin made the collapsed
+   drawer wider than the section at tablet widths. In normal flow, auto
+   width correctly subtracts the timeline gutter. Collapsed state has zero
+   horizontal footprint. */
+.method-explorer-v11 {
+  width: auto;
+}
+.method-explorer-v11.is-collapsed {
+  width: auto;
+  max-width: 100%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.method-explorer-v11.is-open {
+  width: auto;
+}
+
+/* P0 — Four-stage tabs: the old 19px/18px rows and max-content labels were
+   tuned for smaller type. Let labels wrap naturally and let row height be
+   content-driven. */
+.method-slider-tabs-v10 button {
+  grid-template-rows: auto auto;
+  min-height: 60px;
+  align-content: center;
+}
+.method-slider-tabs-v10 button > b,
+.method-slider-tabs-v10 button > small {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.method-slider-tabs-v10 button > b {
+  line-height: 1.12;
+}
+.method-slider-tabs-v10 button > small {
+  line-height: 1.2;
+}
+
+/* P1 — Compatibility dock: readable role text now needs wrapping instead
+   of the pre-audit forced single line. Keep the retriever ports compact and
+   let the explanatory copy use up to two lines. */
+.compatibility-copy-v9 {
+  min-width: 0;
+}
+.compatibility-copy-v9 strong {
+  white-space: normal;
+  text-wrap: wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+.retriever-row-v9 span {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.15;
+}
+
+/* P0 — Narrow method geometry: contain every scene inside the section.
+   Internal horizontal scrollers (the stage tabs on phones) remain allowed,
+   but no method object may enlarge the document itself. */
+@media (max-width: 1080px) {
+  .method-story-v9,
+  .method-scene-v9,
+  .architecture-scene-v9,
+  .method-explore-dock-v11,
+  .method-explorer-v11,
+  .training-lifecycle-v11 {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 880px) {
+  .method-slider-tabs-v10 button {
+    min-height: 64px;
+  }
+}
+
+@media (max-width: 720px) {
+  /* These tabs are intentionally horizontally scrollable on compact screens;
+     keep each stage readable without leaking scroll to the page. */
+  .method-explorer-v11 .method-slider-tabs-v10 {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+  .method-explorer-v11 .method-slider-tabs-v10::-webkit-scrollbar { display: none; }
+  .method-slider-tabs-v10 button {
+    min-height: 62px;
+  }
+}
+
+@media (max-width: 500px) {
+  .method-slider-tabs-v10 button {
+    grid-template-rows: auto;
+    min-height: 54px;
+  }
+  .method-slider-tabs-v10 button > b {
+    line-height: 1.15;
+  }
+}
+
+/* P0 — stabilize state-dependent Motivation copy at the breakpoints where
+   the same sentence set wraps to a different number of lines. */
+@media (max-width: 900px) {
+  .motivation-gallery-footer-v6 { min-height: 3.8rem; }
+  .motivation-slide-punchline-v6 { min-height: 3.75rem; }
+}
+@media (max-width: 700px) {
+  .motivation-gallery-footer-v6 { min-height: 8.5rem; }
+  .motivation-slide-punchline-v6 { min-height: 5.25rem; }
+}
+
+/* P0 — v10 encoder specificity had reintroduced the five-column desktop
+   lane after the older <=650px mobile rule. Reassert the stacked lane with
+   equal/higher specificity so encoder/embedding labels cannot be clipped. */
+@media (max-width: 650px) {
+  .method-v9 .base-lane-v9 {
+    grid-template-columns: 1fr;
+    gap: .28rem;
+  }
+  .method-v9 .base-lanes-v9,
+  .method-v9 .base-objective-v9 {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* P1 — preserve intrinsic width of the tiny t1/t2/t3 label chips; these fit
+   comfortably inside the prologue and should never be flex-shrunk. */
+.ephemeral-observations-v9 span { min-width: max-content; }
+
+
+/* =========================================================
+   P2 — Method/result detail polish after typography stabilization
+   ========================================================= */
+
+/* Method compatibility dock: present the shared attachment interface as a
+   real terminal block. The label/value rows have fixed roles so subscript
+   metrics cannot make the copy jump vertically. */
+@media (min-width: 651px) {
+  .compatibility-dock-v9 {
+    grid-template-columns: minmax(160px,.8fr) minmax(270px,1.45fr) 30px 116px;
+  }
+}
+.retriever-port-v9 {
+  width: 116px;
+  min-width: 116px;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  gap: .28rem;
+  align-content: center;
+  justify-items: stretch;
+  padding: .48rem .55rem .5rem;
+  border: 1px solid #bfd1e8;
+  border-radius: 11px;
+  background: linear-gradient(180deg, #fff, #f4f8fd);
+  box-shadow: 0 3px 10px rgba(57,121,202,.055);
+}
+.retriever-port-v9 > small {
+  grid-column: auto;
+  color: var(--method-muted);
+  font-size: var(--type-micro);
+  font-weight: 780;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+.retriever-port-values-v12 {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  gap: .26rem;
+  align-items: center;
+}
+.retriever-port-values-v12 > span:not(.retriever-port-divider-v12) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .22rem;
+  min-width: 0;
+  color: #4d5968;
+}
+.retriever-port-values-v12 i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--method-blue);
+}
+.retriever-port-values-v12 .is-textual i { background: var(--method-red); }
+.retriever-port-values-v12 strong {
+  display: inline-block;
+  color: #3f4855;
+  font-size: var(--type-label);
+  font-weight: 850;
+  line-height: 1;
+  white-space: nowrap;
+}
+.retriever-port-values-v12 strong sub {
+  position: relative;
+  bottom: -.12em;
+  font-size: .7em;
+  line-height: 0;
+}
+.retriever-port-divider-v12 {
+  color: #9aa4b1;
+  font-size: var(--type-micro);
+  line-height: 1;
+}
+@media (max-width: 650px) {
+  .retriever-port-v9 {
+    width: min(100%, 150px);
+    min-width: 0;
+    justify-self: start;
+  }
+}
+
+/* Project stage: center all three column labels and give the projection
+   column one consistent type treatment in both visual/textual lanes. */
+.project-diagram-v11 .project-column-label-v12 {
+  font-size: 13px;
+  font-weight: 860;
+  letter-spacing: 1.15px;
+}
+.project-diagram-v11 .project-head-symbol-v12 {
+  font-size: 18px;
+  font-weight: 900;
+}
+.project-diagram-v11 .project-head-subscript-v12 {
+  font-size: 11px;
+  font-weight: 850;
+}
+.project-diagram-v11 .project-head-note-v12 {
+  font-size: 12px;
+  font-weight: 680;
+}
+
+/* Results: no retriever/dataset is preselected. The details panel starts in
+   an instructional state and only becomes active on hover/focus/click. */
+.result-detail.is-empty .result-detail-head > b {
+  color: var(--text-3);
+  background: var(--surface-soft);
+}
+.result-detail.is-empty .result-detail-metrics {
+  opacity: .58;
+}
+.result-detail.is-empty .result-detail-metric.is-primary {
+  border-color: #ebe6de;
+  background: rgba(255,255,255,.86);
+  box-shadow: none;
+}
+.result-detail-bars > div {
+  grid-template-columns: minmax(58px, auto) 42px 1fr;
+}
+.result-detail-bars span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.12;
+}
+
+/* P2 follow-up: keep terminal block row order identical on compact layouts,
+   overriding the older direct-child mobile grid placement. */
+@media (max-width: 650px) {
+  .retriever-port-v9 > small {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .retriever-port-values-v12 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+/* The project slide is scaled inside the explorer; use a slightly larger
+   source size so the three stage headings remain readable after SVG scaling. */
+.project-diagram-v11 .project-column-label-v12 { font-size: 14px; }

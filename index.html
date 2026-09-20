@@ -6,6 +6,9 @@
   <meta name="description" content="Identity-Aware Prototype Regularization (IAPR) for Text-Based Person Search — persistent identity references during training, no inference-time overhead." />
   <meta name="theme-color" content="#991b1b" />
   <title>IAPR — Identity-Aware Prototype Regularization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=optional" rel="stylesheet" />
   <link rel="icon" href="assets/branding/spidey.png" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -576,7 +579,14 @@
               <span>CLIP</span><span>IRRA</span><span>RDE</span><span>DM-Adapter</span><span>ITSELF</span>
             </div>
             <div class="retriever-converge-v9" aria-hidden="true"><i></i><b>→</b></div>
-            <div class="retriever-port-v9"><i></i><i></i><strong>v<sub>i</sub> / t<sub>i</sub></strong><small>final embeddings</small></div>
+            <div class="retriever-port-v9" aria-label="Final visual and textual embeddings">
+              <small>Final embeddings</small>
+              <div class="retriever-port-values-v12" aria-hidden="true">
+                <span class="is-visual"><i></i><strong>v<sub>i</sub></strong></span>
+                <span class="retriever-port-divider-v12">/</span>
+                <span class="is-textual"><i></i><strong>t<sub>i</sub></strong></span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -621,9 +631,9 @@
                       <marker id="arrowBlueProject" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#3979ca"/></marker>
                       <marker id="arrowOrangeProject" markerWidth="9" markerHeight="9" refX="7.5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#d88437"/></marker>
                     </defs>
-                    <text x="68" y="44" class="diagram-label-v10">FINAL BASE EMBEDDINGS</text>
-                    <text x="318" y="44" class="diagram-label-v10">TRAINING-ONLY PROJECTION</text>
-                    <text x="584" y="44" class="diagram-label-v10">PROTOTYPE SPACE</text>
+                    <text x="138" y="44" text-anchor="middle" class="diagram-label-v10 project-column-label-v12">FINAL BASE EMBEDDINGS</text>
+                    <text x="381" y="44" text-anchor="middle" class="diagram-label-v10 project-column-label-v12">TRAINING-ONLY PROJECTION</text>
+                    <text x="607" y="44" text-anchor="middle" class="diagram-label-v10 project-column-label-v12">PROTOTYPE SPACE</text>
 
                     <g class="project-source-v11 project-source-v11--visual">
                       <rect x="72" y="94" width="132" height="78" rx="20"/>
@@ -640,13 +650,13 @@
 
                     <g class="project-head-v11 project-head-v11--visual">
                       <rect x="308" y="99" width="146" height="68" rx="18"/>
-                      <text x="381" y="126" text-anchor="middle" class="diagram-strong-blue-v10">gᵥ</text>
-                      <text x="381" y="148" text-anchor="middle" class="diagram-note-v10">linear + normalize</text>
+                      <text x="381" y="126" text-anchor="middle" class="diagram-strong-blue-v10 project-head-symbol-v12">g<tspan class="project-head-subscript-v12" baseline-shift="sub">v</tspan></text>
+                      <text x="381" y="148" text-anchor="middle" class="diagram-note-v10 project-head-note-v12">linear + normalize</text>
                     </g>
                     <g class="project-head-v11 project-head-v11--textual">
                       <rect x="308" y="212" width="146" height="68" rx="18"/>
-                      <text x="381" y="239" text-anchor="middle" class="project-head-text-v11">gₜ</text>
-                      <text x="381" y="261" text-anchor="middle" class="diagram-note-v10">linear + normalize</text>
+                      <text x="381" y="239" text-anchor="middle" class="project-head-text-v11 project-head-symbol-v12">g<tspan class="project-head-subscript-v12" baseline-shift="sub">t</tspan></text>
+                      <text x="381" y="261" text-anchor="middle" class="diagram-note-v10 project-head-note-v12">linear + normalize</text>
                     </g>
 
                     <path d="M211 133 H296" class="project-route-v11 project-route-v11--visual" marker-end="url(#arrowBlueProject)"/>
@@ -977,29 +987,29 @@
           <div class="result-matrix" data-result-matrix role="grid" aria-label="IAPR gain explorer"></div>
         </div>
 
-        <aside class="result-detail" data-result-detail aria-live="polite">
+        <aside class="result-detail is-empty" data-result-detail aria-live="polite">
           <header class="result-detail-head">
             <div>
-              <span>Selected setting</span>
-              <h3 data-result-detail-title>RDE × RSTPReid</h3>
+              <span>Setting details</span>
+              <h3 data-result-detail-title>Hover a setting</h3>
             </div>
-            <b data-result-detail-active-gain>+3.35 R@1</b>
+            <b data-result-detail-active-gain>—</b>
           </header>
-          <p class="result-detail-copy" data-result-detail-copy>Paired comparison under the same retriever and dataset protocol.</p>
+          <p class="result-detail-copy" data-result-detail-copy>Hover any retriever × dataset cell to preview its paired comparison. Click a cell to keep it selected.</p>
 
           <div class="result-detail-metrics">
             <article class="result-detail-metric" data-result-detail-metric="r1">
-              <div class="result-detail-metric-head"><strong>R@1</strong><span data-result-detail-delta="r1">+3.35</span></div>
+              <div class="result-detail-metric-head"><strong>R@1</strong><span data-result-detail-delta="r1">—</span></div>
               <div class="result-detail-bars">
-                <div><span>Base</span><b data-result-detail-value="r1-base">57.75</b><i><em data-result-detail-bar="r1-base"></em></i></div>
-                <div class="is-iapr"><span>+ IAPR</span><b data-result-detail-value="r1-iapr">61.10</b><i><em data-result-detail-bar="r1-iapr"></em></i></div>
+                <div><span data-result-detail-base-label>Retriever</span><b data-result-detail-value="r1-base">—</b><i><em data-result-detail-bar="r1-base"></em></i></div>
+                <div class="is-iapr"><span>+ IAPR</span><b data-result-detail-value="r1-iapr">—</b><i><em data-result-detail-bar="r1-iapr"></em></i></div>
               </div>
             </article>
             <article class="result-detail-metric" data-result-detail-metric="map">
-              <div class="result-detail-metric-head"><strong>mAP</strong><span data-result-detail-delta="map">+1.90</span></div>
+              <div class="result-detail-metric-head"><strong>mAP</strong><span data-result-detail-delta="map">—</span></div>
               <div class="result-detail-bars">
-                <div><span>Base</span><b data-result-detail-value="map-base">46.53</b><i><em data-result-detail-bar="map-base"></em></i></div>
-                <div class="is-iapr"><span>+ IAPR</span><b data-result-detail-value="map-iapr">48.43</b><i><em data-result-detail-bar="map-iapr"></em></i></div>
+                <div><span data-result-detail-base-label>Retriever</span><b data-result-detail-value="map-base">—</b><i><em data-result-detail-bar="map-base"></em></i></div>
+                <div class="is-iapr"><span>+ IAPR</span><b data-result-detail-value="map-iapr">—</b><i><em data-result-detail-bar="map-iapr"></em></i></div>
               </div>
             </article>
           </div>

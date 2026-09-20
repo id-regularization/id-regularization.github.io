@@ -993,9 +993,10 @@
   const resultDetailTitle = resultDetail?.querySelector("[data-result-detail-title]");
   const resultDetailActiveGain = resultDetail?.querySelector("[data-result-detail-active-gain]");
   const resultDetailCopy = resultDetail?.querySelector("[data-result-detail-copy]");
+  const resultDetailBaseLabels = resultDetail ? [...resultDetail.querySelectorAll("[data-result-detail-base-label]")] : [];
   const resultsReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let activeResultMetric = "r1";
-  let selectedResult = { model: "rde", dataset: "rstp" };
+  let selectedResult = null;
 
   function resultGain(modelKey, datasetKey, metric) {
     const entry = resultData[modelKey]?.[datasetKey]?.[metric];
@@ -1011,21 +1012,49 @@
     return Math.max(...resultModelOrder.flatMap((modelKey) => resultDatasetOrder.map((datasetKey) => resultGain(modelKey, datasetKey, metric))));
   }
 
-  function applyResultContext(modelKey, datasetKey) {
+  function applyResultContext(modelKey = null, datasetKey = null) {
     if (!resultMatrix) return;
+    const hasContext = !!modelKey && !!datasetKey;
     resultMatrix.querySelectorAll("[data-result-row]").forEach((node) => {
-      node.classList.toggle("is-context", node.dataset.resultRow === modelKey);
+      node.classList.toggle("is-context", hasContext && node.dataset.resultRow === modelKey);
     });
     resultMatrix.querySelectorAll("[data-result-col]").forEach((node) => {
-      node.classList.toggle("is-context", node.dataset.resultCol === datasetKey);
+      node.classList.toggle("is-context", hasContext && node.dataset.resultCol === datasetKey);
     });
     resultMatrix.querySelectorAll("[data-result-cell]").forEach((node) => {
-      const sameRow = node.dataset.resultModel === modelKey;
-      const sameCol = node.dataset.resultDataset === datasetKey;
-      const selected = node.dataset.resultModel === selectedResult.model && node.dataset.resultDataset === selectedResult.dataset;
+      const sameRow = hasContext && node.dataset.resultModel === modelKey;
+      const sameCol = hasContext && node.dataset.resultDataset === datasetKey;
+      const selected = !!selectedResult && node.dataset.resultModel === selectedResult.model && node.dataset.resultDataset === selectedResult.dataset;
       node.classList.toggle("is-context", sameRow || sameCol);
       node.classList.toggle("is-selected", selected);
       node.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function resetResultDetail() {
+    if (!resultDetail) return;
+    resultDetail.classList.add("is-empty");
+    if (resultDetailTitle) resultDetailTitle.textContent = "Hover a setting";
+    if (resultDetailActiveGain) resultDetailActiveGain.textContent = "—";
+    if (resultDetailCopy) resultDetailCopy.textContent = "Hover any retriever × dataset cell to preview its paired comparison. Click a cell to keep it selected.";
+    resultDetailBaseLabels.forEach((label) => { label.textContent = "Retriever"; });
+
+    ["r1", "map"].forEach((metric) => {
+      const deltaNode = resultDetail.querySelector(`[data-result-detail-delta="${metric}"]`);
+      const baseValue = resultDetail.querySelector(`[data-result-detail-value="${metric}-base"]`);
+      const iaprValue = resultDetail.querySelector(`[data-result-detail-value="${metric}-iapr"]`);
+      const baseBar = resultDetail.querySelector(`[data-result-detail-bar="${metric}-base"]`);
+      const iaprBar = resultDetail.querySelector(`[data-result-detail-bar="${metric}-iapr"]`);
+      const metricCard = resultDetail.querySelector(`[data-result-detail-metric="${metric}"]`);
+      if (deltaNode) {
+        deltaNode.textContent = "—";
+        deltaNode.classList.remove("is-negative");
+      }
+      if (baseValue) baseValue.textContent = "—";
+      if (iaprValue) iaprValue.textContent = "—";
+      if (baseBar) baseBar.style.width = "0%";
+      if (iaprBar) iaprBar.style.width = "0%";
+      metricCard?.classList.toggle("is-primary", metric === activeResultMetric);
     });
   }
 
@@ -1036,9 +1065,11 @@
     const setting = model[datasetKey];
     const activeGain = resultGain(modelKey, datasetKey, activeResultMetric);
 
+    resultDetail.classList.remove("is-empty");
     if (resultDetailTitle) resultDetailTitle.textContent = `${model.label} × ${datasetLabel}`;
     if (resultDetailActiveGain) resultDetailActiveGain.textContent = `${formatSigned(activeGain)} ${resultMetricLabels[activeResultMetric]}`;
     if (resultDetailCopy) resultDetailCopy.textContent = `Paired ${model.label} comparison on ${datasetLabel}; switch metrics or inspect another cell without leaving the full gallery of results.`;
+    resultDetailBaseLabels.forEach((label) => { label.textContent = model.label; });
 
     ["r1", "map"].forEach((metric) => {
       const entry = setting[metric];
@@ -1073,8 +1104,13 @@
         updateResultDetail(modelKey, datasetKey);
       };
       const restore = () => {
-        applyResultContext(selectedResult.model, selectedResult.dataset);
-        updateResultDetail(selectedResult.model, selectedResult.dataset);
+        if (selectedResult) {
+          applyResultContext(selectedResult.model, selectedResult.dataset);
+          updateResultDetail(selectedResult.model, selectedResult.dataset);
+        } else {
+          applyResultContext();
+          resetResultDetail();
+        }
       };
 
       cell.addEventListener("pointerenter", preview);
@@ -1128,7 +1164,8 @@
 
     resultMatrix.innerHTML = parts.join("");
     bindResultCells();
-    applyResultContext(selectedResult.model, selectedResult.dataset);
+    if (selectedResult) applyResultContext(selectedResult.model, selectedResult.dataset);
+    else applyResultContext();
   }
 
   function setResultMetric(metric, { focusButton = false } = {}) {
@@ -1142,7 +1179,8 @@
       if (active && focusButton) button.focus({ preventScroll: true });
     });
     renderResultMatrix();
-    updateResultDetail(selectedResult.model, selectedResult.dataset);
+    if (selectedResult) updateResultDetail(selectedResult.model, selectedResult.dataset);
+    else resetResultDetail();
   }
 
   resultMetricButtons.forEach((button, index) => {
@@ -1161,8 +1199,6 @@
 
   if (resultExplorer) {
     setResultMetric("r1");
-    // Let the first painted frame establish zero-width bars before the comparison animates in.
-    if (!resultsReduceMotion) window.requestAnimationFrame(() => updateResultDetail(selectedResult.model, selectedResult.dataset));
   }
 
   // Count the three headline claims once when the Results section enters view.
