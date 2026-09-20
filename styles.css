@@ -8191,3 +8191,280 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .site-mascot--hero { animation: none !important; }
 }
+
+
+/* =========================================================
+   Arrow system + overview video audit (v12)
+   Continuous CSS connectors replace detached Unicode glyphs.
+   ========================================================= */
+
+.diagram-arrow-v12 {
+  --diagram-arrow-color: currentColor;
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 14px;
+  height: 18px;
+  color: var(--diagram-arrow-color);
+  font-size: 0;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.diagram-arrow-v12::before {
+  position: absolute;
+  left: 1px;
+  right: calc(var(--arrow-head-size) + 1px);
+  top: 50%;
+  height: var(--arrow-stroke);
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
+  transform: translateY(-50%);
+}
+
+.diagram-arrow-v12::after {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  width: var(--arrow-head-size);
+  height: var(--arrow-head-size);
+  border-top: var(--arrow-stroke) solid currentColor;
+  border-right: var(--arrow-stroke) solid currentColor;
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
+}
+
+.diagram-arrow-v12--reverse::before {
+  left: calc(var(--arrow-head-size) + 1px);
+  right: 1px;
+}
+
+.diagram-arrow-v12--reverse::after {
+  left: 1px;
+  right: auto;
+  transform: translateY(-50%) rotate(225deg);
+}
+
+/* Overview video: replace the placeholder with the actual local media asset. */
+.overview-video-figure {
+  width: min(100%, 1040px);
+  margin: 0 auto;
+}
+
+.overview-video-player {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid #eadede;
+  border-radius: 24px;
+  background: #111;
+  box-shadow: var(--shadow-md);
+  object-fit: contain;
+}
+
+.overview-video-caption {
+  margin: .7rem auto 0;
+  color: var(--text-3);
+  font-size: var(--type-caption);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Prologue: one shaft + one head, not a detached line and glyph. */
+.prologue-runway-v9 {
+  grid-template-columns: 1fr;
+  justify-items: stretch;
+}
+
+.prologue-runway-v9 i.prologue-arrow-v12 {
+  width: 100%;
+  height: 18px;
+  border: 0;
+  background: none;
+  color: var(--method-red);
+}
+
+.prologue-runway-v9 b { display: none; }
+
+/* Base-retriever lanes. */
+.lane-arrow-v9.diagram-arrow-v12 {
+  align-self: center;
+  color: #83a2ca;
+}
+
+/* Four-stage IAPR overview flow. */
+.flow-arrow-v9.diagram-arrow-v12 {
+  color: #ce7376;
+}
+
+/* Tiny projection arrows use the same geometry at a smaller scale. */
+.project-mini-row-v10 > .mini-arrow-v12 {
+  --arrow-stroke: 1.5px;
+  --arrow-head-size: 5px;
+  min-width: 22px;
+  height: 12px;
+  color: #8994a3;
+}
+
+.translate-bridge-v10 .translate-bridge-arrow-v12 {
+  --arrow-stroke: 1.5px;
+  --arrow-head-size: 5px;
+  width: 26px;
+  height: 12px;
+  color: #7258ad;
+}
+
+/* Auxiliary gradient is explicitly a backward connector. */
+.gradient-return-v9 > .gradient-return-arrow-v12 {
+  height: 18px;
+  color: var(--method-red);
+  transform: none;
+}
+
+/* Inference scoring and retriever compatibility use the same connector grammar. */
+.score-arrow-v10.diagram-arrow-v12 {
+  color: #8794a5;
+}
+
+.retriever-converge-v9.diagram-arrow-v12 {
+  width: 34px;
+  min-width: 34px;
+  color: #7899c3;
+}
+
+/* Lifecycle step arrows are continuous, too. */
+.lifecycle-loop-steps-v11 > .lifecycle-arrow-v12 {
+  width: 26px;
+  min-width: 26px;
+  color: #c5bbb5;
+  font-style: normal;
+}
+
+/* Tablet: preserve semantic order instead of dropping connectors. */
+@media (max-width: 1080px) {
+  .method-v9 .iapr-flow-v9,
+  .iapr-flow-v9 {
+    grid-template-columns: 1fr;
+    gap: .42rem;
+  }
+
+  .flow-arrow-v9.diagram-arrow-v12 {
+    display: block;
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .flow-step-v9,
+  .method-v9 .flow-step-v9,
+  .method-v9 .flow-step-v9--loss {
+    width: 100%;
+    min-height: 104px;
+  }
+
+  .gradient-return-v9 {
+    grid-template-columns: auto minmax(90px,1fr);
+  }
+
+  .gradient-return-v9 > small {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Stacked architecture: horizontal connectors become vertical rather than disappearing. */
+@media (max-width: 880px) {
+  .prologue-runway-v9 {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .prologue-runway-v9 i.prologue-arrow-v12 {
+    width: var(--arrow-length);
+    height: 18px;
+    background: none;
+    transform: rotate(90deg);
+  }
+}
+
+/* Mobile: keep every relationship visible and aligned with its vertical reading order. */
+@media (max-width: 650px) {
+  .lane-arrow-v9.diagram-arrow-v12 {
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .flow-arrow-v9.diagram-arrow-v12 {
+    display: block;
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .gradient-return-v9 {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .gradient-return-v9 > .gradient-return-arrow-v12 {
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .score-arrow-v10.diagram-arrow-v12 {
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .retriever-converge-v9.diagram-arrow-v12 {
+    display: block;
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .retriever-port-v9 {
+    justify-self: center;
+  }
+}
+
+/* Lifecycle: at narrow widths use a single vertical sequence so arrows never vanish
+   or imply the wrong 2-column traversal order. */
+@media (max-width: 720px) {
+  .lifecycle-loop-steps-v11 {
+    grid-template-columns: 1fr;
+    gap: .3rem;
+  }
+
+  .lifecycle-loop-steps-v11 > .lifecycle-arrow-v12 {
+    display: block;
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .overview-video-player {
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagram-arrow-v12 {
+    transition: none !important;
+  }
+}

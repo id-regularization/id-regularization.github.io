@@ -46,6 +46,10 @@
   --radius-lg: 28px;
   --radius-pill: 999px;
 
+  --arrow-stroke: 2px;
+  --arrow-head-size: 7px;
+  --arrow-length: 34px;
+
   --page: 1180px;
   --content: 980px;
   --reading: 760px;

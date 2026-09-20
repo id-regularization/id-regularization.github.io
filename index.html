@@ -92,7 +92,13 @@
         <p class="section-kicker">Video Overview</p>
         <h3 id="videoOverviewTitle">A short walkthrough of the idea.</h3>
       </div>
-      <div class="overview-video-slot" aria-label="Video overview placeholder"></div>
+      <figure class="overview-video-figure">
+        <video class="overview-video-slot overview-video-player" controls playsinline preload="metadata" aria-describedby="overviewVideoCaption">
+          <source src="assets/video/overview.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption class="overview-video-caption" id="overviewVideoCaption">1-minute project overview</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -404,8 +410,7 @@
 
         <div class="prologue-runway-v9" aria-hidden="true">
           <span>instantiate</span>
-          <i></i>
-          <b>→</b>
+          <i class="prologue-arrow-v12 diagram-arrow-v12"></i>
         </div>
 
         <div class="prologue-memory-v9">
@@ -443,17 +448,17 @@
             <div class="base-lanes-v9">
               <div class="base-lane-v9 base-lane-v9--visual">
                 <div class="lane-input-v9 lane-input-v9--image"><i aria-hidden="true"></i><span>Image</span></div>
-                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <span class="lane-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
                 <div class="lane-encoder-v9 lane-encoder-v9--visual"><small>existing module</small><strong>Vision encoder</strong></div>
-                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <span class="lane-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
                 <div class="lane-embedding-v9 lane-embedding-v9--visual"><small>Visual embedding</small><strong>v<sub>i</sub></strong></div>
               </div>
 
               <div class="base-lane-v9 base-lane-v9--textual">
                 <div class="lane-input-v9 lane-input-v9--text"><i aria-hidden="true"></i><span>Text</span></div>
-                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <span class="lane-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
                 <div class="lane-encoder-v9 lane-encoder-v9--textual"><small>existing module</small><strong>Text encoder</strong></div>
-                <span class="lane-arrow-v9" aria-hidden="true">→</span>
+                <span class="lane-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
                 <div class="lane-embedding-v9 lane-embedding-v9--textual"><small>Text embedding</small><strong>t<sub>i</sub></strong></div>
               </div>
             </div>
@@ -487,11 +492,11 @@
                 <span>Project</span>
                 <strong>Prototype projection</strong>
                 <div class="project-mini-v10" aria-hidden="true">
-                  <div class="project-mini-row-v10 project-mini-row-v10--visual"><i></i><b>v<sub>i</sub></b><em>g<sub>v</sub></em><span>→</span><i></i><b>z<sub>i</sub><sup>v</sup></b></div>
-                  <div class="project-mini-row-v10 project-mini-row-v10--textual"><i></i><b>t<sub>i</sub></b><em>g<sub>t</sub></em><span>→</span><i></i><b>z<sub>i</sub><sup>t</sup></b></div>
+                  <div class="project-mini-row-v10 project-mini-row-v10--visual"><i></i><b>v<sub>i</sub></b><em>g<sub>v</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><i></i><b>z<sub>i</sub><sup>v</sup></b></div>
+                  <div class="project-mini-row-v10 project-mini-row-v10--textual"><i></i><b>t<sub>i</sub></b><em>g<sub>t</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><i></i><b>z<sub>i</sub><sup>t</sup></b></div>
                 </div>
               </div>
-              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--memory" data-method-pipeline-step="remember">
                 <button class="flow-step-hit-v11" type="button" data-method-open="remember" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-owned memory details"></button>
                 <span>Remember</span>
@@ -502,18 +507,18 @@
                   <div class="memory-mini-lock-v10">● own identity only</div>
                 </div>
               </div>
-              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--translate" data-method-pipeline-step="translate">
                 <button class="flow-step-hit-v11" type="button" data-method-open="translate" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore same-space translated target details"></button>
                 <span>Translate</span>
                 <strong>Same-space targets</strong>
                 <div class="translate-mini-v10" aria-hidden="true">
                   <div class="translate-plane-v10 translate-plane-v10--text"><i></i><i></i><i></i><small>assign</small></div>
-                  <div class="translate-bridge-v10"><b>⇢</b><small>structure</small></div>
+                  <div class="translate-bridge-v10"><b class="translate-bridge-arrow-v12 diagram-arrow-v12" aria-hidden="true"></b><small>structure</small></div>
                   <div class="translate-plane-v10 translate-plane-v10--visual"><i></i><i></i><strong>★</strong><small>target</small></div>
                 </div>
               </div>
-              <span class="flow-arrow-v9" aria-hidden="true">→</span>
+              <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--loss" data-method-pipeline-step="regularize">
                 <button class="flow-step-hit-v11" type="button" data-method-open="regularize" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-prototype regularization details"></button>
                 <span>Regularize</span>
@@ -532,7 +537,7 @@
 
             <div class="gradient-return-v9">
               <span>auxiliary gradient</span>
-              <div aria-hidden="true"><i></i><b>↶</b></div>
+              <div class="gradient-return-arrow-v12 diagram-arrow-v12 diagram-arrow-v12--reverse" aria-hidden="true"></div>
               <small>shapes the base embeddings during training</small>
             </div>
           </div>
@@ -551,7 +556,7 @@
                 </div>
                 <div class="score-interaction-v10"><i></i><b>↔</b><i></i></div>
                 <div class="scoring-core-v10"><small>unchanged</small><strong>Original<br />scoring function</strong></div>
-                <span class="score-arrow-v10">→</span>
+                <span class="score-arrow-v10 diagram-arrow-v12" aria-hidden="true"></span>
                 <div class="score-output-v10"><strong>s<sub>ij</sub></strong><small>retrieval score</small></div>
               </div>
             </div>
@@ -580,7 +585,7 @@
             <div class="retriever-row-v9">
               <span>CLIP</span><span>IRRA</span><span>RDE</span><span>DM-Adapter</span><span>ITSELF</span>
             </div>
-            <div class="retriever-converge-v9" aria-hidden="true"><i></i><b>→</b></div>
+            <div class="retriever-converge-v9 diagram-arrow-v12" aria-hidden="true"></div>
             <div class="retriever-port-v9" aria-label="Final visual and textual embeddings">
               <small>Final embeddings</small>
               <div class="retriever-port-values-v12" aria-hidden="true">
@@ -921,11 +926,11 @@
               <div class="lifecycle-loop-head-v11"><span>REPEATS EACH ACTIVE MINI-BATCH</span><small>memories update before the prototype loss is evaluated</small></div>
               <div class="lifecycle-loop-steps-v11">
                 <div class="lifecycle-loop-step-v11" data-loop-step="1"><span>01</span><b>Assign</b><small>ground-truth identity slots only</small></div>
-                <i aria-hidden="true">→</i>
+                <i class="lifecycle-arrow-v12 diagram-arrow-v12" aria-hidden="true"></i>
                 <div class="lifecycle-loop-step-v11" data-loop-step="2"><span>02</span><b>EMA update</b><small>prototypes + translated targets</small></div>
-                <i aria-hidden="true">→</i>
+                <i class="lifecycle-arrow-v12 diagram-arrow-v12" aria-hidden="true"></i>
                 <div class="lifecycle-loop-step-v11" data-loop-step="3"><span>03</span><b>Compete</b><small>select Top-K identity-wrong targets</small></div>
-                <i aria-hidden="true">→</i>
+                <i class="lifecycle-arrow-v12 diagram-arrow-v12" aria-hidden="true"></i>
                 <div class="lifecycle-loop-step-v11" data-loop-step="4"><span>04</span><b>Optimize</b><small>L<sub>base</sub> + λ<sub>ip</sub>L<sub>ip</sub></small></div>
                 <span class="lifecycle-loop-token-v11" aria-hidden="true"></span>
               </div>
