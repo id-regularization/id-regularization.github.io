@@ -582,17 +582,24 @@
   supervisionReplay?.addEventListener("click", runSupervisionDemo);
   if (motivationDeck && motivationSlides.length) setMotivationSlide(0);
 
-  // Motivation takeaway: turn the missing persistent reference into a short temporal story.
+  // Motivation takeaway: continuous in-view loop. The animation resets only after
+  // the completed state has had time to read, and pauses when it leaves the viewport.
   const motivationTakeaway = document.querySelector("[data-motivation-takeaway]");
   const motivationTakeawaySteps = motivationTakeaway ? [...motivationTakeaway.querySelectorAll("[data-motivation-takeaway-step]")] : [];
-  const motivationTakeawayReplay = motivationTakeaway?.querySelector("[data-motivation-takeaway-replay]");
   const motivationTakeawayStatus = motivationTakeaway?.querySelector("[data-motivation-takeaway-status]");
   let motivationTakeawayTimers = [];
-  let motivationTakeawayHasPlayed = false;
+  let motivationTakeawayInView = false;
 
   function clearMotivationTakeawayTimers() {
     motivationTakeawayTimers.forEach((timer) => window.clearTimeout(timer));
     motivationTakeawayTimers = [];
+  }
+
+  function resetMotivationTakeawayVisual() {
+    if (!motivationTakeaway) return;
+    motivationTakeaway.dataset.state = "idle";
+    motivationTakeawaySteps.forEach((step) => step.classList.remove("is-current", "is-past"));
+    if (motivationTakeawayStatus) motivationTakeawayStatus.textContent = "Watch three observations of ID 17 accumulate into one persistent reference.";
   }
 
   function setMotivationTakeawayStep(index) {
@@ -607,7 +614,7 @@
     }
   }
 
-  function completeMotivationTakeaway() {
+  function completeMotivationTakeaway({ loop = true } = {}) {
     if (!motivationTakeaway) return;
     motivationTakeaway.dataset.state = "complete";
     motivationTakeawaySteps.forEach((step) => {
@@ -617,47 +624,52 @@
     if (motivationTakeawayStatus) {
       motivationTakeawayStatus.innerHTML = "<strong>Requirement established:</strong> keep an explicit observation-derived identity reference available across mini-batches.";
     }
-    if (motivationTakeawayReplay) {
-      motivationTakeawayReplay.disabled = false;
-      motivationTakeawayReplay.innerHTML = '<span aria-hidden="true">↻</span> Replay accumulation';
+
+    if (loop && motivationTakeawayInView && !motivationReduceMotion) {
+      motivationTakeawayTimers.push(window.setTimeout(() => {
+        if (motivationTakeawayInView) runMotivationTakeaway();
+      }, 1250));
     }
-    motivationTakeawayHasPlayed = true;
   }
 
   function runMotivationTakeaway() {
-    if (!motivationTakeaway || !motivationTakeawaySteps.length) return;
+    if (!motivationTakeaway || !motivationTakeawaySteps.length || !motivationTakeawayInView) return;
     clearMotivationTakeawayTimers();
-    motivationTakeaway.dataset.state = "idle";
-    motivationTakeawaySteps.forEach((step) => step.classList.remove("is-current", "is-past"));
-    if (motivationTakeawayReplay) {
-      motivationTakeawayReplay.disabled = true;
-      motivationTakeawayReplay.innerHTML = '<span aria-hidden="true">●</span> Accumulating…';
-    }
-    if (motivationTakeawayStatus) motivationTakeawayStatus.textContent = "Watch three observations of ID 17 arrive across mini-batches.";
+    resetMotivationTakeawayVisual();
 
     if (motivationReduceMotion) {
-      completeMotivationTakeaway();
+      completeMotivationTakeaway({ loop: false });
       return;
     }
 
     [260, 1030, 1800].forEach((delay, index) => {
-      motivationTakeawayTimers.push(window.setTimeout(() => setMotivationTakeawayStep(index), delay));
+      motivationTakeawayTimers.push(window.setTimeout(() => {
+        if (motivationTakeawayInView) setMotivationTakeawayStep(index);
+      }, delay));
     });
-    motivationTakeawayTimers.push(window.setTimeout(completeMotivationTakeaway, 2700));
+    motivationTakeawayTimers.push(window.setTimeout(() => {
+      if (motivationTakeawayInView) completeMotivationTakeaway();
+    }, 2700));
   }
 
-  motivationTakeawayReplay?.addEventListener("click", runMotivationTakeaway);
-
   if (motivationTakeaway && "IntersectionObserver" in window) {
-    const motivationTakeawayObserver = new IntersectionObserver((entries, observer) => {
+    const motivationTakeawayObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting || motivationTakeawayHasPlayed) return;
-        observer.unobserve(entry.target);
-        motivationTakeawayTimers.push(window.setTimeout(runMotivationTakeaway, motivationReduceMotion ? 0 : 220));
+        const shouldRun = entry.isIntersecting && entry.intersectionRatio >= .24;
+        if (shouldRun === motivationTakeawayInView) return;
+        motivationTakeawayInView = shouldRun;
+        clearMotivationTakeawayTimers();
+
+        if (motivationTakeawayInView) {
+          motivationTakeawayTimers.push(window.setTimeout(runMotivationTakeaway, motivationReduceMotion ? 0 : 220));
+        } else if (!motivationReduceMotion) {
+          resetMotivationTakeawayVisual();
+        }
       });
-    }, { threshold: .42 });
+    }, { threshold: [0, .24, .42] });
     motivationTakeawayObserver.observe(motivationTakeaway);
   } else if (motivationTakeaway) {
+    motivationTakeawayInView = true;
     runMotivationTakeaway();
   }
 
@@ -888,59 +900,75 @@
     }
   }
 
-  // Training lifecycle: teach the two-phase schedule and repeated active-stage loop.
+  // Training lifecycle: continuous in-view loop. Each cycle completes before the
+  // next begins, and all timers are cleared while the section is off-screen.
   const trainingLifecycle = document.querySelector("[data-training-lifecycle]");
-  const trainingReplay = trainingLifecycle?.querySelector("[data-training-replay]");
   const trainingStatus = trainingLifecycle?.querySelector("[data-training-status]");
-  let trainingLifecycleTimer = null;
-  let trainingLifecycleHasPlayed = false;
+  let trainingLifecycleTimers = [];
+  let trainingLifecycleInView = false;
 
-  function finishTrainingLifecycle() {
+  function clearTrainingLifecycleTimers() {
+    trainingLifecycleTimers.forEach((timer) => window.clearTimeout(timer));
+    trainingLifecycleTimers = [];
+  }
+
+  function resetTrainingLifecycleVisual() {
+    if (!trainingLifecycle) return;
+    trainingLifecycle.classList.remove("is-playing", "is-complete");
+    trainingLifecycle.dataset.state = "idle";
+    if (trainingStatus) trainingStatus.textContent = "Warm-up → activate at epoch 6 → repeat the active mini-batch loop → remove IAPR for inference.";
+  }
+
+  function finishTrainingLifecycle({ loop = true } = {}) {
     if (!trainingLifecycle) return;
     trainingLifecycle.classList.remove("is-playing");
     trainingLifecycle.classList.add("is-complete");
     trainingLifecycle.dataset.state = "complete";
     if (trainingStatus) trainingStatus.innerHTML = "<strong>Deployment unchanged:</strong> the IAPR branch is discarded; inference uses the base retriever’s original scoring function.";
-    if (trainingReplay) {
-      trainingReplay.disabled = false;
-      trainingReplay.innerHTML = '<span aria-hidden="true">↻</span> Replay';
+
+    if (loop && trainingLifecycleInView && !methodReduceMotion) {
+      trainingLifecycleTimers.push(window.setTimeout(() => {
+        if (trainingLifecycleInView) runTrainingLifecycle();
+      }, 1450));
     }
-    trainingLifecycleHasPlayed = true;
   }
 
   function runTrainingLifecycle() {
-    if (!trainingLifecycle) return;
-    if (trainingLifecycleTimer) window.clearTimeout(trainingLifecycleTimer);
-    trainingLifecycle.classList.remove("is-playing", "is-complete");
-    trainingLifecycle.dataset.state = "idle";
+    if (!trainingLifecycle || !trainingLifecycleInView) return;
+    clearTrainingLifecycleTimers();
+    resetTrainingLifecycleVisual();
     void trainingLifecycle.offsetWidth;
 
-    if (trainingReplay) {
-      trainingReplay.disabled = true;
-      trainingReplay.innerHTML = '<span aria-hidden="true">●</span> Playing';
-    }
-    if (trainingStatus) trainingStatus.textContent = "Warm-up → activate at epoch 6 → repeat the active mini-batch loop → remove IAPR for inference.";
-
     if (methodReduceMotion) {
-      finishTrainingLifecycle();
+      finishTrainingLifecycle({ loop: false });
       return;
     }
 
     trainingLifecycle.classList.add("is-playing");
     trainingLifecycle.dataset.state = "playing";
-    trainingLifecycleTimer = window.setTimeout(finishTrainingLifecycle, 5600);
+    trainingLifecycleTimers.push(window.setTimeout(() => {
+      if (trainingLifecycleInView) finishTrainingLifecycle();
+    }, 5600));
   }
 
-  trainingReplay?.addEventListener("click", runTrainingLifecycle);
-
   if (trainingLifecycle && "IntersectionObserver" in window) {
-    const trainingLifecycleObserver = new IntersectionObserver((entries, observer) => {
-      if (!entries.some((entry) => entry.isIntersecting) || trainingLifecycleHasPlayed) return;
-      observer.disconnect();
-      window.setTimeout(runTrainingLifecycle, methodReduceMotion ? 0 : 220);
-    }, { threshold: .28 });
+    const trainingLifecycleObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const shouldRun = entry.isIntersecting && entry.intersectionRatio >= .22;
+        if (shouldRun === trainingLifecycleInView) return;
+        trainingLifecycleInView = shouldRun;
+        clearTrainingLifecycleTimers();
+
+        if (trainingLifecycleInView) {
+          trainingLifecycleTimers.push(window.setTimeout(runTrainingLifecycle, methodReduceMotion ? 0 : 220));
+        } else if (!methodReduceMotion) {
+          resetTrainingLifecycleVisual();
+        }
+      });
+    }, { threshold: [0, .22, .4] });
     trainingLifecycleObserver.observe(trainingLifecycle);
   } else if (trainingLifecycle) {
+    trainingLifecycleInView = true;
     runTrainingLifecycle();
   }
 

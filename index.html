@@ -87,17 +87,27 @@
       <figcaption>Several candidates can look equally convincing—yet identity allows only one correct match.</figcaption>
     </figure>
 
-    <div class="overview-video reveal" aria-labelledby="videoOverviewTitle">
-      <div class="overview-video-head">
+    <div class="overview-video overview-video-v13 reveal" aria-labelledby="videoOverviewTitle">
+      <div class="overview-video-story-v13">
+        <div class="overview-video-meta-v13"><span>01:00</span><i aria-hidden="true"></i><small>project overview</small></div>
         <p class="section-kicker">Video Overview</p>
-        <h3 id="videoOverviewTitle">A short walkthrough of the idea.</h3>
+        <h3 id="videoOverviewTitle">See the problem, the memory, and the payoff in one minute.</h3>
+        <p class="overview-video-lead-v13">A compact visual walkthrough of why batch-local identity supervision is not enough, how IAPR carries identity evidence forward, and why deployment stays unchanged.</p>
+        <ol class="overview-video-beats-v13" aria-label="What the overview video covers">
+          <li><span>01</span><div><strong>Why batches forget</strong><small>Identity labels structure an update, but observation-derived evidence does not persist by itself.</small></div></li>
+          <li><span>02</span><div><strong>How identity evidence persists</strong><small>Identity-owned prototype memories accumulate compatible visual and textual observations.</small></div></li>
+          <li><span>03</span><div><strong>Why retrieval stays simple</strong><small>IAPR regularizes training, then disappears before inference.</small></div></li>
+        </ol>
       </div>
-      <figure class="overview-video-figure">
-        <video class="overview-video-slot overview-video-player" controls playsinline preload="metadata" aria-describedby="overviewVideoCaption">
-          <source src="assets/video/overview.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <figcaption class="overview-video-caption" id="overviewVideoCaption">1-minute project overview</figcaption>
+      <figure class="overview-video-figure overview-video-figure-v13">
+        <div class="overview-video-frame-v13">
+          <video class="overview-video-slot overview-video-player" controls playsinline preload="metadata" aria-describedby="overviewVideoCaption">
+            <source src="assets/video/overview.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <span class="overview-video-corner-v13" aria-hidden="true">IAPR · 1 MIN</span>
+        </div>
+        <figcaption class="overview-video-caption" id="overviewVideoCaption">From mini-batch supervision to a persistent identity reference—and back to the unchanged base retriever at inference.</figcaption>
       </figure>
     </div>
   </section>
@@ -339,9 +349,7 @@
           <h3 id="motivationTakeawayTitle">Identity supervision needs a reference that survives the mini-batch.</h3>
           <p>A persistent, observation-derived identity reference can carry evidence forward as new observations of the same person arrive during training.</p>
         </div>
-        <button type="button" class="motivation-takeaway-replay-v8" data-motivation-takeaway-replay>
-          <span aria-hidden="true">▶</span> Replay accumulation
-        </button>
+
       </div>
 
       <div class="motivation-takeaway-flow-v8" aria-label="Three observations of ID 17 accumulate into one persistent identity reference">
@@ -892,7 +900,7 @@
               <h3 id="trainingLifecycleTitle">Warm up once. Regularize every active mini-batch.</h3>
               <p>The schedule has two phases—not four sequential stages. Epochs 1–5 train the base retriever alone; at epoch 6 IAPR is initialized, then its assign → update → compete → optimize cycle repeats for the rest of training.</p>
             </div>
-            <button type="button" class="training-replay-v11" data-training-replay><span aria-hidden="true">↻</span> Replay</button>
+
           </header>
 
           <div class="training-lifecycle-stage-v11">
@@ -947,7 +955,7 @@
           </div>
 
           <footer class="training-lifecycle-foot-v11">
-            <p data-training-status aria-live="polite">Replay the lifecycle to follow warm-up, activation, the active mini-batch loop, and removal at inference.</p>
+            <p data-training-status aria-live="polite">The lifecycle loops automatically while this section is in view: warm-up → activation → active mini-batch cycle → inference.</p>
             <div class="training-lifecycle-facts-v11">
               <span><b>&lt; 2%</b><small>extra trainable parameters during training</small></span>
               <span><b>0</b><small>extra inference modules</small></span>
@@ -1331,20 +1339,35 @@
     </div>
   </section>
 
-  <section class="section section-compact" id="closing">
-    <div class="closing-card reveal">
-      <div class="closing-copy">
-        <h2>Remember identity during training. Retrieve exactly as before.</h2>
-        <p>Persistent identity-owned prototypes organize training around same-identity variation and hard identity-wrong competition, then disappear completely from the deployed retrieval pipeline.</p>
+  <section class="section section-compact closing-section-v13" id="closing">
+    <div class="closing-card closing-card-v13 reveal">
+      <div class="closing-decoration-v13" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="closing-copy closing-copy-v13">
+        <span class="closing-eyebrow-v13">Training-time memory · zero deployment tax</span>
+        <h2>Remember identity during training.<br /><em>Retrieve exactly as before.</em></h2>
+        <p>Persistent identity-owned prototypes carry evidence across mini-batches, sharpen competition against identity-wrong look-alikes, and are removed before deployment.</p>
+        <div class="closing-facts-v13" aria-label="IAPR summary">
+          <span><b>Persistent</b><small>identity-owned references</small></span>
+          <span><b>&lt; 2%</b><small>extra trainable parameters</small></span>
+          <span><b>0</b><small>extra inference modules</small></span>
+        </div>
+        <a class="closing-back-v13" href="#top">Back to overview <span aria-hidden="true">↑</span></a>
       </div>
-      <img class="site-mascot site-mascot--closing" src="assets/branding/spidey.png" alt="" aria-hidden="true" />
+      <div class="closing-mascot-stage-v13" aria-hidden="true">
+        <span class="closing-orbit-v13 closing-orbit-v13--one"></span>
+        <span class="closing-orbit-v13 closing-orbit-v13--two"></span>
+        <span class="closing-memory-chip-v13 closing-memory-chip-v13--visual">v</span>
+        <span class="closing-memory-chip-v13 closing-memory-chip-v13--textual">t</span>
+        <span class="closing-memory-chip-v13 closing-memory-chip-v13--memory">ID</span>
+        <img class="site-mascot site-mascot--closing" src="assets/branding/spidey.png" alt="" />
+      </div>
     </div>
   </section>
 </main>
 
-<footer class="site-footer">
-  <span>IAPR · Identity-Aware Prototype Regularization for Text-Based Person Search</span>
-  <span>Interactive project demo</span>
+<footer class="site-footer site-footer-v13">
+  <div class="site-footer-brand-v13"><span>IAPR</span><strong>Identity-Aware Prototype Regularization</strong></div>
+  <div class="site-footer-meta-v13"><span>Text-Based Person Search</span><i aria-hidden="true"></i><span>Interactive project demo</span></div>
 </footer>
 
 <div class="lightbox" id="lightbox" hidden>
