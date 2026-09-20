@@ -8045,3 +8045,149 @@ body {
 /* The project slide is scaled inside the explorer; use a slightly larger
    source size so the three stage headings remain readable after SVG scaling. */
 .project-diagram-v11 .project-column-label-v12 { font-size: 14px; }
+
+/* =========================================================
+   Mascot placements
+   Branding rhythm: nav -> hero -> IAPR memory -> closing.
+   The existing assets/overview/spidey.png remains an Overview
+   illustration and is intentionally not reused as branding.
+   ========================================================= */
+
+.site-mascot {
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Navbar: replace the generic ID tile with the project mascot. */
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.site-mascot--nav {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 5px 8px rgba(153,27,27,.16));
+}
+
+/* Hero: one larger brand character in the whitespace above/right of the title. */
+.paper-hero-copy { position: relative; }
+.site-mascot--hero {
+  position: absolute;
+  z-index: 0;
+  top: -5.3rem;
+  right: clamp(.25rem, 2vw, 1.5rem);
+  width: clamp(104px, 10vw, 124px);
+  height: 100px;
+  opacity: .97;
+  transform-origin: 50% 60%;
+  filter: drop-shadow(0 14px 22px rgba(153,27,27,.14));
+  animation: mascotHeroFloat 4.6s ease-in-out infinite;
+}
+.paper-hero-copy > h1,
+.paper-hero-copy > .paper-links,
+.paper-hero-copy > .hero-subtitle {
+  position: relative;
+  z-index: 1;
+}
+@keyframes mascotHeroFloat {
+  0%, 100% { transform: translateY(0) rotate(1.5deg); }
+  50% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+/* Method: make the mascot semantically accompany the persistent memory block,
+   without entering the architecture diagram itself. */
+.prologue-memory-v9 {
+  position: relative;
+  padding-right: 4.7rem;
+}
+.site-mascot--method {
+  position: absolute;
+  z-index: 2;
+  right: .45rem;
+  top: 50%;
+  width: 64px;
+  height: 72px;
+  opacity: .94;
+  transform: translateY(-50%) rotate(5deg);
+  filter: drop-shadow(0 9px 14px rgba(153,27,27,.12));
+}
+
+/* Closing: final mascot signature; copy remains the dominant element. */
+.closing-card {
+  position: relative;
+  min-height: 190px;
+  overflow: hidden;
+  padding-right: clamp(10rem, 18vw, 13rem);
+}
+.closing-copy {
+  position: relative;
+  z-index: 1;
+}
+.site-mascot--closing {
+  position: absolute;
+  z-index: 0;
+  right: clamp(1.2rem, 3vw, 2.4rem);
+  bottom: -1.1rem;
+  width: clamp(138px, 15vw, 176px);
+  height: clamp(140px, 16vw, 174px);
+  opacity: .94;
+  filter: drop-shadow(0 16px 24px rgba(0,0,0,.26));
+  transform: rotate(-4deg);
+}
+
+@media (max-width: 880px) {
+  .site-mascot--hero {
+    right: .1rem;
+    width: 102px;
+    height: 92px;
+  }
+  .prologue-memory-v9 { padding-right: 4.2rem; }
+  .site-mascot--method { width: 56px; right: .35rem; }
+}
+
+@media (max-width: 760px) {
+  /* On compact screens the hero mascot rejoins normal flow below the subtitle. */
+  .site-mascot--hero {
+    position: static;
+    width: 88px;
+    height: 96px;
+    margin: 1.4rem auto 0;
+    animation: none;
+    transform: rotate(2deg);
+  }
+  /* Keep the dense Method story focused on content on small screens. */
+  .prologue-memory-v9 { padding-right: 1rem; }
+  .site-mascot--method { display: none; }
+
+  .closing-card {
+    min-height: 0;
+    padding-right: clamp(1.5rem,4vw,2.5rem);
+    padding-bottom: 7.1rem;
+  }
+  .site-mascot--closing {
+    right: 1rem;
+    bottom: -.8rem;
+    width: 108px;
+    height: 112px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Preserve a compact brand mark even though the long brand name stays hidden. */
+  .brand { display: inline-flex; flex: 0 0 auto; }
+  .brand-text { display: none; }
+  .brand-mark { width: 32px; height: 32px; flex-basis: 32px; }
+  .site-mascot--nav { width: 29px; height: 29px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-mascot--hero { animation: none !important; }
+}

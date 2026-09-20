@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=optional" rel="stylesheet" />
-  <link rel="icon" href="assets/branding/spidey.png" type="image/svg+xml" />
+  <link rel="icon" href="assets/branding/spidey.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -18,7 +18,7 @@
 <nav class="site-nav" aria-label="Primary navigation">
   <div class="nav-inner">
     <a class="brand" href="#top" aria-label="IAPR home">
-      <span class="brand-mark" aria-hidden="true">ID</span>
+      <span class="brand-mark" aria-hidden="true"><img class="site-mascot site-mascot--nav" src="assets/branding/spidey.png" alt="" /></span>
       <span class="brand-text">Identity-Aware Prototype Regularization</span>
     </a>
     <div class="nav-links" id="primaryNav">
@@ -65,6 +65,7 @@
         </nav>
 
         <p class="hero-subtitle"><strong>Remember identity during training.</strong> Retrieve exactly as before.</p>
+        <img class="site-mascot site-mascot--hero" src="assets/branding/spidey.png" alt="" aria-hidden="true" />
       </div>
     </div>
   </section>
@@ -418,6 +419,7 @@
             <div><small>textual</small><i></i><i></i><i class="is-filled"></i></div>
           </div>
           <small>identity-owned · multi-slot · updated from observations</small>
+          <img class="site-mascot site-mascot--method" src="assets/branding/spidey.png" alt="" aria-hidden="true" />
         </div>
       </div>
 
@@ -1326,10 +1328,11 @@
 
   <section class="section section-compact" id="closing">
     <div class="closing-card reveal">
-      <div>
+      <div class="closing-copy">
         <h2>Remember identity during training. Retrieve exactly as before.</h2>
         <p>Persistent identity-owned prototypes organize training around same-identity variation and hard identity-wrong competition, then disappear completely from the deployed retrieval pipeline.</p>
       </div>
+      <img class="site-mascot site-mascot--closing" src="assets/branding/spidey.png" alt="" aria-hidden="true" />
     </div>
   </section>
 </main>
