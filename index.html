@@ -484,10 +484,10 @@
 
           <div class="attachment-zone-v9" aria-hidden="true">
             <div class="attachment-line-v9"></div>
-            <div class="attachment-socket-v9">
-              <i></i><i></i>
-              <span>v<sub>i</sub> / t<sub>i</sub></span>
-              <small>attach here</small>
+            <div class="attachment-socket-v9 attachment-socket-v14">
+              <div class="attachment-points-v14"><i></i><i></i></div>
+              <span class="attachment-symbol-v14">v<sub>i</sub> / t<sub>i</sub></span>
+              <small class="attachment-caption-v14">attach here</small>
             </div>
           </div>
 
@@ -497,18 +497,16 @@
             <div class="iapr-flow-v9" aria-label="Project base embeddings, remember identity-owned prototypes, translate cross-modal structure, and regularize local identity competition">
               <div class="flow-step-v9 flow-step-v9--project" data-method-pipeline-step="project">
                 <button class="flow-step-hit-v11" type="button" data-method-open="project" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore prototype projection details"></button>
-                <span>Project</span>
-                <strong>Prototype projection</strong>
-                <div class="project-mini-v10" aria-hidden="true">
-                  <div class="project-mini-row-v10 project-mini-row-v10--visual"><i></i><b>v<sub>i</sub></b><em>g<sub>v</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><i></i><b>z<sub>i</sub><sup>v</sup></b></div>
-                  <div class="project-mini-row-v10 project-mini-row-v10--textual"><i></i><b>t<sub>i</sub></b><em>g<sub>t</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><i></i><b>z<sub>i</sub><sup>t</sup></b></div>
+                <div class="flow-step-heading-v14"><span>Project</span><strong>Prototype projection</strong></div>
+                <div class="project-mini-v10 project-mini-v14" aria-hidden="true">
+                  <div class="project-mini-row-v14 project-mini-row-v14--visual"><span class="project-endpoint-v14"><i></i><b>v<sub>i</sub></b></span><em>g<sub>v</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><span class="project-endpoint-v14 project-endpoint-v14--output"><i></i><b>z<sub>i</sub><sup>v</sup></b></span></div>
+                  <div class="project-mini-row-v14 project-mini-row-v14--textual"><span class="project-endpoint-v14"><i></i><b>t<sub>i</sub></b></span><em>g<sub>t</sub></em><span class="mini-arrow-v12 diagram-arrow-v12"></span><span class="project-endpoint-v14 project-endpoint-v14--output"><i></i><b>z<sub>i</sub><sup>t</sup></b></span></div>
                 </div>
               </div>
               <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--memory" data-method-pipeline-step="remember">
                 <button class="flow-step-hit-v11" type="button" data-method-open="remember" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-owned memory details"></button>
-                <span>Remember</span>
-                <strong>IOPM + IRA</strong>
+                <div class="flow-step-heading-v14"><span>Remember</span><strong>IOPM + IRA</strong></div>
                 <div class="memory-mini-v10" aria-hidden="true">
                   <div class="memory-mini-row-v10 is-owned"><b>ID 17</b><span class="is-visual"><i></i><i class="is-active"></i></span><span class="is-textual"><i></i><i></i></span></div>
                   <div class="memory-mini-row-v10"><b>ID 08</b><span class="is-visual"><i></i><i></i></span><span class="is-textual"><i></i><i></i></span></div>
@@ -518,28 +516,28 @@
               <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--translate" data-method-pipeline-step="translate">
                 <button class="flow-step-hit-v11" type="button" data-method-open="translate" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore same-space translated target details"></button>
-                <span>Translate</span>
-                <strong>Same-space targets</strong>
-                <div class="translate-mini-v10" aria-hidden="true">
+                <div class="flow-step-heading-v14"><span>Translate</span><strong>Same-space targets</strong></div>
+                <div class="translate-mini-v10 translate-mini-v14" aria-hidden="true">
                   <div class="translate-plane-v10 translate-plane-v10--text"><i></i><i></i><i></i><small>assign</small></div>
-                  <div class="translate-bridge-v10"><b class="translate-bridge-arrow-v12 diagram-arrow-v12" aria-hidden="true"></b><small>structure</small></div>
+                  <div class="translate-bridge-v14"><b class="translate-bridge-arrow-v12 diagram-arrow-v12" aria-hidden="true"></b><small>structure</small></div>
                   <div class="translate-plane-v10 translate-plane-v10--visual"><i></i><i></i><strong>★</strong><small>target</small></div>
                 </div>
               </div>
               <span class="flow-arrow-v9 diagram-arrow-v12" aria-hidden="true"></span>
               <div class="flow-step-v9 flow-step-v9--loss" data-method-pipeline-step="regularize">
                 <button class="flow-step-hit-v11" type="button" data-method-open="regularize" aria-controls="iaprMethodExplorer" aria-expanded="false" aria-label="Explore identity-prototype regularization details"></button>
-                <span>Regularize</span>
-                <strong>Identity-prototype loss</strong>
-                <div class="regulate-mini-v10" aria-hidden="true">
-                  <i class="regulate-query-v10">z</i>
-                  <i class="regulate-positive-v10"></i>
-                  <i class="regulate-negative-v10"></i>
-                  <span class="regulate-pull-v10">pull</span>
-                  <span class="regulate-push-v10">push</span>
+                <div class="flow-step-heading-v14"><span>Regularize</span><strong>Identity-prototype loss</strong></div>
+                <div class="regulate-mini-v14" aria-hidden="true">
+                  <div class="regulate-competition-v14">
+                    <span class="regulate-target-v14 regulate-target-v14--positive"></span>
+                    <span class="regulate-link-v14 regulate-link-v14--pull"><small>pull</small><i></i></span>
+                    <span class="regulate-query-v14">z</span>
+                    <span class="regulate-link-v14 regulate-link-v14--push"><small>push</small><i></i></span>
+                    <span class="regulate-target-v14 regulate-target-v14--negative"></span>
+                  </div>
                   <b>Top-K hard wrong IDs</b>
                 </div>
-                <em class="flow-loss-symbol-v10">L<sub>ip</sub></em>
+                <em class="flow-loss-symbol-v10 flow-loss-symbol-v14">L<sub>ip</sub></em>
               </div>
             </div>
 

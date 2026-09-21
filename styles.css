@@ -228,8 +228,8 @@ body { overflow-x: clip; }
   box-shadow: var(--shadow-sm);
 }
 .paper-links svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   flex: 0 0 17px;
   fill: none;
   stroke: currentColor;
@@ -9025,4 +9025,443 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .closing-back-v13 span { transform: none !important; }
+}
+
+/* =========================================================
+   Method stability pass v14 — fixed card anatomy, no text jumps
+   ========================================================= */
+
+/* The four compact method cards now share one explicit anatomy:
+   heading -> diagram canvas -> optional footer. This prevents late font
+   metrics or wrapped labels from pushing each diagram to a different y. */
+.method-v9 .flow-step-v9 {
+  grid-template-rows: 2.55rem minmax(5rem, 1fr) auto;
+  align-content: stretch;
+  justify-items: stretch;
+  min-height: 176px;
+  padding: .7rem .62rem .58rem;
+  gap: .34rem;
+  overflow: hidden;
+}
+
+.flow-step-heading-v14 {
+  min-width: 0;
+  min-height: 2.55rem;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: .12rem;
+  text-align: center;
+}
+
+.flow-step-heading-v14 > span {
+  color: var(--method-red-strong);
+  font-size: .54rem;
+  font-weight: 880;
+  line-height: 1;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.flow-step-heading-v14 > strong {
+  width: 100%;
+  max-width: 10.5rem;
+  min-height: 2.2em;
+  display: grid;
+  place-items: start center;
+  color: var(--method-ink);
+  font-size: clamp(.63rem, .72vw, .69rem);
+  font-weight: 820;
+  line-height: 1.08;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+
+/* Keep the invisible click target above the new inner wrappers. */
+.flow-step-hit-v11 { z-index: 8; }
+
+/* Attachment point: text gets its own full-width rows instead of sharing
+   the two-dot grid, so browser/font differences cannot push the caption out. */
+@media (min-width: 1081px) {
+  .architecture-scene-v9[data-mode="training"] .base-system-v9 { flex-basis: 44%; }
+  .architecture-scene-v9[data-mode="training"] .iapr-branch-v9 { flex-basis: 56%; }
+  .architecture-scene-v9[data-mode="training"] .attachment-zone-v9 {
+    flex-basis: 104px;
+  }
+}
+
+.attachment-socket-v9.attachment-socket-v14 {
+  width: 98px;
+  min-width: 98px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  justify-items: center;
+  align-content: center;
+  gap: .3rem;
+  padding: .72rem .52rem .68rem;
+  overflow: hidden;
+}
+
+.attachment-points-v14 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .78rem;
+  min-height: 11px;
+}
+
+.attachment-points-v14 > i {
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-radius: 50%;
+  background: var(--method-red);
+}
+.attachment-points-v14 > i:first-child { background: var(--method-blue); }
+
+.attachment-socket-v9 .attachment-symbol-v14,
+.attachment-socket-v9 .attachment-caption-v14 {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+  grid-column: 1;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+
+.attachment-socket-v9 .attachment-symbol-v14 {
+  color: var(--method-red-strong);
+  font-size: .68rem;
+  font-weight: 850;
+  line-height: 1.08;
+}
+
+.attachment-socket-v9 .attachment-caption-v14 {
+  color: var(--method-muted);
+  font-size: .5rem;
+  font-weight: 760;
+  line-height: 1.05;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+/* PROJECT: four deterministic columns rather than six loosely sized items. */
+.project-mini-v14 {
+  width: 100%;
+  align-self: center;
+  display: grid;
+  align-content: center;
+  gap: .46rem;
+  margin: 0;
+  padding-inline: .02rem;
+}
+
+.project-mini-row-v14 {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(22px, .8fr) minmax(26px, .9fr) 18px minmax(28px, 1fr);
+  align-items: center;
+  gap: .12rem;
+}
+
+.project-endpoint-v14 {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .18rem;
+  color: #4d5968;
+}
+.project-endpoint-v14 > i {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--method-blue);
+}
+.project-mini-row-v14--textual .project-endpoint-v14 > i { background: var(--textual); }
+.project-endpoint-v14 > b {
+  min-width: 0;
+  font-size: .52rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.project-mini-row-v14 > em {
+  min-width: 0;
+  min-height: 27px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #bad0ec;
+  border-radius: 7px;
+  color: var(--method-blue-strong);
+  background: white;
+  font-size: .53rem;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1;
+}
+.project-mini-row-v14--textual > em {
+  border-color: #ebc7a7;
+  color: #9b5b22;
+}
+.project-mini-row-v14 > .mini-arrow-v12 {
+  width: 18px;
+  min-width: 18px;
+  justify-self: center;
+}
+
+/* Existing memory visual is retained but vertically centered in the shared canvas. */
+.method-v9 .memory-mini-v10 {
+  align-self: center;
+  margin: 0;
+}
+
+/* TRANSLATE: bridge label is horizontal and owns its own row, avoiding
+   writing-mode baseline shifts and overlap with the arrow. */
+.translate-mini-v14 {
+  width: 100%;
+  align-self: center;
+  display: grid;
+  grid-template-columns: minmax(36px, 1fr) 24px minmax(36px, 1fr);
+  align-items: center;
+  gap: .25rem;
+  margin: 0;
+}
+
+.translate-mini-v14 .translate-plane-v10 {
+  min-height: 66px;
+}
+
+.translate-bridge-v14 {
+  width: 24px;
+  display: grid;
+  grid-template-rows: 14px auto;
+  place-items: center;
+  gap: .12rem;
+  color: #7258ad;
+}
+
+.translate-bridge-v14 .translate-bridge-arrow-v12 {
+  width: 24px;
+  min-width: 24px;
+  height: 12px;
+  color: #7258ad;
+}
+
+.translate-bridge-v14 > small {
+  width: 100%;
+  color: #7258ad;
+  font-size: .38rem;
+  font-weight: 820;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+}
+
+/* REGULARIZE: local competition is a real grid, not overlapping absolute
+   labels. pull/push sit above their own connector, while the hard-negative
+   caption and L_ip occupy dedicated rows. */
+.method-v9 .flow-step-v9--loss {
+  grid-template-rows: 2.55rem minmax(5rem, 1fr) auto;
+  min-height: 176px;
+  padding-bottom: .58rem;
+}
+.method-v9 .flow-step-v9--loss > strong { min-height: 0; }
+
+.regulate-mini-v14 {
+  width: 100%;
+  align-self: center;
+  display: grid;
+  grid-template-rows: minmax(52px, 1fr) auto;
+  align-content: center;
+  gap: .3rem;
+  margin: 0;
+}
+
+.regulate-competition-v14 {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 15px minmax(20px, 1fr) 26px minmax(20px, 1fr) 15px;
+  align-items: center;
+  gap: .08rem;
+}
+
+.regulate-target-v14 {
+  width: 15px;
+  height: 15px;
+  display: block;
+  justify-self: center;
+  border: 3px solid white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.12);
+}
+.regulate-target-v14--positive {
+  border-radius: 50%;
+  background: var(--positive);
+  box-shadow: 0 0 0 1px rgba(22,154,99,.35);
+}
+.regulate-target-v14--negative {
+  border-radius: 4px;
+  background: var(--negative);
+  box-shadow: 0 0 0 1px rgba(217,87,100,.35);
+  transform: rotate(45deg);
+}
+
+.regulate-query-v14 {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  border: 1px solid #d69b9e;
+  border-radius: 50%;
+  color: var(--method-red-strong);
+  background: white;
+  font-size: .6rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(143,23,27,.08);
+}
+
+.regulate-link-v14 {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 6px;
+  align-items: end;
+  gap: .16rem;
+}
+.regulate-link-v14 > small {
+  color: var(--method-muted);
+  font-size: .41rem;
+  font-weight: 830;
+  line-height: 1;
+  text-align: center;
+}
+.regulate-link-v14 > i {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1px;
+}
+.regulate-link-v14 > i::after {
+  position: absolute;
+  top: -2.5px;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  content: "";
+}
+.regulate-link-v14--pull > i {
+  background: linear-gradient(90deg, var(--positive), #a7cdb9);
+}
+.regulate-link-v14--pull > i::after {
+  right: -1px;
+  border-left: 5px solid #a7cdb9;
+}
+.regulate-link-v14--push > i {
+  background: linear-gradient(90deg, #e5b1b5, var(--negative));
+}
+.regulate-link-v14--push > i::after {
+  right: -1px;
+  border-left: 5px solid var(--negative);
+}
+
+.regulate-mini-v14 > b {
+  width: 100%;
+  color: var(--negative-strong);
+  font-size: .43rem;
+  font-weight: 820;
+  line-height: 1.05;
+  text-align: center;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.flow-loss-symbol-v14 {
+  justify-self: center;
+  margin: 0;
+  font-size: .73rem;
+  line-height: 1;
+}
+
+/* Tablet/phone: the sequence stacks. Every card keeps the same internal
+   anatomy; diagrams are allowed more width instead of shrinking text. */
+@media (max-width: 1080px) {
+  .method-v9 .iapr-flow-v9,
+  .iapr-flow-v9 {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .42rem;
+  }
+
+  .method-v9 .flow-step-v9,
+  .method-v9 .flow-step-v9--loss {
+    width: 100%;
+    min-height: 154px;
+    grid-template-rows: 2.3rem minmax(4.5rem, 1fr) auto;
+  }
+
+  .flow-step-heading-v14,
+  .method-v9 .flow-step-v9--loss .flow-step-heading-v14 {
+    min-height: 2.3rem;
+  }
+
+  .flow-step-heading-v14 > strong { max-width: 18rem; }
+  .project-mini-v14,
+  .memory-mini-v10,
+  .translate-mini-v14,
+  .regulate-mini-v14 { width: min(100%, 360px); justify-self: center; }
+
+  .flow-arrow-v9.diagram-arrow-v12 {
+    display: block;
+    width: var(--arrow-length);
+    min-width: var(--arrow-length);
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .attachment-socket-v9.attachment-socket-v14 {
+    width: min(100%, 260px);
+    min-width: 0;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto;
+    justify-content: center;
+    gap: .55rem;
+    padding: .5rem .75rem;
+    overflow: hidden;
+  }
+  .attachment-points-v14 { gap: .42rem; }
+  .attachment-socket-v9 .attachment-symbol-v14,
+  .attachment-socket-v9 .attachment-caption-v14 {
+    width: auto;
+    grid-column: auto;
+    white-space: nowrap;
+  }
+
+  .method-v9 .flow-step-v9,
+  .method-v9 .flow-step-v9--loss {
+    min-height: 150px;
+    padding-inline: .8rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .project-mini-row-v14 {
+    grid-template-columns: minmax(30px,.8fr) minmax(34px,.85fr) 22px minmax(38px,1fr);
+    gap: .16rem;
+  }
+  .translate-mini-v14 {
+    grid-template-columns: minmax(48px,1fr) 34px minmax(48px,1fr);
+  }
+  .regulate-competition-v14 {
+    grid-template-columns: 18px minmax(34px,1fr) 30px minmax(34px,1fr) 18px;
+  }
 }
